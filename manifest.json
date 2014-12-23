@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Austerity",
+  "short_name": "Austerity",
+  "description": "Port of Dominion",
+  
+
+  "version": "0.0.1.0",
+
+  "icons": {
+    "16": "server/assets/icon_16.png",
+    "128": "server/assets/icon_128.png"
+  },
+
+  "app": {
+    "background": {
+      "scripts": ["server/background.js"]
+    }
+  }
+}
