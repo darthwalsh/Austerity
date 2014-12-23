@@ -16,5 +16,11 @@
     "background": {
       "scripts": ["server/background.js"]
     }
+  },
+  
+  "sockets": {
+    "tcpServer": {
+      "listen": ""
+    }
   }
 }
