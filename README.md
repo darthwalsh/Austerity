@@ -1,4 +1,4 @@
 Austerity
 =========
 
-A Chrome App web server
+A Chrome Packaged App web server
