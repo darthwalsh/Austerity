@@ -207,7 +207,9 @@ HttpServer.prototype = {
       t.onRequest_(request);
     }
     sockets.tcp.onReceive.addListener(onReceive);
-    sockets.tcp.onReceiveError.addListener(function() {
+    sockets.tcp.onReceiveError.addListener(function(errorInfo) {
+      console.log("onReceiveError code: " + errorInfo.resultCode + 
+        "  CLOSING: "+ socketId);
       sockets.tcp.disconnect(socketId);
     });
     sockets.tcp.setPaused(socketId, false);
@@ -228,6 +230,7 @@ var extensionTypes = {
   'css': 'text/css',
   'html': 'text/html',
   'htm': 'text/html',
+  'ico': 'image/x-icon',
   'jpg': 'image/jpeg',
   'jpeg': 'image/jpeg',
   'js': 'text/javascript',
@@ -264,6 +267,7 @@ HttpRequest.prototype = {
     // The socket for keep alive connections will be re-used by the server.
     // Just stop referencing or using the socket in this HttpRequest.
     if (this.headers['Connection'] != 'keep-alive') {
+        console.log("not keepAlive, CLOSING: "+ this.socketId_);
       sockets.tcp.disconnect(this.socketId_);
     }
     this.socketId_ = 0;
