@@ -3,9 +3,11 @@ function log(text) {
 }
 
 var port = 8888;
-var isServer = http.Server && http.WebSocketServer;
+var isServer = false;
 
-if (isServer) {
+if (http.Server && http.WebSocketServer) {
+  isServer = true;
+  
   var server = new http.Server();
   var wsServer = new http.WebSocketServer(server);
   server.listen(port);

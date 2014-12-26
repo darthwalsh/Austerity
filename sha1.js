@@ -12,6 +12,9 @@
 
 // Copyright 2005 Google Inc. All Rights Reserved.
 
+// Copied from
+//  https://github.com/GoogleChrome/chrome-app-samples/blob/master/samples/websocket-server/sha1.js 
+
 /**
  * @fileoverview SHA-1 cryptographic hash.
  * Variable names follow the notation in FIPS PUB 180-3:
