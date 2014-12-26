@@ -8,19 +8,20 @@
   "version": "0.0.1.0",
 
   "icons": {
-    "16": "server/assets/icon_16.png",
-    "128": "server/assets/icon_128.png"
+    "16": "assets/icon_16.png",
+    "128": "assets/icon_128.png"
   },
 
+  "permissions": [{
+    "socket": [
+      "tcp-connect",
+      "tcp-listen"
+    ]
+  }],
+      
   "app": {
     "background": {
-      "scripts": ["server/background.js"]
-    }
-  },
-  
-  "sockets": {
-    "tcpServer": {
-      "listen": ""
+      "scripts": ["background.js"]
     }
   }
 }
