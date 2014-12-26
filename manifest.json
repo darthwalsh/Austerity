@@ -7,16 +7,17 @@
 
   "version": "0.0.1.0",
 
-    "sockets": {
-       "tcpServer": {
-         "listen": ""
-       }
-    },
-
   "icons": {
     "16": "assets/icon_16.png",
     "128": "assets/icon_128.png"
   },
+  
+  "permissions": [{
+    "socket": [
+      "tcp-connect",
+      "tcp-listen"
+    ]
+  }],
       
   "app": {
     "background": {
