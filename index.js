@@ -49,16 +49,35 @@ if (http.Server && http.WebSocketServer) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+  if(isServer) {
+    var manageDiv = document.getElementById("manage");
+    var startButton = document.createElement("button");
+    startButton.innerHTML = "Start";
+    startButton.onclick = function() {
+      log("Starting!!!")
+    }
+    manageDiv.appendChild(startButton);
+  }
+  
   setTimeout(function() { 
   log("Port " + port);
   var address = isServer ? 
     "ws://localhost:" + port + "/" : //TODO works?
     window.location.href.replace("http", "ws");
+  var name = document.getElementById("name");
+  name.addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) {
+      var data = {type: "connect", data: name.value};
+      ws.send(JSON.stringify(data));
+      name.disabled = true;
+    }
+  });
+  
+  var input = document.getElementById("input");
   var ws = new WebSocket(address);
   ws.addEventListener("open", function() {
     log("Connected to Server");
   });
-  var input = document.getElementById("input");
   ws.addEventListener('close', function() {
     log('Connection to Server lost');
     input.disabled = true;
@@ -68,7 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   input.addEventListener('keydown', function(e) {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
-      ws.send(input.value);
+      var data = {type: "choice", data: input.value};
+      ws.send(JSON.stringify(data));
       input.value = '';
     }
   });
