@@ -15,12 +15,6 @@ function slog(text) {
 var port = 8888;
 var isServer = false;
 
-var Player = function (name, socket) {
-  this.name = name;
-  this.socket = socket;
-  this.cards = [];
-}
-
 if (http.Server && http.WebSocketServer) {
   isServer = true;
   
@@ -42,32 +36,37 @@ if (http.Server && http.WebSocketServer) {
     var socket = req.accept();
     
     var updateStartButton = function() {
-      $("startButton").disabled = Object.keys(players).length < 2;
+      $("startButton").disabled = Object.keys(players).length < 1;
+      //TODO Game of 1 is only fun for debugging
     } 
 
+    var alllog = function(text) {
+      for(var id in players) {
+        players[id].socket.send(JSON.stringify({message: text}));
+      } 
+    }
+
+    var me;
     socket.addEventListener('message', function(e) {
-      var data = JSON.parse(e.data)
-      switch (data.type) {
-        case "connect":
+      var data = JSON.parse(e.data);
+      var type = Object.keys(data)[0];
+      data = data[type];
+      switch(type) {
+      case "connect":
           //TODO what if name already signed in?
-          players[socket.socketId_] = new Player(data.name, socket);
-          slog(data.name + " connected");
+          me = new Player(data, socket);
+          players[socket.socketId_] = me;
+          slog(data + " connected");
           updateStartButton();
           break;
-        case "choose":
-          slog(players[socket.socketId_].name + ": " + data.choice);
+        case "choice":
+          alllog(me.name + " chose " + data);
           break;
         case "chat":
-          var message = { 
-            type: "message",
-            message: players[socket.socketId_].name + ": " + data.message
-          }
-          for(var id in players) {
-            players[id].socket.send(JSON.stringify(message));
-          }
+          alllog(me.name + ": " + data);
           break;
         default:
-          console.error("Not implemenented: " + data.type);
+          console.error("Not implemenented: " + type);
       }
     });
 
@@ -96,12 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.id = "startButton";
     startButton.onclick = function() {
       slog("Starting!!!");
-      var choice = {
-        type:"choice",
-        choices: ["Copper", "Silver", "Curse"] 
-      };
       for(var id in players) {
-        players[id].socket.send(JSON.stringify(choice));
+        players[id].socket.send(JSON.stringify({
+        choices: ["Copper", "Silver", "Curse"] 
+      }));
       }
     };
     
@@ -122,8 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var name = $("name");
   name.addEventListener('keydown', function(e) {
     if (e.keyCode == 13) {
-      var data = {type: "connect", name: name.value};
-      ws.send(JSON.stringify(data));
+      ws.send(JSON.stringify({connect: name.value}));
       name.disabled = true;
     }
   });
@@ -139,20 +135,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   ws.addEventListener('message', function(e) {
     var data = JSON.parse(e.data);
-    switch(data.type) {
+    var type = Object.keys(data)[0];
+    data = data[type];
+    switch(type) {
       case "message":
-        log(data.message);
+        log(data);
         break;
-      case "choice":
-        var cc = data.choices;
+      case "choices": 
+        //TODO if server can send a stream of choices 
+        // then the client will have to queue them
+        var cc = data;
         var cDiv = $("choices");
         for(var i = 0; i < cc.length; ++i) {
           var button = document.createElement("button");
           button.innerHTML = cc[i];
           button.onclick = function() {
-            var ans = {type:"choose",choice:this.innerHTML};
-            ws.send(JSON.stringify(ans));
-            log(this.innerHTML); // TODO send back and remove buttons
+            ws.send(JSON.stringify({choice:this.innerHTML}));
             while(cDiv.firstChild)
               cDiv.removeChild(cDiv.firstChild);
           };
@@ -160,13 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         break;
       default:
-        console.error("Not implemenented: " + data.type); 
+        console.error("Not implemenented: " + type); 
     }
   });
   input.addEventListener('keydown', function(e) {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
-      var data = {type: "chat", message: input.value};
-      ws.send(JSON.stringify(data));
+      ws.send(JSON.stringify({chat: input.value}));
       input.value = '';
     }
   });
