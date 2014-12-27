@@ -49,13 +49,23 @@ if (http.Server && http.WebSocketServer) {
       var data = JSON.parse(e.data)
       switch (data.type) {
         case "connect":
+          //TODO what if name already signed in?
           players[socket.socketId_] = new Player(data.name, socket);
           slog(data.name + " connected");
           updateStartButton();
           break;
         case "choose":
-          slog(data.choice);
-          break
+          slog(players[socket.socketId_].name + ": " + data.choice);
+          break;
+        case "chat":
+          var message = { 
+            type: "message",
+            message: players[socket.socketId_].name + ": " + data.message
+          }
+          for(var id in players) {
+            players[id].socket.send(JSON.stringify(message));
+          }
+          break;
         default:
           console.error("Not implemenented: " + data.type);
       }
@@ -85,8 +95,15 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.disabled = true;
     startButton.id = "startButton";
     startButton.onclick = function() {
-      slog("Starting!!!")
-    }
+      slog("Starting!!!");
+      var choice = {
+        type:"choice",
+        choices: ["Copper", "Silver", "Curse"] 
+      };
+      for(var id in players) {
+        players[id].socket.send(JSON.stringify(choice));
+      }
+    };
     
     var manageLog = document.createElement("textarea");
     manageLog.readOnly = true;
@@ -121,11 +138,34 @@ document.addEventListener('DOMContentLoaded', function() {
     input.disabled = true;
   });
   ws.addEventListener('message', function(e) {
-    log(e.data);
+    var data = JSON.parse(e.data);
+    switch(data.type) {
+      case "message":
+        log(data.message);
+        break;
+      case "choice":
+        var cc = data.choices;
+        var cDiv = $("choices");
+        for(var i = 0; i < cc.length; ++i) {
+          var button = document.createElement("button");
+          button.innerHTML = cc[i];
+          button.onclick = function() {
+            var ans = {type:"choose",choice:this.innerHTML};
+            ws.send(JSON.stringify(ans));
+            log(this.innerHTML); // TODO send back and remove buttons
+            while(cDiv.firstChild)
+              cDiv.removeChild(cDiv.firstChild);
+          };
+          cDiv.appendChild(button);
+        };
+        break;
+      default:
+        console.error("Not implemenented: " + data.type); 
+    }
   });
   input.addEventListener('keydown', function(e) {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
-      var data = {type: "choose", choice: input.value};
+      var data = {type: "chat", message: input.value};
       ws.send(JSON.stringify(data));
       input.value = '';
     }
