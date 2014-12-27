@@ -5,6 +5,12 @@ function log(text) {
 var port = 8888;
 var isServer = false;
 
+var Player = function (name, socket) {
+  this.name = name;
+  this.socket = socket;
+  this.cards = [];
+}
+
 if (http.Server && http.WebSocketServer) {
   isServer = true;
   
@@ -20,27 +26,40 @@ if (http.Server && http.WebSocketServer) {
     return true;
   });
   
-  var connectedSockets = [];
+  var players = {}; // id -> Player
 
   wsServer.addEventListener('request', function(req) {
-    log('Client connected');
     var socket = req.accept();
-    connectedSockets.push(socket);
+    
+    var updateStartButton = function() {
+      document.getElementById("startButton").disabled = 
+        Object.keys(players).length < 2;
+    } 
 
-    //TODO better logic
     socket.addEventListener('message', function(e) {
-      for (var i = 0; i < connectedSockets.length; i++)
-        connectedSockets[i].send(e.data);
+      var data = JSON.parse(e.data)
+      switch (data.type) {
+        case "connect":
+          players[socket.socketId_] = new Player(data.name, socket);
+          log(data.name + " connected");
+          updateStartButton();
+          break;
+        case "choose":
+          log(data.choice);
+          break
+        default:
+          console.error("Not implemenented: " + data.type);
+      }
     });
 
-    // When a socket is closed, remove it from the list of connected sockets.
     socket.addEventListener('close', function() {
-      log("Client disconnected");
-      for (var i = 0; i < connectedSockets.length; i++) {
-        if (connectedSockets[i] == socket) {
-          connectedSockets.splice(i, 1);
-          break;
-        }
+      var player = players[socket.socketId_];
+      if (player) {
+        log(player.name + " disconnected");
+        delete players[socket.socketId_];
+        updateStartButton();
+      } else {
+        log("Unknown left!");
       }
     });
     return true;
@@ -53,6 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var manageDiv = document.getElementById("manage");
     var startButton = document.createElement("button");
     startButton.innerHTML = "Start";
+    startButton.disabled = true;
+    startButton.id = "startButton";
     startButton.onclick = function() {
       log("Starting!!!")
     }
@@ -67,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var name = document.getElementById("name");
   name.addEventListener('keydown', function(e) {
     if (e.keyCode == 13) {
-      var data = {type: "connect", data: name.value};
+      var data = {type: "connect", name: name.value};
       ws.send(JSON.stringify(data));
       name.disabled = true;
     }
@@ -87,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   input.addEventListener('keydown', function(e) {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
-      var data = {type: "choice", data: input.value};
+      var data = {type: "choose", choice: input.value};
       ws.send(JSON.stringify(data));
       input.value = '';
     }
