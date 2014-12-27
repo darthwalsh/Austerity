@@ -1,5 +1,15 @@
+function $(id) {
+  return document.getElementById(id);
+}
+
 function log(text) {
-  document.getElementById("log").value += text + "\n";
+  $("log").value += text + "\n";
+}
+
+function slog(text) {
+  if(isServer){
+    $("manageLog").value += text + "\n";
+  }
 }
 
 var port = 8888;
@@ -32,8 +42,7 @@ if (http.Server && http.WebSocketServer) {
     var socket = req.accept();
     
     var updateStartButton = function() {
-      document.getElementById("startButton").disabled = 
-        Object.keys(players).length < 2;
+      $("startButton").disabled = Object.keys(players).length < 2;
     } 
 
     socket.addEventListener('message', function(e) {
@@ -41,11 +50,11 @@ if (http.Server && http.WebSocketServer) {
       switch (data.type) {
         case "connect":
           players[socket.socketId_] = new Player(data.name, socket);
-          log(data.name + " connected");
+          slog(data.name + " connected");
           updateStartButton();
           break;
         case "choose":
-          log(data.choice);
+          slog(data.choice);
           break
         default:
           console.error("Not implemenented: " + data.type);
@@ -55,11 +64,11 @@ if (http.Server && http.WebSocketServer) {
     socket.addEventListener('close', function() {
       var player = players[socket.socketId_];
       if (player) {
-        log(player.name + " disconnected");
+        slog(player.name + " disconnected");
         delete players[socket.socketId_];
         updateStartButton();
       } else {
-        log("Unknown left!");
+        slog("Unknown left!");
       }
     });
     return true;
@@ -69,23 +78,31 @@ if (http.Server && http.WebSocketServer) {
 
 document.addEventListener('DOMContentLoaded', function() {
   if(isServer) {
-    var manageDiv = document.getElementById("manage");
+    var manageDiv = $("manage");
+    
     var startButton = document.createElement("button");
     startButton.innerHTML = "Start";
     startButton.disabled = true;
     startButton.id = "startButton";
     startButton.onclick = function() {
-      log("Starting!!!")
+      slog("Starting!!!")
     }
+    
+    var manageLog = document.createElement("textarea");
+    manageLog.readOnly = true;
+    manageLog.id = "manageLog";
+    
     manageDiv.appendChild(startButton);
+    manageDiv.appendChild(document.createElement("p"));
+    manageDiv.appendChild(manageLog);
   }
   
   setTimeout(function() { 
-  log("Port " + port);
+  slog("Port " + port);
   var address = isServer ? 
     "ws://localhost:" + port + "/" : //TODO works?
     window.location.href.replace("http", "ws");
-  var name = document.getElementById("name");
+  var name = $("name");
   name.addEventListener('keydown', function(e) {
     if (e.keyCode == 13) {
       var data = {type: "connect", name: name.value};
@@ -94,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  var input = document.getElementById("input");
+  var input = $("input");
   var ws = new WebSocket(address);
   ws.addEventListener("open", function() {
     log("Connected to Server");
