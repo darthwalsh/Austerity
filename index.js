@@ -42,7 +42,7 @@ if (http.Server && http.WebSocketServer) {
 
     var alllog = function(text) {
       for(var id in players) {
-        players[id].socket.send(JSON.stringify({message: text}));
+        players[id].send({message: text});
       } 
     }
 
@@ -60,7 +60,7 @@ if (http.Server && http.WebSocketServer) {
           updateStartButton();
           break;
         case "choice":
-          alllog(me.name + " chose " + data);
+          me.onChoice(data);
           break;
         case "chat":
           alllog(me.name + ": " + data);
@@ -94,11 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.disabled = true;
     startButton.id = "startButton";
     startButton.onclick = function() {
-      slog("Starting!!!");
+      startButton.disabled = true;
       for(var id in players) {
-        players[id].socket.send(JSON.stringify({
-        choices: ["Copper", "Silver", "Curse"] 
-      }));
+        players[id].takeTurn();
       }
     };
     
@@ -114,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() { 
   slog("Port " + port);
   var address = isServer ? 
-    "ws://localhost:" + port + "/" : //TODO works?
+    "ws://localhost:" + port + "/" :
     window.location.href.replace("http", "ws");
   var name = $("name");
   name.addEventListener('keydown', function(e) {
@@ -143,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
       case "choices": 
         //TODO if server can send a stream of choices 
-        // then the client will have to queue them
+        // then the client has to queue them
         var cc = data;
         var cDiv = $("choices");
         for(var i = 0; i < cc.length; ++i) {
