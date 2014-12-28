@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
       startButton.disabled = true;
       for(var id in players) { //TODO no loop
         players[id].takeTurn(function() {
-          console.error("TODO kick of next player turn"); //TODO
+          console.error("TODO kick off next player turn"); //TODO
         } );
       }
     };
@@ -167,4 +167,4 @@ document.addEventListener('DOMContentLoaded', function() {
       input.value = '';
     }
   });
-}, isServer ? 1000 : 0)}); //Mitigate race condition in starting webServer?
+}, isServer ? 100 : 0)}); //Mitigate race condition in starting webServer?
