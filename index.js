@@ -95,8 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.id = "startButton";
     startButton.onclick = function() {
       startButton.disabled = true;
-      for(var id in players) {
-        players[id].takeTurn();
+      for(var id in players) { //TODO no loop
+        players[id].takeTurn(function() {
+          console.error("TODO kick of next player turn"); //TODO
+        } );
       }
     };
     
