@@ -48,7 +48,7 @@ var cards = {
   
   Estate:  new Property(2, 1),
   Duchy:   new Property(5, 3),
-  Provice: new Property(8, 3),
+  Province: new Property(8, 3),
   
   Smithy: new Smithy(),
   Workshop: new Workshop(),

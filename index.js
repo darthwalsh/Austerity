@@ -17,6 +17,7 @@ function slog(text) {
 var port = 8888;
 var isServer = false;
 var game = new Game(slog);
+var store = new Store();
 
 game.playersChanged = function() {
   $("startButton").disabled = !game.canStart();
@@ -48,21 +49,47 @@ document.addEventListener('DOMContentLoaded', function() {
   if(isServer) {
     var manageDiv = $("manage");
 
-    var startButton = document.createElement("button");
-    startButton.innerHTML = "Start";
-    startButton.disabled = true;
-    startButton.id = "startButton";
-    startButton.onclick = function() {
-      startButton.disabled = true;
-      game.start();
-    };
+    var options = store.optional();
+    for(var i = 0; i < options.length; ++i) {
+      var id = "optional" + options[i];
+
+      var box = document.createElement("input");
+      box.setAttribute("type", "checkbox");
+      box.setAttribute("id", id);
+      manageDiv.appendChild(box);
+
+      var label = document.createElement("label");
+      label.innerText = options[i];
+      label.htmlFor = id;
+      manageDiv.appendChild(label);
+    }
+
+    manageDiv.appendChild(document.createElement("br"));
 
     var manageLog = document.createElement("textarea");
     manageLog.readOnly = true;
     manageLog.id = "manageLog";
 
+    var startButton = document.createElement("button");
+    startButton.innerHTML = "Start";
+    startButton.disabled = true;
+    startButton.id = "startButton";
+    startButton.onclick = function() {
+      store.setIncluded(store.optional().filter(function(n) {
+        return $("optional" + n).checked;
+      }).map(function(n) {
+        return cards[n];
+      }))
+
+      while (manageDiv.firstChild !== manageLog)
+        manageDiv.removeChild(manageDiv.firstChild);
+      game.start();
+    };
+
     manageDiv.appendChild(startButton);
-    manageDiv.appendChild(document.createElement("p"));
+
+    manageDiv.appendChild(document.createElement("br"));
+
     manageDiv.appendChild(manageLog);
   }
 
@@ -102,15 +129,21 @@ document.addEventListener('DOMContentLoaded', function() {
         var cc = data;
         var cDiv = $("choices");
         for(var i = 0; i < cc.length; ++i) {
-          var button = document.createElement("button");
-          button.innerHTML = cc[i];
-          button.onclick = function() {
-            ws.send(JSON.stringify({choice:this.innerHTML}));
-            while(cDiv.firstChild)
-              cDiv.removeChild(cDiv.firstChild);
-          };
-          cDiv.appendChild(button);
-        };
+          if(cc[i] === "\n") {
+            cDiv.appendChild(document.createElement("br"));
+          }
+          else {
+            var button = document.createElement("button");
+            button.innerHTML = cc[i];
+            button.onclick = function() {
+              ws.send(JSON.stringify({choice:this.innerHTML}));
+              while(cDiv.firstChild)
+                cDiv.removeChild(cDiv.firstChild);
+            };
+            cDiv.appendChild(button);
+          }
+        }
+        $("log").scrollTop = $("log").scrollHeight;
         break;
       default:
         console.error("Not implemenented: " + type);

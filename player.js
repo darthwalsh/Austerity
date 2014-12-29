@@ -1,5 +1,3 @@
-var store = Object.keys(cards).map(function(n) {return cards[n]}); //TODO
-
 function Player(name, socket) {
   this.name = name;
   this.socket = socket;
@@ -67,8 +65,6 @@ Player.prototype = {
     this.playCard(choice);
     --this.actions;
 
-    this.played.push(card);
-
     this.promptAction();
   },
 
@@ -84,14 +80,13 @@ Player.prototype = {
 
     var choices = treasureCards.map(function(c){return c.name;});
 
-    if (choices.length)
+    if (choices.length) {
       choices.unshift("Play All Treasures");
+      choices.push("\n");
+    }
 
-    //TODO only offer cards from store
-    var t = this;
-    Array.prototype.push.apply(choices, store
-      .filter(function(c){return c.cost <= t.money;})
-      .map(function(c){return "Buy: " + c.name}));
+    Array.prototype.push.apply(choices,
+      store.getAvailable(this.money).map(function(c){return "Buy: " + c.name}));
 
     if (!choices.length) {
       this.send({message:"Nothing to buy"});
