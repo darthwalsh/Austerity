@@ -61,14 +61,10 @@ Player.prototype = {
 
     if(choice == "Done With Actions") {
       this.promptBuys();
+      return;
     }
 
-    var hi = this.hand.map(function(c){return c.name;}).indexOf(choice);
-    if (hi == -1)
-      console.error("Bad choice: " + choice);
-    var card = this.hand.splice(hi, 1)[0];
-
-    card.play(this); //TODO will need to be async...
+    this.playCard(choice);
     --this.actions;
 
     this.played.push(card);
@@ -110,6 +106,7 @@ Player.prototype = {
   },
 
   receiveBuys: function(choice) {
+    var t = this;
     this.onChoice = null;
 
     if (choice == "Done With Buys") {
@@ -118,7 +115,11 @@ Player.prototype = {
     }
 
     if (choice == "Play All Treasures") {
-      console.error("TODO Play All Treasures Not Implemented"); //TODO
+      this.hand
+        .filter(function(c){return c.kind=="treasure";})
+        .forEach(function(c){t.playCard(c.name)});
+      this.promptBuys();
+      return;
     }
 
     if (choice.substring(0, 5) == "Buy: ") {
@@ -129,15 +130,19 @@ Player.prototype = {
 
       //TODO reduce number of cards in store
     } else {
-      var hi = this.hand.map(function(c){return c.name;}).indexOf(choice);
-      if (hi == -1)
-        console.error("Bad choice: " + choice);
-      var card = this.hand.splice(hi, 1)[0];
-      card.play(this); //TODO async?
-      this.played.push(card);
+      this.playCard(choice);
     }
 
     this.promptBuys();
+  },
+
+  playCard: function(name) {
+    var hi = this.hand.map(function(c){return c.name;}).indexOf(name);
+      if (hi == -1)
+        console.error("Bad choice: " + choice);
+    var card = this.hand.splice(hi, 1)[0];
+    card.play(this); //TODO will need to be async to handle cards with user interaction
+    this.played.push(card);
   },
 
   sendStatus: function() {
