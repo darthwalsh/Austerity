@@ -14,6 +14,11 @@ function slog(text) {
 
 var port = 8888;
 var isServer = false;
+var game = new Game(slog);
+
+game.playersChanged = function() {
+  $("startButton").disabled = !game.canStart();
+};
 
 if (http.Server && http.WebSocketServer) {
   isServer = true;
@@ -25,61 +30,13 @@ if (http.Server && http.WebSocketServer) {
   server.addEventListener('request', function(req) {
     var url = req.headers.url;
     if (url == '/')
-      url = '/index.html'; //TODO needed?
+      url = '/index.html';
     req.serveUrl(url);
     return true;
   });
   
-  var players = {}; // id -> Player
-
   wsServer.addEventListener('request', function(req) {
-    var socket = req.accept();
-    
-    var updateStartButton = function() {
-      $("startButton").disabled = Object.keys(players).length < 1;
-      //TODO Game of 1 is only fun for debugging
-    } 
-
-    var alllog = function(text) {
-      for(var id in players) {
-        players[id].send({message: text});
-      } 
-    }
-
-    var me;
-    socket.addEventListener('message', function(e) {
-      var data = JSON.parse(e.data);
-      var type = Object.keys(data)[0];
-      data = data[type];
-      switch(type) {
-      case "connect":
-          //TODO what if name already signed in?
-          me = new Player(data, socket);
-          players[socket.socketId_] = me;
-          slog(data + " connected");
-          updateStartButton();
-          break;
-        case "choice":
-          me.onChoice(data);
-          break;
-        case "chat":
-          alllog(me.name + ": " + data);
-          break;
-        default:
-          console.error("Not implemenented: " + type);
-      }
-    });
-
-    socket.addEventListener('close', function() {
-      var player = players[socket.socketId_];
-      if (player) {
-        slog(player.name + " disconnected");
-        delete players[socket.socketId_];
-        updateStartButton();
-      } else {
-        slog("Unknown left!");
-      }
-    });
+    game.addConnection(req.accept());
     return true;
   });
 }
@@ -95,11 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.id = "startButton";
     startButton.onclick = function() {
       startButton.disabled = true;
-      for(var id in players) { //TODO no loop
-        players[id].takeTurn(function() {
-          console.error("TODO kick off next player turn"); //TODO
-        } );
-      }
+      game.start();
     };
     
     var manageLog = document.createElement("textarea");

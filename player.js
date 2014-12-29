@@ -1,6 +1,6 @@
-var store = Object.keys(cards).map(function(n) {return cards[n]});
+var store = Object.keys(cards).map(function(n) {return cards[n]}); //TODO
 
-var Player = function (name, socket) {
+function Player(name, socket) {
   this.name = name;
   this.socket = socket;
   this.drawPile = [];
@@ -152,8 +152,8 @@ Player.prototype = {
   },
 
   turnDone: function() {
-    Array.prototype.push.apply(this.discardPile, this.hand);
-    Array.prototype.push.apply(this.discardPile, this.played);
+    Array.prototype.push.apply(this.discardPile, this.hand.splice(0));
+    Array.prototype.push.apply(this.discardPile, this.played.splice(0));
     this.draw(5);
 
     this.afterTurn();
