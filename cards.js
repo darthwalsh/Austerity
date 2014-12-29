@@ -15,30 +15,10 @@ function Property(cost, points) {
   this.points = points; //TODO function taking player?
 }
 
-function Smithy() {
+function Action(cost, play) {
   this.kind = "action";
-  this.cost = 4;
-  this.play = function(player) {
-    player.draw(3);
-  };
-}
-
-function Workshop() {
-  this.kind = "action";
-  this.cost = 3;
-  this.play = function(player) {
-    player.money += 2;
-    player.buys  += 1;
-  };
-}
-
-function Village() {
-  this.kind = "action";
-  this.cost = 3;
-  this.play = function(player) {
-    player.actions += 2;
-    player.draw();
-  };
+  this.cost = cost;
+  this.play = play;
 }
 
 var cards = {
@@ -50,9 +30,32 @@ var cards = {
   Duchy:   new Property(5, 3),
   Province: new Property(8, 3),
 
-  Smithy: new Smithy(),
-  Workshop: new Workshop(),
-  Village: new Village()
+  Festival: new Action(5, function(player) {
+    player.actions += 2;
+    player.buys += 1;
+    player.money += 2;
+  }),
+  Laboratory: new Action(5, function(player) {
+    player.draw(2);
+    player.actions += 1;
+  }),
+  Market: new Action(5, function(player) {
+    player.draw();
+    player.actions += 1;
+    player.buys += 1;
+    player.money += 1;
+  }),
+  Smithy: new Action(4, function(player) {
+    player.draw(3);
+  }),
+  Village: new Action(3, function(player) {
+    player.draw();
+    player.actions += 2;
+  }),
+  Workshop: new Action(3, function(player) {
+    player.buys  += 1;
+    player.money += 2;
+  })
 };
 
 for(var name in cards) {
