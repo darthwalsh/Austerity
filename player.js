@@ -156,6 +156,9 @@ Player.prototype = {
     Array.prototype.push.apply(this.discardPile, this.played.splice(0));
     this.draw(5);
 
+    this.send({message: ""});
+    this.sendStatus();
+
     this.afterTurn();
   },
 

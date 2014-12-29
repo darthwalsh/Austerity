@@ -4,11 +4,13 @@ function $(id) {
 
 function log(text) {
   $("log").value += text + "\n";
+  $("log").scrollTop = $("log").scrollHeight;
 }
 
 function slog(text) {
   if(isServer){
     $("manageLog").value += text + "\n";
+    $("manageLog").scrollTop = $("manageLog").scrollHeight;
   }
 }
 
