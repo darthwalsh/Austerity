@@ -35,6 +35,15 @@ Store.prototype = {
   bought: function(card) {
     if(--this.counts[card] < 0)
       console.error("Already out of card!");
+  },
+
+  gameOver: function() {
+    var t = this;
+    if(!this.counts[cards.Province])
+      return true;
+    return this.default.concat(this.included).filter(function(c) {
+      return t.counts[c] == 0;
+    }).length >= 3;
   }
 }
 

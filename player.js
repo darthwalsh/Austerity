@@ -86,7 +86,7 @@ Player.prototype = {
     }
 
     Array.prototype.push.apply(choices,
-      store.getAvailable(this.money).map(function(c){return "Buy: " + c.name}));
+      game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name}));
 
     if (!choices.length) {
       this.send({message:"Nothing to buy"});
@@ -123,7 +123,7 @@ Player.prototype = {
       this.money -= buying.cost;
       --this.buys;
 
-      store.bought(buying);
+      game.store.bought(buying);
     } else {
       this.playCard(choice);
     }
@@ -191,6 +191,11 @@ Player.prototype = {
 
     this.drawPile = this.discardPile;
     this.discardPile = [];
+  },
+
+  getPoints: function() {
+    return this.drawPile.concat(this.discardPile).concat(this.hand).reduce(
+      function(a, c) { return a + (c.points || 0); }, 0);
   },
 
   send: function(o) {

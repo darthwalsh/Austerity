@@ -17,7 +17,6 @@ function slog(text) {
 var port = 8888;
 var isServer = false;
 var game = new Game(slog);
-var store = new Store();
 
 game.playersChanged = function() {
   $("startButton").disabled = !game.canStart();
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if(isServer) {
     var manageDiv = $("manage");
 
-    var options = store.optional();
+    var options = game.store.optional();
     for(var i = 0; i < options.length; ++i) {
       var id = "optional" + options[i];
 
@@ -75,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startButton.disabled = true;
     startButton.id = "startButton";
     startButton.onclick = function() {
-      store.setIncluded(store.optional().filter(function(n) {
+      game.store.setIncluded(game.store.optional().filter(function(n) {
         return $("optional" + n).checked;
       }).map(function(n) {
         return cards[n];

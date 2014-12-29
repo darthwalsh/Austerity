@@ -6,7 +6,6 @@ var util = {
       } catch (err) {
         console.log(err.stack);
         console.error(err.message);
-        throw error;
       }
     }
   }

@@ -1,6 +1,7 @@
-function Game(log) {
-  this.players = {}; // socketId -> Player
+function Game(log, store) {
   this.log = log;
+  this.store = new Store();
+  this.players = {}; // socketId -> Player
   this.playersChanged = null;
 }
 
@@ -16,6 +17,16 @@ Game.prototype = {
     var turn = 0;
 
     var nextTurn = function() {
+      if (t.store.gameOver()) {
+        var result = "GAME OVER!!!\r\n";
+        result += ps
+          .sort(function(a, b) { return b.getPoints() - a.getPoints() }) //descending
+          .map(function(p){ return p.name + ": " + p.getPoints();})
+          .join("\r\n");
+        t.alllog(result);
+        return;
+      }
+
       ++turn;
       ps[turn % ps.length].takeTurn(nextTurn);
     };
