@@ -49,7 +49,7 @@ Game.prototype = {
     }.bind(this)));
 
     socket.addEventListener('close', util.wrapErrors(function() {
-      var player = players[socket.socketId_];
+      var player = this.players[socket.socketId_];
       if (player) {
         this.log(player.name + " disconnected");
         delete this.players[socket.socketId_];
