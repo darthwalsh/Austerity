@@ -65,6 +65,5 @@ Game.prototype = {
   }
 }
 
-// Loudly fail so nobody can try-catch these errors
 for(var name in Game.prototype)
   Game.prototype[name] = util.wrapErrors(Game.prototype[name]);

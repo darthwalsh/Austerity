@@ -123,7 +123,7 @@ Player.prototype = {
       this.money -= buying.cost;
       --this.buys;
 
-      //TODO reduce number of cards in store
+      store.bought(buying);
     } else {
       this.playCard(choice);
     }

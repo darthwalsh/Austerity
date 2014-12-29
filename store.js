@@ -10,7 +10,7 @@ function Store() {
     return o;
   }, {});
   this.included = null;
-} 
+}
 
 Store.prototype = {
   optional: function() {
@@ -30,5 +30,13 @@ Store.prototype = {
     var t = this;
     return this.default.concat(this.included)
       .filter(function(c){return c.cost <= price && t.counts[c.name];});
+  },
+
+  bought: function(card) {
+    if(--this.counts[card] < 0)
+      console.error("Already out of card!");
   }
 }
+
+for(var name in Store.prototype)
+  Store.prototype[name] = util.wrapErrors(Store.prototype[name]);

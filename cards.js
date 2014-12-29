@@ -55,8 +55,10 @@ var cards = {
   Village: new Village()
 };
 
-for(var name in cards) 
+for(var name in cards) {
   cards[name].name = name;
+  cards[name].toString = function() { return this.name; };
+}
 
 return cards;
 })();
