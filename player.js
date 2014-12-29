@@ -204,15 +204,5 @@ Player.prototype = {
 }
 
 // Loudly fail so nobody can try-catch these errors
-for(var name in Player.prototype) {
-  Player.prototype[name] = function(fn) {
-    return function() {
-      try {
-        return fn.apply(this, arguments);
-      } catch (err) {
-        console.log(err.stack);
-        console.error(err.message);
-      }
-    }
-  }(Player.prototype[name]);
-}
+for(var name in Player.prototype)
+  Player.prototype[name] = util.wrapErrors(Player.prototype[name]);

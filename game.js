@@ -25,7 +25,7 @@ Game.prototype = {
 
   addConnection: function(socket) {
     var me;
-    socket.addEventListener('message', function(e) {
+    socket.addEventListener('message', util.wrapErrors(function(e) {
       var data = JSON.parse(e.data);
       var type = Object.keys(data)[0];
       data = data[type];
@@ -41,21 +41,21 @@ Game.prototype = {
           me.onChoice(data);
           break;
         case "chat":
-          alllog(me.name + ": " + data);
+          this.alllog(me.name + ": " + data);
           break;
         default:
           console.error("Not implemenented: " + type);
       }
-    }.bind(this));
+    }.bind(this)));
 
-    socket.addEventListener('close', function() {
+    socket.addEventListener('close', util.wrapErrors(function() {
       var player = players[socket.socketId_];
       if (player) {
         this.log(player.name + " disconnected");
         delete this.players[socket.socketId_];
         this.playersChanged();
       }
-    }.bind(this));
+    }.bind(this)));
   },
 
   alllog: function(text) {
@@ -64,3 +64,7 @@ Game.prototype = {
     }
   }
 }
+
+// Loudly fail so nobody can try-catch these errors
+for(var name in Game.prototype)
+  Game.prototype[name] = util.wrapErrors(Game.prototype[name]);

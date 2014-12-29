@@ -24,30 +24,30 @@ game.playersChanged = function() {
 
 if (http.Server && http.WebSocketServer) {
   isServer = true;
-  
+
   var server = new http.Server();
   var wsServer = new http.WebSocketServer(server);
   server.listen(port);
-  
-  server.addEventListener('request', function(req) {
+
+  server.addEventListener('request', util.wrapErrors(function(req) {
     var url = req.headers.url;
     if (url == '/')
       url = '/index.html';
     req.serveUrl(url);
     return true;
-  });
-  
-  wsServer.addEventListener('request', function(req) {
+  }));
+
+  wsServer.addEventListener('request', util.wrapErrors(function(req) {
     game.addConnection(req.accept());
     return true;
-  });
+  }));
 }
 
 
 document.addEventListener('DOMContentLoaded', function() {
   if(isServer) {
     var manageDiv = $("manage");
-    
+
     var startButton = document.createElement("button");
     startButton.innerHTML = "Start";
     startButton.disabled = true;
@@ -56,19 +56,19 @@ document.addEventListener('DOMContentLoaded', function() {
       startButton.disabled = true;
       game.start();
     };
-    
+
     var manageLog = document.createElement("textarea");
     manageLog.readOnly = true;
     manageLog.id = "manageLog";
-    
+
     manageDiv.appendChild(startButton);
     manageDiv.appendChild(document.createElement("p"));
     manageDiv.appendChild(manageLog);
   }
-  
-  setTimeout(function() { 
+
+  setTimeout(function() {
   slog("Port " + port);
-  var address = isServer ? 
+  var address = isServer ?
     "ws://localhost:" + port + "/" :
     window.location.href.replace("http", "ws");
   var name = $("name");
@@ -78,17 +78,17 @@ document.addEventListener('DOMContentLoaded', function() {
       name.disabled = true;
     }
   });
-  
+
   var input = $("input");
   var ws = new WebSocket(address);
-  ws.addEventListener("open", function() {
+  ws.addEventListener("open", util.wrapErrors(function() {
     log("Connected to Server");
-  });
-  ws.addEventListener('close', function() {
+  }));
+  ws.addEventListener('close', util.wrapErrors(function() {
     log('Connection to Server lost');
     input.disabled = true;
-  });
-  ws.addEventListener('message', function(e) {
+  }));
+  ws.addEventListener('message', util.wrapErrors(function(e) {
     var data = JSON.parse(e.data);
     var type = Object.keys(data)[0];
     data = data[type];
@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
       case "message":
         log(data);
         break;
-      case "choices": 
-        //TODO if server can send a stream of choices 
+      case "choices":
+        //TODO if server can send a stream of choices
         // then the client has to queue them
         var cc = data;
         var cDiv = $("choices");
@@ -113,13 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         break;
       default:
-        console.error("Not implemenented: " + type); 
+        console.error("Not implemenented: " + type);
     }
-  });
-  input.addEventListener('keydown', function(e) {
+  }));
+  input.addEventListener('keydown', util.wrapErrors(function(e) {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
       ws.send(JSON.stringify({chat: input.value}));
       input.value = '';
     }
-  });
+  }));
 }, isServer ? 100 : 0)}); //Mitigate race condition in starting webServer?
