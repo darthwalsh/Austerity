@@ -131,11 +131,19 @@ Player.prototype = {
     this.promptBuys();
   },
 
-  playCard: function(name) {
+  fromHand: function(name) {
     var hi = this.hand.map(function(c){return c.name;}).indexOf(name);
-      if (hi == -1)
-        console.error("Bad choice: " + choice);
-    var card = this.hand.splice(hi, 1)[0];
+    if (hi == -1)
+      return null;
+    return this.hand.splice(hi, 1)[0];
+  },
+
+  playCard: function(name) {
+    var card = this.fromHand(name);
+    if (card == null) {
+      console.error("Card doesn't exist: " + name);
+      return;
+    }
     card.play(this); //TODO will need to be async to handle cards with user interaction
     this.played.push(card);
   },

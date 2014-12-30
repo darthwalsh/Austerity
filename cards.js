@@ -45,6 +45,13 @@ var cards = {
     player.buys += 1;
     player.money += 1;
   }),
+  Moneylender: new Action(3, function(player) {
+    var copper = player.fromHand(cards.Copper.name);
+    if (copper) {
+      player.money += 3;
+      game.trash.push(copper);
+    }
+  }),
   Smithy: new Action(4, function(player) {
     player.draw(3);
   }),

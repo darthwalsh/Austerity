@@ -3,6 +3,7 @@ function Game(log, store) {
   this.store = new Store();
   this.players = {}; // socketId -> Player
   this.playersChanged = null;
+  this.trash = [];
 }
 
 Game.prototype = {
