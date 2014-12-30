@@ -52,7 +52,7 @@ var cards = {
     player.draw();
     player.actions += 2;
   }),
-  Workshop: new Action(3, function(player) {
+  Woodcutter: new Action(3, function(player) {
     player.buys  += 1;
     player.money += 2;
   })
