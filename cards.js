@@ -33,7 +33,7 @@ function Mine() {
       .filter(function(c){return c.kind=="treasure";})
       .map(function(c){return c.name;});
     if (!trashChoices.length) {
-      player.send({message: "No Treasures to trash"})
+      player.send({message: "No Treasures to trash"});
       callback();
       return;
     }
@@ -51,11 +51,63 @@ function Mine() {
         return;
       }
 
-      player.send({message: "Gain a Treasure:"})
+      player.send({message: "Gain a Treasure:"});
       player.sendChoice(gainChoices, function(gainChoice) {
         player.hand.push(cards[gainChoice]);
         game.store.bought(gainChoice);
         callback();
+      });
+    });
+  };
+}
+
+function ThroneRoom() {
+  this.kind = "action";
+  this.cost = 4;
+  this.play = function(player, callback) {
+    var actions = player.hand
+      .filter(function(c){return c.kind=="action";})
+      .map(function(c){return c.name;});
+    if (!actions.length) {
+      player.send({message: "No Actions to play"});
+      callback();
+      return;
+    }
+    player.send({message: "Pick an Action to double:"})
+    player.sendChoice(actions, function(action) {
+      var action = player.fromHand(action);
+      action.play(player, function() {
+        action.play(player, function() {
+          player.played.push(action);
+          callback();
+        });
+      });
+    });
+  };
+}
+
+function KingsCourt() {
+  this.kind = "action";
+  this.cost = 7;
+  this.play = function(player, callback) {
+    var actions = player.hand
+      .filter(function(c){return c.kind=="action";})
+      .map(function(c){return c.name;});
+    if (!actions.length) {
+      player.send({message: "No Actions to play"});
+      callback();
+      return;
+    }
+    player.send({message: "Pick an Action to triple:"})
+    player.sendChoice(actions, function(action) {
+      var action = player.fromHand(action);
+      action.play(player, function() {
+        action.play(player, function() {
+          action.play(player, function() {
+            player.played.push(action);
+            callback();
+        });
+        });
       });
     });
   };
@@ -75,6 +127,7 @@ var cards = {
     player.buys += 1;
     player.money += 2;
   }),
+  KingsCourt: new KingsCourt(),
   Laboratory: new Action(5, function(player) {
     player.draw(2);
     player.actions += 1;
@@ -96,6 +149,7 @@ var cards = {
   Smithy: new Action(4, function(player) {
     player.draw(3);
   }),
+  ThroneRoom: new ThroneRoom(),
   Village: new Action(3, function(player) {
     player.draw();
     player.actions += 2;
