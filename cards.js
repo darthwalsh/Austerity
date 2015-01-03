@@ -68,7 +68,7 @@ var cards = {
 
   Estate:  new Property(2, 1),
   Duchy:   new Property(5, 3),
-  Province: new Property(8, 3),
+  Province: new Property(8, 6),
 
   Festival: new Action(5, function(player) {
     player.actions += 2;
