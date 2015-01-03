@@ -86,7 +86,7 @@ var cards = {
     player.money += 1;
   }),
   Mine: new Mine(),
-  Moneylender: new Action(3, function(player) {
+  Moneylender: new Action(4, function(player) {
     var copper = player.fromHand(cards.Copper.name);
     if (copper) {
       player.money += 3;
