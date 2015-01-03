@@ -37,8 +37,6 @@ Player.prototype = {
       return;
     }
 
-    this.sendStatus();
-
     var actionCards = this.hand.filter(function(c){return c.kind=="action";});
     var choices = actionCards.map(function(c){return c.name;});
 
@@ -49,6 +47,8 @@ Player.prototype = {
     }
 
     choices.push("Done With Actions");
+
+    this.sendStatus();
 
     this.sendChoice(choices, this.receiveAction);
   },
@@ -71,8 +71,6 @@ Player.prototype = {
       return;
     }
 
-    this.sendStatus();
-
     var treasureCards = this.hand.filter(function(c){return c.kind=="treasure";});
 
     var choices = treasureCards.map(function(c){return c.name;});
@@ -93,6 +91,7 @@ Player.prototype = {
 
     choices.push("Done With Buys");
 
+    this.sendStatus();
     this.sendChoice(choices, this.receiveBuys);
   },
 
