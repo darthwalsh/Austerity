@@ -59,10 +59,8 @@ Player.prototype = {
       return;
     }
 
-    this.playCard(choice);
     --this.actions;
-
-    this.promptAction();
+    this.playCard(choice, this.promptAction.bind(this));
   },
 
   promptBuys: function() {
@@ -96,18 +94,13 @@ Player.prototype = {
   },
 
   receiveBuys: function(choice) {
-    var t = this;
-
     if (choice == "Done With Buys") {
       this.turnDone();
       return;
     }
 
     if (choice == "Play All Treasures") {
-      this.hand
-        .filter(function(c){return c.kind=="treasure";})
-        .forEach(function(c){t.playCard(c.name)});
-      this.promptBuys();
+      this.playAllTreasures();
       return;
     }
 
@@ -118,11 +111,19 @@ Player.prototype = {
       --this.buys;
 
       game.store.bought(buying);
+      this.promptBuys();
     } else {
-      this.playCard(choice);
+      this.playCard(choice, this.promptBuys.bind(this));
     }
+  },
 
-    this.promptBuys();
+  playAllTreasures: function() {
+    var treasures = this.hand.filter(function(c){return c.kind=="treasure";});
+    if (treasures.length) {
+      this.playCard(treasures[0].name, this.playAllTreasures.bind(this));
+    } else {
+      this.promptBuys();
+    }
   },
 
   fromHand: function(name) {
@@ -132,14 +133,17 @@ Player.prototype = {
     return this.hand.splice(hi, 1)[0];
   },
 
-  playCard: function(name) {
+  playCard: function(name, callback) {
+    var t = this;
     var card = this.fromHand(name);
     if (card == null) {
       console.error("Card doesn't exist: " + name);
       return;
     }
-    card.play(this); //TODO will need to be async to handle cards with user interaction
-    this.played.push(card);
+    card.play(this, function() {
+      t.played.push(card);
+      callback();
+    });
   },
 
   sendStatus: function() {

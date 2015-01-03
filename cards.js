@@ -4,8 +4,9 @@ function Treasure(cost, money) {
   this.kind = "treasure";
   this.cost = cost;
   this.money = money;
-  this.play = function(player) {
+  this.play = function(player, callback) {
     player.money += this.money;
+    callback();
   };
 }
 
@@ -18,7 +19,10 @@ function Property(cost, points) {
 function Action(cost, play) {
   this.kind = "action";
   this.cost = cost;
-  this.play = play;
+  this.play = function(player, callback) {
+    play(player);
+    callback();
+  }
 }
 
 var cards = {
