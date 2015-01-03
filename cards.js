@@ -25,6 +25,42 @@ function Action(cost, play) {
   }
 }
 
+function Mine() {
+  this.kind = "action";
+  this.cost = 5;
+  this.play = function(player, callback) {
+    var trashChoices = player.hand
+      .filter(function(c){return c.kind=="treasure";})
+      .map(function(c){return c.name;});
+    if (!trashChoices.length) {
+      player.send({message: "No Treasures to trash"})
+      callback();
+      return;
+    }
+    player.send({message: "Trash a Treasure:"})
+    player.sendChoice(trashChoices, function(trashChoice) {
+      var trash = player.fromHand(trashChoice);
+      game.trash.push(trash);
+
+      var gainChoices = game.store
+        .getAvailable(trash.cost+3)
+        .filter(function(c){return c.kind=="treasure";})
+        .map(function(c){return c.name;});
+      if (!gainChoices.length) {
+        callback();
+        return;
+      }
+
+      player.send({message: "Gain a Treasure:"})
+      player.sendChoice(gainChoices, function(gainChoice) {
+        player.hand.push(cards[gainChoice]);
+        game.store.bought(gainChoice);
+        callback();
+      });
+    });
+  };
+}
+
 var cards = {
   Copper: new Treasure(0, 1),
   Silver: new Treasure(3, 2),
@@ -49,6 +85,7 @@ var cards = {
     player.buys += 1;
     player.money += 1;
   }),
+  Mine: new Mine(),
   Moneylender: new Action(3, function(player) {
     var copper = player.fromHand(cards.Copper.name);
     if (copper) {
