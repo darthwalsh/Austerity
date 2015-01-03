@@ -50,13 +50,10 @@ Player.prototype = {
 
     choices.push("Done With Actions");
 
-    this.onChoice = this.receiveAction;
-    this.send({choices:choices});
+    this.sendChoice(choices, this.receiveAction);
   },
 
   receiveAction: function(choice) {
-    this.onChoice = null;
-
     if(choice == "Done With Actions") {
       this.promptBuys();
       return;
@@ -96,13 +93,11 @@ Player.prototype = {
 
     choices.push("Done With Buys");
 
-    this.onChoice = this.receiveBuys;
-    this.send({choices:choices});
+    this.sendChoice(choices, this.receiveBuys);
   },
 
   receiveBuys: function(choice) {
     var t = this;
-    this.onChoice = null;
 
     if (choice == "Done With Buys") {
       this.turnDone();
@@ -208,6 +203,15 @@ Player.prototype = {
 
   send: function(o) {
     this.socket.send(JSON.stringify(o));
+  },
+
+  sendChoice: function(choices, handleChoice) {
+    var t = this;
+    this.onChoice = function(choice) {
+      t.onChoice = null;
+      handleChoice.call(t, choice);
+    };
+    this.socket.send(JSON.stringify({choices:choices}));
   }
 }
 
