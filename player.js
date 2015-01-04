@@ -41,15 +41,15 @@ Player.prototype = {
     var choices = actionCards.map(function(c){return c.name;});
 
     if (!choices.length) {
-      this.send({message:"No actions to play"});
+      this.sendMessage("No Actions to play");
       this.promptBuys();
       return;
     }
 
     choices.push("Done With Actions");
 
-    this.sendStatus();
-
+    var message = "Actions: " + this.actions + " Money: " + this.money + " Buys: " + this.buys;
+    this.sendMessage(message);
     this.sendChoice(choices, this.receiveAction);
   },
 
@@ -60,6 +60,8 @@ Player.prototype = {
     }
 
     --this.actions;
+
+    game.alllog(this.name + " played " + choice);
     this.playCard(choice, this.promptAction.bind(this));
   },
 
@@ -82,14 +84,14 @@ Player.prototype = {
       game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name}));
 
     if (!choices.length) {
-      this.send({message:"Nothing to buy"});
+      this.sendMessage("Nothing to buy");
       this.turnDone();
       return;
     }
 
     choices.push("Done With Buys");
 
-    this.sendStatus();
+    this.sendMessage("Money: " + this.money + " Buys: " + this.buys);
     this.sendChoice(choices, this.receiveBuys);
   },
 
@@ -110,6 +112,7 @@ Player.prototype = {
       this.money -= buying.cost;
       --this.buys;
 
+      game.alllog(this.name + " bought " + buying.name);
       game.store.bought(buying);
       this.promptBuys();
     } else {
@@ -130,7 +133,9 @@ Player.prototype = {
     var hi = this.hand.map(function(c){return c.name;}).indexOf(name);
     if (hi == -1)
       return null;
-    return this.hand.splice(hi, 1)[0];
+    var card = this.hand.splice(hi, 1)[0];
+    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
+    return card;
   },
 
   playCard: function(name, callback) {
@@ -146,24 +151,12 @@ Player.prototype = {
     });
   },
 
-  sendStatus: function() {
-    var message = "Hand: " + this.hand.map(function(c){return c.name}).toString();
-    message += "\r\n";
-
-    message += "Actions: " + this.actions;
-    message += " Money: " + this.money;
-    message += " Buys: " + this.buys;
-
-    this.send({message: message});
-  },
-
   turnDone: function() {
     Array.prototype.push.apply(this.discardPile, this.hand.splice(0));
     Array.prototype.push.apply(this.discardPile, this.played.splice(0));
-    this.draw(5);
 
-    this.send({message: ""});
-    this.sendStatus();
+    this.sendMessage("");
+    this.draw(5);
 
     this.afterTurn();
   },
@@ -177,6 +170,7 @@ Player.prototype = {
       }
       this.hand.push(this.drawPile.pop());
     }
+    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
   },
 
   shuffle: function() {
@@ -208,13 +202,17 @@ Player.prototype = {
     this.socket.send(JSON.stringify(o));
   },
 
+  sendMessage: function(msg) {
+    this.send({message:msg});
+  },
+
   sendChoice: function(choices, handleChoice) {
     var t = this;
     this.onChoice = function(choice) {
       t.onChoice = null;
       handleChoice.call(t, choice);
     };
-    this.socket.send(JSON.stringify({choices:choices}));
+    this.send({choices:choices});
   }
 }
 

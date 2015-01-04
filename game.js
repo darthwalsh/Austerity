@@ -72,7 +72,7 @@ Game.prototype = {
 
   alllog: function(text) {
     for(var id in this.players) {
-      this.players[id].send({message: text});
+      this.players[id].sendMessage(text);
     }
   }
 }

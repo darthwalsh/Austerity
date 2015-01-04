@@ -33,11 +33,11 @@ function Mine() {
       .filter(function(c){return c.kind=="treasure";})
       .map(function(c){return c.name;});
     if (!trashChoices.length) {
-      player.send({message: "No Treasures to trash"});
+      player.sendMessage("No Treasures to trash");
       callback();
       return;
     }
-    player.send({message: "Trash a Treasure:"})
+    player.sendMessage("Trash a Treasure:");
     player.sendChoice(trashChoices, function(trashChoice) {
       var trash = player.fromHand(trashChoice);
       game.trash.push(trash);
@@ -51,7 +51,7 @@ function Mine() {
         return;
       }
 
-      player.send({message: "Gain a Treasure:"});
+      player.sendMessage("Gain a Treasure:");
       player.sendChoice(gainChoices, function(gainChoice) {
         player.hand.push(cards[gainChoice]);
         game.store.bought(gainChoice);
@@ -69,12 +69,13 @@ function ThroneRoom() {
       .filter(function(c){return c.kind=="action";})
       .map(function(c){return c.name;});
     if (!actions.length) {
-      player.send({message: "No Actions to play"});
+      player.sendMessage("No Actions to play");
       callback();
       return;
     }
-    player.send({message: "Pick an Action to double:"})
+    player.sendMessage("Pick an Action to double:");
     player.sendChoice(actions, function(action) {
+      game.alllog(player.name + " played " + action + " doubled!");
       var action = player.fromHand(action);
       action.play(player, function() {
         action.play(player, function() {
@@ -94,12 +95,13 @@ function KingsCourt() {
       .filter(function(c){return c.kind=="action";})
       .map(function(c){return c.name;});
     if (!actions.length) {
-      player.send({message: "No Actions to play"});
+      player.sendMessage("No Actions to play");
       callback();
       return;
     }
-    player.send({message: "Pick an Action to triple:"})
+    player.sendMessage("Pick an Action to triple:")
     player.sendChoice(actions, function(action) {
+      game.alllog(player.name + " played " + action + " tripled!!");
       var action = player.fromHand(action);
       action.play(player, function() {
         action.play(player, function() {
