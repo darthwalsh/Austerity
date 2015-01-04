@@ -78,14 +78,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return $("optional" + n).checked;
       }).map(function(n) {
         return cards[n];
-      }))
+      }));
 
+      var debugMode = $("debugMode").checked;
       while (manageDiv.firstChild !== manageLog)
         manageDiv.removeChild(manageDiv.firstChild);
-      game.start();
+      game.start(debugMode);
     };
 
     manageDiv.appendChild(startButton);
+
+    var debugBox = document.createElement("input");
+    debugBox.setAttribute("type", "checkbox");
+    debugBox.setAttribute("id", "debugMode");
+    manageDiv.appendChild(debugBox);
+
+    var debugLabel = document.createElement("label");
+    debugLabel.innerText = "Debug";
+    debugLabel.htmlFor = "debugMode";
+    manageDiv.appendChild(debugLabel);
 
     manageDiv.appendChild(document.createElement("br"));
 

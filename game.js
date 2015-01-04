@@ -12,11 +12,17 @@ Game.prototype = {
     return Object.keys(this.players).length >= 1;
   },
 
-  start: function() {
+  start: function(debugMode) {
     var t = this;
     ps = Object.keys(this.players).map(function(n){return t.players[n]});
-    var turn = 0;
 
+    if(debugMode) {
+      Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
+      ps[0].sendHand();
+      this.alllog("Player 0 is cheating ;)");
+    }
+
+    var turn = 0;
     var nextTurn = function() {
       if (t.store.gameOver()) {
         var result = "GAME OVER!!!\r\n";

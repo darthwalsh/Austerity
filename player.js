@@ -134,7 +134,7 @@ Player.prototype = {
     if (hi == -1)
       return null;
     var card = this.hand.splice(hi, 1)[0];
-    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
+    this.sendHand();
     return card;
   },
 
@@ -170,7 +170,7 @@ Player.prototype = {
       }
       this.hand.push(this.drawPile.pop());
     }
-    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
+    this.sendHand();
   },
 
   shuffle: function() {
@@ -204,6 +204,10 @@ Player.prototype = {
 
   sendMessage: function(msg) {
     this.send({message:msg});
+  },
+
+  sendHand: function() {
+    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
   },
 
   sendChoice: function(choices, handleChoice) {
