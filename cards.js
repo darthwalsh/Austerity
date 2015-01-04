@@ -25,6 +25,82 @@ function Action(cost, play) {
   }
 }
 
+function Cellar() {
+  this.kind = "action";
+  this.cost = 2;
+  this.play = function(player, callback) {
+    player.actions += 1;
+    var discarded = 0;
+    
+    var end = function() {
+      player.draw(discarded);
+      callback();
+    };
+    
+    var promptDiscard = function() {
+      var choices = player.hand.map(function(c){return c.name;});
+      if (!choices.length) {
+        end();
+        return;
+      }
+      choices.push("Done Discarding");
+
+      player.sendMessage("Discard cards:");
+      player.sendChoice(choices, function(choice) {
+        if(choice == "Done Discarding") {
+          end();
+          return;
+        }
+
+        var discard = player.fromHand(choice);
+        ++discarded;
+        player.discardPile.push(discard);
+
+        promptDiscard();
+      });
+    };
+
+    promptDiscard();
+  }
+}
+
+function Chapel() {
+  this.kind = "action";
+  this.cost = 2;
+  this.play = function(player, callback) {
+    var canTrash = 4;
+
+    var promptTrash = function() {
+      var trashChoices = player.hand.map(function(c){return c.name;});
+      if (!trashChoices.length) {
+        callback();
+        return;
+      }
+      trashChoices.push("Done Trashing");
+
+      player.sendMessage("Trash up to " + canTrash + " cards:");
+      player.sendChoice(trashChoices, function(choice) {
+        if(choice == "Done Trashing") {
+          callback();
+          return;
+        }
+
+        var trash = player.fromHand(choice);
+        game.trash.push(trash);
+        --canTrash;
+
+        if (canTrash) {
+          promptTrash();
+        } else {
+          callback();
+        }
+      });
+    };
+
+    promptTrash();
+  }
+}
+
 function Mine() {
   this.kind = "action";
   this.cost = 5;
@@ -124,6 +200,8 @@ var cards = {
   Duchy:   new Property(5, 3),
   Province: new Property(8, 6),
 
+  Cellar: new Cellar(),
+  Chapel: new Chapel(),
   Festival: new Action(5, function(player) {
     player.actions += 2;
     player.buys += 1;

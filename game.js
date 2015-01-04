@@ -19,7 +19,7 @@ Game.prototype = {
     if(debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
       ps[0].sendHand();
-      this.alllog("Player 0 is cheating ;)");
+      this.alllog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
     var turn = 0;
