@@ -7,6 +7,6 @@ var util = {
         console.log(err.stack);
         console.error(err.message);
       }
-    }
+    };
   }
-}
+};
