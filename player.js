@@ -162,7 +162,11 @@ Player.prototype = {
   },
 
   draw: function(n) {
-    for(var i = 0; i < (n || 1); ++i) {
+    if (typeof n === "undefined") {
+      n = 1;
+    }
+
+    for(var i = 0; i < n; ++i) {
       if(!this.drawPile.length) {
         this.shuffle();
         if(!this.drawPile.length)
