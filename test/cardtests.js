@@ -10,7 +10,10 @@ var defaultTest = {
   interactions: [],
   drawAfter: [],
   discardAfter: [],
-  handAfter: []
+  handAfter: [],
+
+  store: [],
+  trashAfter: []
 };
 
 var tests = {
@@ -67,14 +70,65 @@ var tests = {
     handAfter: ["Copper"]
   },
 
+  Chapel: {
+    hand: ["Copper", "Silver", "Gold", "Village", "Chapel"],
+    interactions: [
+      "Trash up to 4 cards:",
+      ["Copper", "Silver", "Gold", "Village", "Chapel", "Done Trashing"],
+      "Copper",
+      "Trash up to 3 cards:",
+      ["Silver", "Gold", "Village", "Chapel", "Done Trashing"],
+      "Gold",
+      "Trash up to 2 cards:",
+      ["Silver", "Village", "Chapel", "Done Trashing"],
+      "Village",
+      "Trash up to 1 cards:",
+      ["Silver", "Chapel", "Done Trashing"],
+      "Chapel"
+    ],
+    handAfter: ["Silver"],
+    trashAfter: ["Copper", "Gold", "Village", "Chapel"]
+  },
+
+  Chapel_Done: {
+    hand: ["Copper"],
+    interactions: [
+      "Trash up to 4 cards:",
+      ["Copper", "Done Trashing"],
+      "Done Trashing"
+    ],
+    handAfter: ["Copper"],
+    trashAfter: []
+  },
+
   Festival: {
     dActions: 2,
     dBuys: 1,
     dMoney: 2
+  },
+
+  Laboratory: {
+    dActions: 1,
+    draw: ["Copper", "Silver"],
+    hand: [],
+    drawAfter: [],
+    handAfter: ["Silver", "Copper"],
+  },
+
+  Mine: {
+    hand: ["Copper", "Silver"],
+    interactions: [
+      "Trash a Treasure:",
+      ["Copper", "Silver"],
+      "Silver",
+      "Gain a Treasure:",
+      ["Copper", "Silver", "Gold"],
+      "Gold"
+    ],
+    handAfter: ["Copper", "Gold"],
+    trashAfter: ["Silver"]
   }
 };
-
-var game = {trash: []};
 
 describe("cards", function () {
   for(var tName in tests) {
@@ -98,6 +152,9 @@ describe("cards", function () {
       };
 
       var interactionIndex = 0;
+
+      game = {trash: [], store: new Store()};
+      game.store.setIncluded(test.store);
 
       var p = new Player("Bot", {send: function(message) {
         var o = JSON.parse(message);
@@ -138,6 +195,11 @@ describe("cards", function () {
             .toEqual(test.discardAfter, "discardAfter");
           expect(p.hand.map(function(c) {return c.name;}))
             .toEqual(test.handAfter, "handAfter");
+
+          expect(game.trash.map(function(c) {return c.name;}))
+            .toEqual(test.trashAfter, "trashAfter");
+
+          expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
           called = true;
         });
