@@ -101,6 +101,24 @@ function Chapel() {
   }
 }
 
+var Festival = new Action(5, function(player) {
+  player.actions += 2;
+  player.buys += 1;
+  player.money += 2;
+});
+
+var Laboratory = new Action(5, function(player) {
+  player.draw(2);
+  player.actions += 1;
+});
+
+var Market = new Action(5, function(player) {
+  player.draw();
+  player.actions += 1;
+  player.buys += 1;
+  player.money += 1;
+});
+
 function Mine() {
   this.kind = "action";
   this.cost = 5;
@@ -137,6 +155,18 @@ function Mine() {
   };
 }
 
+var Moneylender = new Action(4, function(player) {
+  var copper = player.fromHand(cards.Copper.name);
+  if (copper) {
+    player.money += 3;
+    game.trash.push(copper);
+  }
+});
+
+var Smithy = new Action(4, function(player) {
+  player.draw(3);
+});
+
 function ThroneRoom() {
   this.kind = "action";
   this.cost = 4;
@@ -162,6 +192,16 @@ function ThroneRoom() {
     });
   };
 }
+
+var Village = new Action(3, function(player) {
+  player.draw();
+  player.actions += 2;
+});
+
+var Woodcutter = new Action(3, function(player) {
+  player.buys  += 1;
+  player.money += 2;
+});
 
 function KingsCourt() {
   this.kind = "action";
@@ -203,41 +243,15 @@ var cards = {
 
   Cellar: new Cellar(),
   Chapel: new Chapel(),
-  Festival: new Action(5, function(player) {
-    player.actions += 2;
-    player.buys += 1;
-    player.money += 2;
-  }),
-  Laboratory: new Action(5, function(player) {
-    player.draw(2);
-    player.actions += 1;
-  }),
-  Market: new Action(5, function(player) {
-    player.draw();
-    player.actions += 1;
-    player.buys += 1;
-    player.money += 1;
-  }),
+  Festival: Festival,
+  Laboratory: Laboratory,
+  Market: Market,
   Mine: new Mine(),
-  Moneylender: new Action(4, function(player) {
-    var copper = player.fromHand(cards.Copper.name);
-    if (copper) {
-      player.money += 3;
-      game.trash.push(copper);
-    }
-  }),
-  Smithy: new Action(4, function(player) {
-    player.draw(3);
-  }),
+  Moneylender: Moneylender,
+  Smithy: Smithy,
   ThroneRoom: new ThroneRoom(),
-  Village: new Action(3, function(player) {
-    player.draw();
-    player.actions += 2;
-  }),
-  Woodcutter: new Action(3, function(player) {
-    player.buys  += 1;
-    player.money += 2;
-  }),
+  Village: Village,
+  Woodcutter: Woodcutter,
 
   // Prosperity
   KingsCourt: new KingsCourt()
