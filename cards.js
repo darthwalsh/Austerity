@@ -163,6 +163,40 @@ var Moneylender = new Action(4, function(player) {
   }
 });
 
+function Remodel() {
+  this.kind = "action";
+  this.cost = 4;
+  this.play = function(player, callback) {
+    var trashChoices = player.hand
+      .map(function(c){return c.name;});
+    if (!trashChoices.length) {
+      player.sendMessage("No Cards to trash");
+      callback();
+      return;
+    }
+    player.sendMessage("Trash a card:");
+    player.sendChoice(trashChoices, function(trashChoice) {
+      var trash = player.fromHand(trashChoice);
+      game.trash.push(trash);
+
+      var gainChoices = game.store
+        .getAvailable(trash.cost+2)
+        .map(function(c){return c.name;});
+      if (!gainChoices.length) {
+        callback();
+        return;
+      }
+
+      player.sendMessage("Gain a card:");
+      player.sendChoice(gainChoices, function(gainChoice) {
+        player.discardPile.push(cards[gainChoice]);
+        game.store.bought(gainChoice);
+        callback();
+      });
+    });
+  };
+}
+
 var Smithy = new Action(4, function(player) {
   player.draw(3);
 });
@@ -248,6 +282,7 @@ var cards = {
   Market: Market,
   Mine: new Mine(),
   Moneylender: Moneylender,
+  Remodel: new Remodel(),
   Smithy: Smithy,
   ThroneRoom: new ThroneRoom(),
   Village: Village,

@@ -159,6 +159,21 @@ var tests = {
     trashAfter: []
   },
 
+  Remodel: {
+    hand: ["Copper", "Silver"],
+    interactions: [
+      "Trash a card:",
+      ["Copper", "Silver"],
+      "Copper",
+      "Gain a card:",
+      ["Copper", "Estate"],
+      "Estate"
+    ],
+    handAfter: ["Silver"],
+    discardAfter: ["Estate"],
+    trashAfter: ["Copper"]
+  },
+
   Smithy: {
     draw: ["Copper", "Silver", "Gold"],
     hand: [],
