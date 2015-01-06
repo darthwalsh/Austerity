@@ -37,6 +37,28 @@ var tests = {
     points: 6
   },
 
+  Adventurer: {
+    draw: ["Copper", "Village", "Silver"],
+    hand: [],
+    discardAfter: ["Village"],
+    handAfter: ["Silver", "Copper"],
+  },
+
+  Adventurer_None: {
+    draw: ["Village", "Estate", "Duchy"],
+    hand: [],
+    discardAfter: ["Duchy", "Estate", "Village"],
+    handAfter: [],
+  },
+
+  Adventurer_Extra: {
+    draw: ["Estate", "Copper", "Village", "Silver"],
+    hand: [],
+    drawAfter: ["Estate"],
+    discardAfter: ["Village"],
+    handAfter: ["Silver", "Copper"],
+  },
+
   Cellar: {
     dActions: 1,
     draw: ["Silver", "Village"],

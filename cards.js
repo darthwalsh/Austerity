@@ -25,6 +25,26 @@ function Action(cost, play) {
   }
 }
 
+var Adventurer = new Action(6, function(player) {
+  var treasures = 0;
+  var drawn = [];
+  while (treasures < 2 && player.drawPile.length) {
+    var card = player.drawPile.pop();
+    if (card.kind == "treasure") {
+      player.hand.push(card);
+      ++treasures;
+    } else {
+      drawn.push(card);
+    }
+
+    if (!player.drawPile.length)
+      player.shuffle();
+  }
+
+  player.sendHand();
+  Array.prototype.push.apply(player.discardPile, drawn);
+});
+
 function Cellar() {
   this.kind = "action";
   this.cost = 2;
@@ -275,6 +295,7 @@ var cards = {
   Duchy:   new Property(5, 3),
   Province: new Property(8, 6),
 
+  Adventurer: Adventurer,
   Cellar: new Cellar(),
   Chapel: new Chapel(),
   Festival: Festival,
