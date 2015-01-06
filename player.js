@@ -16,7 +16,7 @@ function Player(name, socket) {
   this.buys = null;
   this.played = null;
 
-  this.onChoice = null; //TODO should it be a stack?
+  this.onChoice = null;
   this.afterTurn = null;
 }
 

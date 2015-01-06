@@ -111,8 +111,16 @@ var tests = {
     dActions: 1,
     draw: ["Copper", "Silver"],
     hand: [],
-    drawAfter: [],
     handAfter: ["Silver", "Copper"],
+  },
+
+  Market: {
+    dActions: 1,
+    dBuys: 1,
+    dMoney: 1,
+    draw: ["Copper"],
+    hand: [],
+    handAfter: ["Copper"],
   },
 
   Mine: {
@@ -127,6 +135,98 @@ var tests = {
     ],
     handAfter: ["Copper", "Gold"],
     trashAfter: ["Silver"]
+  },
+
+  Mine_NoMoney: {
+    hand: [],
+    interactions: [
+      "No Treasures to trash"
+    ],
+    handAfter: []
+  },
+
+  Moneylender: {
+    dMoney: 3,
+    hand: ["Copper", "Copper"],
+    handAfter: ["Copper"],
+    trashAfter: ["Copper"]
+  },
+
+  Moneylender_NoCopper: {
+    dMoney: 0,
+    hand: ["Silver"],
+    handAfter: ["Silver"],
+    trashAfter: []
+  },
+
+  Smithy: {
+    draw: ["Copper", "Silver", "Gold"],
+    hand: [],
+    handAfter: ["Gold", "Silver", "Copper"],
+  },
+
+  Smithy_DoneDraw: {
+    draw: ["Copper"],
+    hand: [],
+    drawAfter: [],
+    handAfter: ["Copper"],
+  },
+
+  ThroneRoom: {
+    hand: ["Copper", "Mine"],
+    interactions: [
+      "Pick an Action to double:",
+      ["Mine"],
+      "Mine",
+      "ALL: Bot played Mine doubled!",
+      "Trash a Treasure:",
+      ["Copper"],
+      "Copper",
+      "Gain a Treasure:",
+      ["Copper", "Silver"],
+      "Silver",
+      "Trash a Treasure:",
+      ["Silver"],
+      "Silver",
+      "Gain a Treasure:",
+      ["Copper", "Silver", "Gold"],
+      "Gold"
+    ],
+    handAfter: ["Gold"],
+    trashAfter: ["Copper", "Silver"]
+  },
+
+  ThroneRoom_None: {
+    hand: ["Copper", "Silver"],
+    interactions: [
+      "No Actions to play"
+    ],
+    handAfter: ["Copper", "Silver"]
+  },
+
+  Village: {
+    dActions: 2,
+    draw: ["Copper"],
+    hand: [],
+    handAfter: ["Copper"],
+  },
+
+  Woodcutter: {
+    dBuys: 1,
+    dMoney: 2
+  },
+
+  KingsCourt: {
+    hand: ["Woodcutter", "Woodcutter"],
+    dBuys: 3,
+    dMoney: 6,
+    interactions: [
+      "Pick an Action to triple:",
+      ["Woodcutter", "Woodcutter"],
+      "Woodcutter",
+      "ALL: Bot played Woodcutter tripled!!",
+    ],
+    handAfter: ["Woodcutter"]
   }
 };
 
@@ -155,6 +255,10 @@ describe("cards", function () {
 
       game = {trash: [], store: new Store()};
       game.store.setIncluded(test.store);
+      game.alllog = function(message) {
+        var expected = test.interactions[interactionIndex++];
+        expect("ALL: " + message).toEqual(expected, "all log");
+      }
 
       var p = new Player("Bot", {send: function(message) {
         var o = JSON.parse(message);
@@ -169,13 +273,14 @@ describe("cards", function () {
           expect(o.choices).toEqual(expected);
           p.onChoice(test.interactions[interactionIndex++]);
         } else {
-          that.fail(Error("Not implemented: " + message));  //TODO
+          that.fail(Error("Not implemented: " + message));
         }
       }});
 
       p.money = init.money;
       p.actions = init.actions;
       p.buys = init.buys;
+      p.played = [];
 
       p.drawPile = test.draw.map(function(n) { return cards[n]; });
       p.discardPile = test.discard.map(function(n) { return cards[n]; });
@@ -212,4 +317,10 @@ describe("cards", function () {
       }
     };}(tName));
   }
+
+  it("tests all", function() {
+    for (var cardName in cards) {
+      expect(tests[cardName]).toBeDefined("tests " + cardName);
+    }
+  });
 });

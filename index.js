@@ -134,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         log(data);
         break;
       case "choices":
-        //TODO if server can send a stream of choices
-        // then the client has to queue them
         var cc = data;
         var cDiv = $("choices");
         for(var i = 0; i < cc.length; ++i) {

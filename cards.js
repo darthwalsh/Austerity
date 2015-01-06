@@ -31,12 +31,12 @@ function Cellar() {
   this.play = function(player, callback) {
     player.actions += 1;
     var discarded = 0;
-    
+
     var end = function() {
       player.draw(discarded);
       callback();
     };
-    
+
     var promptDiscard = function() {
       var choices = player.hand.map(function(c){return c.name;});
       if (!choices.length) {
@@ -192,6 +192,7 @@ function KingsCourt() {
 }
 
 var cards = {
+  // Core game
   Copper: new Treasure(0, 1),
   Silver: new Treasure(3, 2),
   Gold:   new Treasure(6, 3),
@@ -207,7 +208,6 @@ var cards = {
     player.buys += 1;
     player.money += 2;
   }),
-  KingsCourt: new KingsCourt(),
   Laboratory: new Action(5, function(player) {
     player.draw(2);
     player.actions += 1;
@@ -237,7 +237,10 @@ var cards = {
   Woodcutter: new Action(3, function(player) {
     player.buys  += 1;
     player.money += 2;
-  })
+  }),
+
+  // Prosperity
+  KingsCourt: new KingsCourt()
 };
 
 for(var name in cards) {
