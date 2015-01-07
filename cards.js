@@ -123,6 +123,13 @@ function Chapel() {
   }
 }
 
+var CouncilRoom = new Action(5, function(player) {
+  player.draw(4);
+  game.otherPlayers(player).forEach(function(p) {
+    p.draw();
+  })
+});
+
 var Festival = new Action(5, function(player) {
   player.actions += 2;
   player.buys += 1;
@@ -312,6 +319,7 @@ var cards = {
   Adventurer: Adventurer,
   Cellar: new Cellar(),
   Chapel: new Chapel(),
+  CouncilRoom: CouncilRoom,
   Festival: Festival,
   Gardens: new Gardens(),
   Laboratory: Laboratory,
@@ -324,7 +332,7 @@ var cards = {
   Village: Village,
   Woodcutter: Woodcutter,
 
-  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief CouncilRoom Library Witch
+  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief Library Witch
 
   // Prosperity
   KingsCourt: new KingsCourt(),

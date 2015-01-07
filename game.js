@@ -14,7 +14,7 @@ Game.prototype = {
 
   start: function(debugMode) {
     var t = this;
-    ps = Object.keys(this.players).map(function(n){return t.players[n]});
+    ps = Object.keys(this.players).map(function(n){return t.players[n];});
 
     if(debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
@@ -74,6 +74,13 @@ Game.prototype = {
         this.playersChanged();
       }
     }.bind(this)));
+  },
+
+  otherPlayers: function(player) {
+    var t = this;
+    return Object.keys(this.players)
+      .map(function(n){return t.players[n];})
+      .filter(function(p){return p.name !== player.name;});
   },
 
   alllog: function(text) {

@@ -12,6 +12,13 @@ var defaultTest = {
   discardAfter: [],
   handAfter: [],
 
+  p2draw: [],
+  p2discard: [],
+  p2hand: [],
+  p2drawAfter: [],
+  p2discardAfter: [],
+  p2handAfter: [],
+
   store: [],
   trashAfter: []
 };
@@ -126,6 +133,18 @@ var tests = {
     trashAfter: []
   },
 
+  CouncilRoom: {
+    draw: ["Village", "Estate", "Copper", "Silver", "Gold"],
+    hand: [],
+    drawAfter: ["Village"],
+    handAfter: ["Gold", "Silver", "Copper", "Estate"],
+
+    p2draw: ["Copper", "Silver"],
+    p2hand: [],
+    p2drawAfter: ["Copper"],
+    p2handAfter: ["Silver"]
+  },
+
   Festival: {
     dActions: 2,
     dBuys: 1,
@@ -215,8 +234,9 @@ var tests = {
   },
 
   Smithy: {
-    draw: ["Copper", "Silver", "Gold"],
+    draw: ["Village", "Copper", "Silver", "Gold"],
     hand: [],
+    drawAfter: ["Village"],
     handAfter: ["Gold", "Silver", "Copper"],
   },
 
@@ -308,13 +328,6 @@ describe("cards", function () {
 
       var interactionIndex = 0;
 
-      game = {trash: [], store: new Store()};
-      game.store.setIncluded(test.store);
-      game.alllog = function(message) {
-        var expected = test.interactions[interactionIndex++];
-        expect("ALL: " + message).toEqual(expected, "all log");
-      }
-
       var p = new Player("Bot", {send: function(message) {
         var o = JSON.parse(message);
         if (o.message && o.message.substring(0, 4) == "Hand")
@@ -332,6 +345,24 @@ describe("cards", function () {
         }
       }});
 
+      var p2 = new Player("Player2", {send: function(message) {
+        var o = JSON.parse(message);
+        if (o.message && o.message.substring(0, 4) == "Hand")
+          return;
+
+        that.fail(Error("Not implemented: " + message));
+      }});
+
+      game = {trash: [], store: new Store()};
+      game.store.setIncluded(test.store);
+      game.alllog = function(message) {
+        var expected = test.interactions[interactionIndex++];
+        expect("ALL: " + message).toEqual(expected, "all log");
+      };
+      game.otherPlayers = function(player) {
+        return [p2];
+      };
+
       p.money = init.money;
       p.actions = init.actions;
       p.buys = init.buys;
@@ -340,6 +371,10 @@ describe("cards", function () {
       p.drawPile = test.draw.map(function(n) { return cards[n]; });
       p.discardPile = test.discard.map(function(n) { return cards[n]; });
       p.hand = test.hand.map(function(n) { return cards[n]; });
+
+      p2.drawPile = test.p2draw.map(function(n) { return cards[n]; });
+      p2.discardPile = test.p2discard.map(function(n) { return cards[n]; });
+      p2.hand = test.p2hand.map(function(n) { return cards[n]; });
 
       var called = false;
 
@@ -360,6 +395,13 @@ describe("cards", function () {
             .toEqual(test.trashAfter, "trashAfter");
 
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
+
+          expect(p2.drawPile.map(function(c) {return c.name;}))
+            .toEqual(test.p2drawAfter, "p2drawAfter");
+          expect(p2.discardPile.map(function(c) {return c.name;}))
+            .toEqual(test.p2discardAfter, "p2discardAfter");
+          expect(p2.hand.map(function(c) {return c.name;}))
+            .toEqual(test.p2handAfter, "p2handAfter");
 
           called = true;
         });
