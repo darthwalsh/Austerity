@@ -129,6 +129,21 @@ var tests = {
     dMoney: 2
   },
 
+  Gardens: {
+    points: 1,
+    hand: ["Copper", "Silver", "Gold", "Village"],
+    draw: ["Copper", "Silver", "Gold"],
+    discard: ["Copper", "Silver", "Gold"]
+  },
+
+  Gardens_Rounding: {
+    points: 0,
+    hand: [
+      "Copper", "Silver", "Gold", "Village", "Smithy",
+      "Copper", "Silver", "Gold", "Village"
+    ]
+  },
+
   Laboratory: {
     dActions: 1,
     draw: ["Copper", "Silver"],
@@ -348,7 +363,7 @@ describe("cards", function () {
 
         expect(called).toBeTruthy("called");
       } else if(card.kind == "property") {
-        expect(card.points).toEqual(test.points, "points");
+        expect(card.getPoints(p)).toEqual(test.points, "points");
       } else {
         this.fail(Error("Not implemented: " + card.kind));
       }

@@ -198,8 +198,9 @@ Player.prototype = {
   },
 
   getPoints: function() {
+    var t = this;
     return this.drawPile.concat(this.discardPile).concat(this.hand).reduce(
-      function(a, c) { return a + (c.points || 0); }, 0);
+      function(a, c) { return a + (c.getPoints ? c.getPoints(t) : 0); }, 0);
   },
 
   send: function(o) {

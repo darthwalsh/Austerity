@@ -13,7 +13,9 @@ function Treasure(cost, money) {
 function Property(cost, points) {
   this.kind = "property";
   this.cost = cost;
-  this.points = points; //TODO function taking player?
+  this.getPoints = function(player) {
+    return points;
+  }
 }
 
 function Action(cost, play) {
@@ -126,6 +128,17 @@ var Festival = new Action(5, function(player) {
   player.buys += 1;
   player.money += 2;
 });
+
+function Gardens() {
+  this.kind = "property";
+  this.getPoints = function(player) {
+    var count = player.drawPile.length + player.discardPile.length + player.hand.length;
+    if (player.played)
+      count += player.played.length;
+
+    return Math.floor(count / 10);
+  }
+}
 
 var Laboratory = new Action(5, function(player) {
   player.draw(2);
@@ -299,6 +312,7 @@ var cards = {
   Cellar: new Cellar(),
   Chapel: new Chapel(),
   Festival: Festival,
+  Gardens: new Gardens(),
   Laboratory: Laboratory,
   Market: Market,
   Mine: new Mine(),
@@ -308,6 +322,8 @@ var cards = {
   ThroneRoom: new ThroneRoom(),
   Village: Village,
   Woodcutter: Woodcutter,
+
+  //TODO Moat Chancellor Bureaucrat Feast Gardens Militia Spy Thief Council Room Library Witch
 
   // Prosperity
   KingsCourt: new KingsCourt()
