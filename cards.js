@@ -131,6 +131,7 @@ var Festival = new Action(5, function(player) {
 
 function Gardens() {
   this.kind = "property";
+  this.cost = 4;
   this.getPoints = function(player) {
     var count = player.drawPile.length + player.discardPile.length + player.hand.length;
     if (player.played)
@@ -323,10 +324,11 @@ var cards = {
   Village: Village,
   Woodcutter: Woodcutter,
 
-  //TODO Moat Chancellor Bureaucrat Feast Gardens Militia Spy Thief Council Room Library Witch
+  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief CouncilRoom Library Witch
 
   // Prosperity
-  KingsCourt: new KingsCourt()
+  KingsCourt: new KingsCourt(),
+  Platinum: new Treasure(9, 5)
 };
 
 for(var name in cards) {

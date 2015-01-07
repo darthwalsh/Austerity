@@ -26,6 +26,9 @@ var tests = {
   Gold: {
     dMoney: 3
   },
+  Platinum: {
+    dMoney: 5
+  },
 
   Estate: {
     points: 1
