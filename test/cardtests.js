@@ -134,6 +134,7 @@ var tests = {
   },
 
   CouncilRoom: {
+    dBuys: 1,
     draw: ["Village", "Estate", "Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Village"],

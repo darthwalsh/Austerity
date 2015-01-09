@@ -124,6 +124,7 @@ function Chapel() {
 }
 
 var CouncilRoom = new Action(5, function(player) {
+  player.buys += 1;
   player.draw(4);
   game.otherPlayers(player).forEach(function(p) {
     p.draw();
