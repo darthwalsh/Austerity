@@ -141,11 +141,7 @@ function Gardens() {
   this.kind = "property";
   this.cost = 4;
   this.getPoints = function(player) {
-    var count = player.drawPile.length + player.discardPile.length + player.hand.length;
-    if (player.played)
-      count += player.played.length;
-
-    return Math.floor(count / 10);
+    return Math.floor(player.allCards().length / 10);
   }
 }
 

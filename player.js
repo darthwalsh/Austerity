@@ -199,8 +199,15 @@ Player.prototype = {
 
   getPoints: function() {
     var t = this;
-    return this.drawPile.concat(this.discardPile).concat(this.hand).reduce(
+    return this.allCards().reduce(
       function(a, c) { return a + (c.getPoints ? c.getPoints(t) : 0); }, 0);
+  },
+
+  allCards: function() {
+    var all = this.drawPile.concat(this.discardPile).concat(this.hand);
+    if (this.played)
+      return all.concat(this.played);
+    return all;
   },
 
   send: function(o) {

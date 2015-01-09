@@ -28,7 +28,12 @@ Game.prototype = {
         var result = "GAME OVER!!!\r\n";
         result += ps
           .sort(function(a, b) { return b.getPoints() - a.getPoints() }) //descending
-          .map(function(p){ return p.name + ": " + p.getPoints();})
+          .map(function(p){ return p.name + ": " + p.getPoints() + "\n    " +
+            p.allCards()
+              .filter(function(c){return c.kind=="property";})
+              .map(function(c){return c.name;})
+              .sort()
+              .toString();})
           .join("\r\n");
         t.alllog(result);
         return;
