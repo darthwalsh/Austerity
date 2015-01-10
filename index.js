@@ -109,13 +109,20 @@ document.addEventListener('DOMContentLoaded', function() {
     "ws://localhost:" + port + "/" :
     window.location.href.replace("http", "ws");
   var name = $("name");
+  var connectButton = $("connectButton");
+  var connect = function() {
+    ws.send(JSON.stringify({connect: name.value}));
+    name.disabled = true;
+    connectButton.disabled = true;
+    input.disabled = false;
+  };
+
   name.addEventListener('keydown', function(e) {
     if (e.keyCode == 13) {
-      ws.send(JSON.stringify({connect: name.value}));
-      name.disabled = true;
-      input.disabled = false;
+      connect();
     }
   });
+  connectButton.onclick = connect;
 
   var turnAlert = new Audio("assets/Computer Error Alert from SoundBible.com.mp3");
   var input = $("input");
