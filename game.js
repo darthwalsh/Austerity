@@ -22,7 +22,7 @@ Game.prototype = {
       this.alllog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
-    var turn = 0;
+    var turn = Math.floor(Math.random() * ps.length);
     var nextTurn = function() {
       if (t.store.gameOver()) {
         var result = "GAME OVER!!!\r\n";
