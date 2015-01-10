@@ -154,8 +154,12 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         $("log").scrollTop = $("log").scrollHeight;
-        if(document.hasFocus && !document.hasFocus())
+        if(document.hasFocus && !document.hasFocus()) {
+          // Audio need to reload sound before each play
+          // http://stackoverflow.com/a/8959342/771768
+          turnAlert.load();
           turnAlert.play();
+        }
         break;
       default:
         console.error("Not implemenented: " + type);
