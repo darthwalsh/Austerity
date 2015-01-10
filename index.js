@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.keyCode == 13) {
       ws.send(JSON.stringify({connect: name.value}));
       name.disabled = true;
+      input.disabled = false;
     }
   });
 
