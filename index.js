@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  var turnAlert = new Audio("assets/Computer Error Alert from SoundBible.com.mp3");
   var input = $("input");
   var ws = new WebSocket(address);
   ws.addEventListener("open", util.wrapErrors(function() {
@@ -153,6 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
         $("log").scrollTop = $("log").scrollHeight;
+        if(document.hasFocus && !document.hasFocus())
+          turnAlert.play();
         break;
       default:
         console.error("Not implemenented: " + type);
