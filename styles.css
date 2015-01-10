@@ -11,6 +11,10 @@ body {
   display: -webkit-box;
 }
 
+button {
+  height: 2em;
+}
+
 #log {
   -webkit-box-flex: 1;
 }
