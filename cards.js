@@ -275,6 +275,27 @@ var Woodcutter = new Action(3, function(player) {
   player.money += 2;
 });
 
+function Workshop() {
+  this.kind = "action";
+  this.cost = 4;
+  this.play = function(player, callback) {
+    var gainChoices = game.store
+        .getAvailable(4)
+        .map(function(c){return c.name;});
+      if (!gainChoices.length) {
+        callback();
+        return;
+      }
+
+      player.sendMessage("Gain a card:");
+      player.sendChoice(gainChoices, function(gainChoice) {
+        player.discardPile.push(cards[gainChoice]);
+        game.store.bought(gainChoice);
+        callback();
+      });
+  };
+}
+
 function KingsCourt() {
   this.kind = "action";
   this.cost = 7;
@@ -328,6 +349,7 @@ var cards = {
   ThroneRoom: new ThroneRoom(),
   Village: Village,
   Woodcutter: Woodcutter,
+  Workshop: new Workshop(),
 
   //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief Library Witch
 

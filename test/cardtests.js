@@ -292,6 +292,15 @@ var tests = {
     dMoney: 2
   },
 
+  Workshop: {
+    interactions: [
+      "Gain a card:",
+      ["Copper", "Silver", "Estate"],
+      "Estate"
+    ],
+    discardAfter: ["Estate"]
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,
