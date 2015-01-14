@@ -277,7 +277,7 @@ var Woodcutter = new Action(3, function(player) {
 
 function Workshop() {
   this.kind = "action";
-  this.cost = 4;
+  this.cost = 3;
   this.play = function(player, callback) {
     var gainChoices = game.store
         .getAvailable(4)
