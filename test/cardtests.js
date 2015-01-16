@@ -291,6 +291,28 @@ var tests = {
     handAfter: ["Copper"],
   },
 
+  Witch: {
+    store: ["Curse"],
+    draw: ["Village", "Estate", "Copper"],
+    hand: [],
+    drawAfter: ["Village"],
+    handAfter: ["Copper", "Estate"],
+
+    p2discard: [],
+    p2discardAfter: ["Curse"]
+  },
+
+  Witch_NoCurse: {
+    store: [],
+    draw: ["Village", "Estate", "Copper"],
+    hand: [],
+    drawAfter: ["Village"],
+    handAfter: ["Copper", "Estate"],
+
+    p2discard: [],
+    p2discardAfter: []
+  },
+
   Woodcutter: {
     dBuys: 1,
     dMoney: 2
@@ -368,7 +390,7 @@ describe("cards", function () {
       }});
 
       game = {trash: [], store: new Store()};
-      game.store.setIncluded(test.store);
+      game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
       game.alllog = function(message) {
         var expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");

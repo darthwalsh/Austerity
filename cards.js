@@ -278,6 +278,21 @@ var Village = new Action(3, function(player) {
   player.actions += 2;
 });
 
+function Witch() {
+  this.kind = "action"; //TODO attack
+  this.cost = 5;
+  this.play = function(player, callback) {
+    player.draw(2);
+    game.otherPlayers(player).forEach(function(p) {
+      if (game.store.counts["Curse"]) { //TODO moat?
+        p.discardPile.push(cards.Curse);
+        game.store.bought(cards.Curse);
+      }
+    });
+    callback();
+  };
+}
+
 var Woodcutter = new Action(3, function(player) {
   player.buys  += 1;
   player.money += 2;
@@ -357,10 +372,11 @@ var cards = {
   Smithy: Smithy,
   ThroneRoom: new ThroneRoom(),
   Village: Village,
+  Witch: new Witch(),
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief Library Witch
+  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief Library
 
   // Prosperity
   KingsCourt: new KingsCourt(),
