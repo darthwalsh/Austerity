@@ -46,6 +46,10 @@ var tests = {
   Province: {
     points: 6
   },
+  Curse: {
+    points: -1
+  },
+
 
   Adventurer: {
     draw: ["Copper", "Village", "Silver"],
@@ -417,7 +421,7 @@ describe("cards", function () {
         });
 
         expect(called).toBeTruthy("called");
-      } else if(card.kind == "property") {
+      } else if(card.kind == "property" || card.kind == "curse") {
         expect(card.getPoints(p)).toEqual(test.points, "points");
       } else {
         this.fail(Error("Not implemented: " + card.kind));

@@ -18,6 +18,14 @@ function Property(cost, points) {
   }
 }
 
+function Curse() {
+  this.kind = "curse";
+  this.cost = 0;
+  this.getPoints = function(player) {
+    return -1;
+  }
+}
+
 function Action(cost, play) {
   this.kind = "action";
   this.cost = cost;
@@ -330,9 +338,10 @@ var cards = {
   Silver: new Treasure(3, 2),
   Gold:   new Treasure(6, 3),
 
-  Estate:  new Property(2, 1),
-  Duchy:   new Property(5, 3),
+  Estate:   new Property(2, 1),
+  Duchy:    new Property(5, 3),
   Province: new Property(8, 6),
+  Curse:    new Curse(),
 
   Adventurer: Adventurer,
   Cellar: new Cellar(),
