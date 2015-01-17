@@ -12,15 +12,20 @@ var defaultTest = {
   discardAfter: [],
   handAfter: [],
 
-  p2draw: [],
-  p2discard: [],
-  p2hand: [],
-  p2drawAfter: [],
-  p2discardAfter: [],
-  p2handAfter: [],
+  others: [],
 
   store: [],
   trashAfter: []
+};
+
+var defaultOthers = {
+  draw: [],
+  discard: [],
+  hand: [],
+  interactions: [],
+  drawAfter: [],
+  discardAfter: [],
+  handAfter: []
 };
 
 var tests = {
@@ -144,10 +149,22 @@ var tests = {
     drawAfter: ["Village"],
     handAfter: ["Gold", "Silver", "Copper", "Estate"],
 
-    p2draw: ["Copper", "Silver"],
-    p2hand: [],
-    p2drawAfter: ["Copper"],
-    p2handAfter: ["Silver"]
+    others: [{
+      draw: ["Copper", "Silver"],
+      hand: [],
+      drawAfter: ["Copper"],
+      handAfter: ["Silver"]
+    }]
+  },
+
+  CouncilRoom_Self: {
+    dBuys: 1,
+    draw: ["Village", "Estate", "Copper", "Silver", "Gold"],
+    hand: [],
+    drawAfter: ["Village"],
+    handAfter: ["Gold", "Silver", "Copper", "Estate"],
+
+    others: []
   },
 
   Festival: {
@@ -214,7 +231,41 @@ var tests = {
     hand: [],
     drawAfter: ["Copper"],
     handAfter: ["Gold", "Silver"]
-  }, //TODO attack interaction
+  },
+
+  Witch_Moat: {
+    store: ["Curse"],
+    draw: ["Estate", "Copper"],
+    handAfter: ["Copper", "Estate"],
+
+    others: [{
+      hand: ["Moat"],
+      discard: [],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Moat"
+      ],
+      handAfter: ["Moat"],
+      discardAfter: []
+    }]
+  },
+
+  Witch_MoatAttacked: {
+    store: ["Curse"],
+    draw: ["Estate", "Copper"],
+    handAfter: ["Copper", "Estate"],
+
+    others: [{
+      hand: ["Moat"],
+      discard: [],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Get Attacked"
+      ],
+      handAfter: ["Moat"],
+      discardAfter: ["Curse"]
+    }]
+  },
 
   Moneylender: {
     dMoney: 3,
@@ -305,19 +356,46 @@ var tests = {
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
-    p2discard: [],
-    p2discardAfter: ["Curse"]
+    others: [{
+      discard: [],
+      discardAfter: ["Curse"]
+    }]
   },
 
   Witch_NoCurse: {
     store: [],
+    draw: ["Estate", "Copper"],
+    handAfter: ["Copper", "Estate"],
+
+    others: [{
+      discard: [],
+      discardAfter: []
+    }]
+  },
+
+  Witch_Self: {
     draw: ["Village", "Estate", "Copper"],
     hand: [],
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
-    p2discard: [],
-    p2discardAfter: []
+    others: []
+  },
+
+  Witch_Many: {
+    store: ["Curse"],
+    draw: ["Village", "Estate", "Copper"],
+    hand: [],
+    drawAfter: ["Village"],
+    handAfter: ["Copper", "Estate"],
+
+    others: [{
+      discard: [],
+      discardAfter: ["Curse"]
+    }, {
+      discard: [],
+      discardAfter: ["Curse"]
+    }]
   },
 
   Woodcutter: {
@@ -362,6 +440,11 @@ describe("cards", function () {
       for(var key in defaultTest) {
         test[key] = test[key] || defaultTest[key];
       }
+      for(var i = 0; i < test.others.length; ++i) {
+        for(var oKey in defaultOthers) {
+          test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
+        }
+      }
 
       var init = {
         actions: 3,
@@ -388,13 +471,32 @@ describe("cards", function () {
         }
       }});
 
-      var p2 = new Player("Player2", {send: function(message) {
-        var o = JSON.parse(message);
-        if (o.message && o.message.substring(0, 4) == "Hand")
-          return;
+      var otherCount = 0;
+      var others = test.others.map(function(testOther) {
+        var oInterationIndex = 0;
+        var oP = new Player("Other#" + otherCount++, {send: function(message) {
+          var o = JSON.parse(message);
+          if (o.message && o.message.substring(0, 4) == "Hand")
+            return;
 
-        that.fail(Error("Not implemented: " + message));
-      }});
+          var expected = testOther.interactions[oInterationIndex++];
+
+          if (o.message) {
+            expect(o.message).toEqual(expected);
+          } else if (o.choices) {
+            expect(o.choices).toEqual(expected);
+
+            oP.onChoice(testOther.interactions[oInterationIndex++]);
+          } else {
+            that.fail(Error("Not implemented: " + message));
+          }
+        }});
+        oP.TestIndex = otherCount - 1;
+        oP.drawPile = testOther.draw.map(function(n) { return cards[n]; });
+        oP.discardPile = testOther.discard.map(function(n) { return cards[n]; });
+        oP.hand = testOther.hand.map(function(n) { return cards[n]; });
+        return oP;
+      });
 
       game = {trash: [], store: new Store()};
       game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
@@ -402,9 +504,7 @@ describe("cards", function () {
         var expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
       };
-      game.otherPlayers = function(player) {
-        return [p2];
-      };
+      game.otherPlayers = function(player) { return others; };
 
       p.money = init.money;
       p.actions = init.actions;
@@ -414,10 +514,6 @@ describe("cards", function () {
       p.drawPile = test.draw.map(function(n) { return cards[n]; });
       p.discardPile = test.discard.map(function(n) { return cards[n]; });
       p.hand = test.hand.map(function(n) { return cards[n]; });
-
-      p2.drawPile = test.p2draw.map(function(n) { return cards[n]; });
-      p2.discardPile = test.p2discard.map(function(n) { return cards[n]; });
-      p2.hand = test.p2hand.map(function(n) { return cards[n]; });
 
       var called = false;
 
@@ -439,12 +535,14 @@ describe("cards", function () {
 
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
-          expect(p2.drawPile.map(function(c) {return c.name;}))
-            .toEqual(test.p2drawAfter, "p2drawAfter");
-          expect(p2.discardPile.map(function(c) {return c.name;}))
-            .toEqual(test.p2discardAfter, "p2discardAfter");
-          expect(p2.hand.map(function(c) {return c.name;}))
-            .toEqual(test.p2handAfter, "p2handAfter");
+          others.forEach(function(o) {
+            expect(o.drawPile.map(function(c) {return c.name;}))
+              .toEqual(test.others[o.TestIndex].drawAfter, o.name + " drawAfter");
+            expect(o.discardPile.map(function(c) {return c.name;}))
+              .toEqual(test.others[o.TestIndex].discardAfter, o.name + " discardAfter");
+            expect(o.hand.map(function(c) {return c.name;}))
+              .toEqual(test.others[o.TestIndex].handAfter, o.name + " handAfter");
+          });
 
           called = true;
         });

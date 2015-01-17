@@ -397,7 +397,7 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Moat Chancellor Bureaucrat Feast Militia Spy Thief Library
+  //TODO Chancellor Bureaucrat Feast Militia Spy Thief Library
 
   // Prosperity
   KingsCourt: new KingsCourt(),
