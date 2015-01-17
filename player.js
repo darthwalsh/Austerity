@@ -197,6 +197,19 @@ Player.prototype = {
     this.discardPile = [];
   },
 
+  attacked: function(attack, callback) {
+    if(this.hand.filter(function(c){return c.name=="Moat";}).length) {
+      this.sendChoice(["Moat", "Get Attacked"], function(choice) {
+        if(choice == "Get Attacked")
+          attack();
+        callback();
+      });
+    } else {
+      attack();
+      callback();
+    }
+  },
+
   getPoints: function() {
     var t = this;
     return this.allCards().reduce(
@@ -224,6 +237,8 @@ Player.prototype = {
 
   sendChoice: function(choices, handleChoice) {
     var t = this;
+    if (this.onChoice)
+      console.error("onChoice wasn't empty!!!");
     this.onChoice = function(choice) {
       t.onChoice = null;
       handleChoice.call(t, choice);

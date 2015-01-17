@@ -201,6 +201,15 @@ function Mine() {
   };
 }
 
+function Moat() {
+  this.kind = "action"; //TODO reaction
+  this.cost = 2;
+  this.play = function(player, callback) {
+    player.draw(2);
+    callback();
+  };
+}
+
 var Moneylender = new Action(4, function(player) {
   var copper = player.fromHand(cards.Copper.name);
   if (copper) {
@@ -283,13 +292,24 @@ function Witch() {
   this.cost = 5;
   this.play = function(player, callback) {
     player.draw(2);
-    game.otherPlayers(player).forEach(function(p) {
-      if (game.store.counts["Curse"]) { //TODO moat?
-        p.discardPile.push(cards.Curse);
-        game.store.bought(cards.Curse);
-      }
+    var others = game.otherPlayers(player);
+    if(!others.length) {
+      callback();
+      return;
+    }
+    var attacksLeft = others.length;
+    others.forEach(function(p) {
+      p.attacked(function() {
+          if (game.store.counts["Curse"]) {
+            p.discardPile.push(cards.Curse);
+            game.store.bought(cards.Curse);
+          }
+        }, function() {
+          if(!--attacksLeft) {
+            callback();
+          }
+        });
     });
-    callback();
   };
 }
 
@@ -367,6 +387,7 @@ var cards = {
   Laboratory: Laboratory,
   Market: Market,
   Mine: new Mine(),
+  Moat: new Moat(),
   Moneylender: Moneylender,
   Remodel: new Remodel(),
   Smithy: Smithy,

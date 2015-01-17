@@ -209,6 +209,13 @@ var tests = {
     handAfter: []
   },
 
+  Moat: {
+    draw: ["Copper", "Silver", "Gold"],
+    hand: [],
+    drawAfter: ["Copper"],
+    handAfter: ["Gold", "Silver"]
+  }, //TODO attack interaction
+
   Moneylender: {
     dMoney: 3,
     hand: ["Copper", "Copper"],
