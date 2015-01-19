@@ -93,6 +93,22 @@ function Cellar() {
   }
 }
 
+function Chancellor() {
+  this.kind = "action";
+  this.cost = 3;
+  this.play = function(player, callback) {
+    player.money += 2;
+
+    player.sendMessage("Discard your draw pile?");
+    player.sendChoice(["No", "Discard"], function(choice) {
+      if (choice == "Discard") {
+        Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
+      }
+      callback();
+    });
+  };
+}
+
 function Chapel() {
   this.kind = "action";
   this.cost = 2;
@@ -424,6 +440,7 @@ var cards = {
 
   Adventurer: Adventurer,
   Cellar: new Cellar(),
+  Chancellor: new Chancellor(),
   Chapel: new Chapel(),
   CouncilRoom: CouncilRoom,
   Festival: Festival,
@@ -442,7 +459,7 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Chancellor Bureaucrat Feast Militia Spy Thief
+  //TODOBureaucrat Feast Militia Spy Thief
 
   // Prosperity
   KingsCourt: new KingsCourt(),

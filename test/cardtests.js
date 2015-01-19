@@ -119,6 +119,29 @@ var tests = {
     handAfter: ["Copper"]
   },
 
+  Chancellor: {
+    dMoney: 2,
+    draw: ["Silver"],
+    interactions: [
+      "Discard your draw pile?",
+      ["No", "Discard"],
+      "Discard"
+    ],
+    drawAfter: [],
+    discardAfter: ["Silver"]
+  },
+
+  Chancellor_No: {
+    dMoney: 2,
+    draw: ["Silver"],
+    interactions: [
+      "Discard your draw pile?",
+      ["No", "Discard"],
+      "No"
+    ],
+    drawAfter: ["Silver"],
+  },
+
   Chapel: {
     hand: ["Copper", "Silver", "Gold", "Village", "Chapel"],
     interactions: [
