@@ -88,6 +88,25 @@ Game.prototype = {
       .filter(function(p){return p.name !== player.name;});
   },
 
+  parallelAttack: function(player, attackThenCallBack, callback) {
+    var others = this.otherPlayers(player);
+    var attacksLeft = others.length;
+    if(!attacksLeft) {
+      callback();
+      return;
+    }
+    var attackDone = function() {
+      if(! --attacksLeft) {
+        callback();
+      }
+    };
+    others.forEach(function(p) {
+      p.attacked(function() {
+        attackThenCallBack(p, attackDone);
+      }, done);
+    });
+  }
+
   alllog: function(text) {
     for(var id in this.players) {
       this.players[id].sendMessage(text);

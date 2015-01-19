@@ -225,6 +225,29 @@ var Market = new Action(5, function(player) {
   player.money += 1;
 });
 
+function Militia() {
+  this.kind = ["action", "attack"];
+  this.cost = 5;
+  this.play = function(player, callback) {
+    player.money += 2;
+
+    var attack = function(p, attackDone) {
+      if(p.hand.length > 3) {
+        var discardChoices = p.hand.map(function(c){return c.name;});
+        p.sendMessage("Discard down to three cards:");
+        p.sendChoice(discardChoices, function(choice) {
+          p.discardPile.push(p.fromHand(choice));
+          attack(p, attackDone);
+        })
+      } else {
+        attackDone();
+      }
+    };
+
+    game.parallelAttack(player, attack, callback);
+  };
+}
+
 function Mine() {
   this.kind = "action";
   this.cost = 5;
@@ -352,24 +375,13 @@ function Witch() {
   this.cost = 5;
   this.play = function(player, callback) {
     player.draw(2);
-    var others = game.otherPlayers(player);
-    if(!others.length) {
-      callback();
-      return;
-    }
-    var attacksLeft = others.length;
-    others.forEach(function(p) {
-      p.attacked(function() {
-          if (game.store.counts["Curse"]) {
-            p.discardPile.push(cards.Curse);
-            game.store.bought(cards.Curse);
-          }
-        }, function() {
-          if(!--attacksLeft) {
-            callback();
-          }
-        });
-    });
+    game.parallelAttack(player, function(p, attackDone) {
+      if (game.store.counts["Curse"]) {
+        p.discardPile.push(cards.Curse);
+        game.store.bought(cards.Curse);
+      }
+      attackDone();
+    }, callback);
   };
 }
 
@@ -449,6 +461,7 @@ var cards = {
   Library: new Library(),
   Market: Market,
   Mine: new Mine(),
+  Militia: new Militia(),
   Moat: new Moat(),
   Moneylender: Moneylender,
   Remodel: new Remodel(),
@@ -459,7 +472,7 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Bureaucrat Feast Militia Spy Thief
+  //TODO Bureaucrat Feast Spy Thief
 
   // Prosperity
   KingsCourt: new KingsCourt(),

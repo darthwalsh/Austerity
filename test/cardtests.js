@@ -261,6 +261,33 @@ var tests = {
     handAfter: ["Copper"],
   },
 
+  Militia: {
+    dMoney: 2,
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
+      interactions: [
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Village", "Smithy"],
+        "Village",
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Smithy"],
+        "Silver"
+      ],
+      handAfter: ["Copper", "Gold", "Smithy"],
+      discardAfter: ["Village", "Silver"]
+    }]
+  },
+
+  Militia_FewCards: {
+    dMoney: 2,
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold"],
+      handAfter: ["Copper", "Silver", "Gold"]
+    }]
+  },
+
   Mine: {
     hand: ["Copper", "Silver"],
     interactions: [
@@ -321,6 +348,34 @@ var tests = {
       ],
       handAfter: ["Moat"],
       discardAfter: ["Curse"]
+    }]
+  },
+
+  Militia_Moat: {
+    dMoney: 2,
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Moat"
+      ],
+      handAfter: ["Copper", "Silver", "Gold", "Village", "Moat"],
+      discardAfter: []
+    },{
+      hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Get Attacked",
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Village", "Moat"],
+        "Village",
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Moat"],
+        "Silver"
+      ],
+      handAfter: ["Copper", "Gold", "Moat"],
+      discardAfter: ["Village", "Silver"]
     }]
   },
 
@@ -530,25 +585,25 @@ describe("cards", function () {
 
       var otherCount = 0;
       var others = test.others.map(function(testOther) {
-        var oInterationIndex = 0;
         var oP = new Player("Other#" + otherCount++, {send: function(message) {
           var o = JSON.parse(message);
           if (o.message && o.message.substring(0, 4) == "Hand")
             return;
 
-          var expected = testOther.interactions[oInterationIndex++];
+          var expected = testOther.interactions[oP.InteractionIndex++];
 
           if (o.message) {
             expect(o.message).toEqual(expected);
           } else if (o.choices) {
             expect(o.choices).toEqual(expected);
 
-            oP.onChoice(testOther.interactions[oInterationIndex++]);
+            oP.onChoice(testOther.interactions[oP.InteractionIndex++]);
           } else {
             that.fail(Error("Not implemented: " + message));
           }
         }});
         oP.TestIndex = otherCount - 1;
+        oP.InteractionIndex = 0;
         oP.drawPile = testOther.draw.map(function(n) { return cards[n]; });
         oP.discardPile = testOther.discard.map(function(n) { return cards[n]; });
         oP.hand = testOther.hand.map(function(n) { return cards[n]; });
@@ -562,6 +617,24 @@ describe("cards", function () {
         expect("ALL: " + message).toEqual(expected, "all log");
       };
       game.otherPlayers = function(player) { return others; };
+      game.parallelAttack = function(player, attackThenCallBack, callback) {
+        var others = this.otherPlayers(player);
+        var attacksLeft = others.length;
+        if(!attacksLeft) {
+          callback();
+          return;
+        }
+        var attackDone = function() {
+          if(! --attacksLeft) {
+            callback();
+          }
+        };
+        others.forEach(function(p) {
+          p.attacked(function() {
+            attackThenCallBack(p, attackDone);
+          }, attackDone);
+        });
+      };
 
       p.money = init.money;
       p.actions = init.actions;
@@ -593,18 +666,23 @@ describe("cards", function () {
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
           others.forEach(function(o) {
+            var otherTest = test.others[o.TestIndex];
+
             expect(o.drawPile.map(function(c) {return c.name;}))
-              .toEqual(test.others[o.TestIndex].drawAfter, o.name + " drawAfter");
+              .toEqual(otherTest.drawAfter, o.name + " drawAfter");
             expect(o.discardPile.map(function(c) {return c.name;}))
-              .toEqual(test.others[o.TestIndex].discardAfter, o.name + " discardAfter");
+              .toEqual(otherTest.discardAfter, o.name + " discardAfter");
             expect(o.hand.map(function(c) {return c.name;}))
-              .toEqual(test.others[o.TestIndex].handAfter, o.name + " handAfter");
+              .toEqual(otherTest.handAfter, o.name + " handAfter");
+
+            expect(o.InteractionIndex).toEqual(otherTest.interactions.length, o.name + " all interactions used");
           });
 
+          expect(called).toBeFalsy("called twice");
           called = true;
         });
 
-        expect(called).toBeTruthy("called");
+        expect(called).toBeTruthy("wasn't called");
       } else if(card.ofKind("property") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
       } else {

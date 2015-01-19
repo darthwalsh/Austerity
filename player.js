@@ -203,16 +203,17 @@ Player.prototype = {
     this.discardPile = [];
   },
 
-  attacked: function(attack, callback) {
+  attacked: function(attackThenCallBack, callback) {
     if(this.hand.filter(function(c){return c.name=="Moat";}).length) {
       this.sendChoice(["Moat", "Get Attacked"], function(choice) {
-        if(choice == "Get Attacked")
-          attack();
-        callback();
+        if(choice == "Get Attacked") {
+          attackThenCallBack();
+        } else {
+          callback();
+        }
       });
     } else {
-      attack();
-      callback();
+      attackThenCallBack();
     }
   },
 
