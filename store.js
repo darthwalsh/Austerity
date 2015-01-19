@@ -1,12 +1,12 @@
 function Store() {
   var DEFAULT_TREASURE_COUNT = 30;
-  var DEFAULT_PROPERTY_COUNT = 8;
+  var DEFAULT_PROPERTY_COUNT = 8; //TODO make correct
 
   this.default = [
     cards.Copper, cards.Silver, cards.Gold,
     cards.Estate, cards.Duchy, cards.Province];
   this.counts = this.default.reduce(function(o, c) {
-    o[c.name] = c.kind == "treasure" ? DEFAULT_TREASURE_COUNT : DEFAULT_PROPERTY_COUNT;
+    o[c.name] = c.ofKind("treasure") ? DEFAULT_TREASURE_COUNT : DEFAULT_PROPERTY_COUNT;
     return o;
   }, {});
   this.included = null;

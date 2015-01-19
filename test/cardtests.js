@@ -574,7 +574,7 @@ describe("cards", function () {
 
       var called = false;
 
-      if(card.kind == "action" || card.kind == "treasure") {
+      if(card.ofKind("action") || card.ofKind("treasure")) {
         card.play(p, function() {
           expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
           expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
@@ -605,10 +605,10 @@ describe("cards", function () {
         });
 
         expect(called).toBeTruthy("called");
-      } else if(card.kind == "property" || card.kind == "curse") {
+      } else if(card.ofKind("property") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
       } else {
-        this.fail(Error("Not implemented: " + card.kind));
+        this.fail(Error("Not implemented kind: " + card.name));
       }
     };}(tName));
   }

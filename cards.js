@@ -42,7 +42,7 @@ var Adventurer = new Action(6, function(player) {
     var card = player.fromDraw();
     if (!card)
       break;
-    if (card.kind == "treasure") {
+    if (card.ofKind("treasure")) {
       player.hand.push(card);
       ++treasures;
     } else {
@@ -198,7 +198,7 @@ function Library() {
         return;
       }
 
-      if (card.kind == "action") {
+      if (card.ofKind("action")) {
         player.sendMessage("Gain Action or set aside:");
         player.sendChoice([card.name, "Set Aside"], function (choice) {
           if(choice == "Set Aside") {
@@ -230,7 +230,7 @@ function Mine() {
   this.cost = 5;
   this.play = function(player, callback) {
     var trashChoices = player.hand
-      .filter(function(c){return c.kind=="treasure";})
+      .filter(function(c){return c.ofKind("treasure");})
       .map(function(c){return c.name;});
     if (!trashChoices.length) {
       player.sendMessage("No Treasures to trash");
@@ -244,7 +244,7 @@ function Mine() {
 
       var gainChoices = game.store
         .getAvailable(trash.cost+3)
-        .filter(function(c){return c.kind=="treasure";})
+        .filter(function(c){return c.ofKind("treasure");})
         .map(function(c){return c.name;});
       if (!gainChoices.length) {
         callback();
@@ -262,7 +262,7 @@ function Mine() {
 }
 
 function Moat() {
-  this.kind = "action"; //TODO reaction
+  this.kind = ["action", "reaction"];
   this.cost = 2;
   this.play = function(player, callback) {
     player.draw(2);
@@ -321,7 +321,7 @@ function ThroneRoom() {
   this.cost = 4;
   this.play = function(player, callback) {
     var actions = player.hand
-      .filter(function(c){return c.kind=="action";})
+      .filter(function(c){return c.ofKind("action");})
       .map(function(c){return c.name;});
     if (!actions.length) {
       player.sendMessage("No Actions to play");
@@ -348,7 +348,7 @@ var Village = new Action(3, function(player) {
 });
 
 function Witch() {
-  this.kind = "action"; //TODO attack
+  this.kind = ["action", "attack"];
   this.cost = 5;
   this.play = function(player, callback) {
     player.draw(2);
@@ -404,7 +404,7 @@ function KingsCourt() {
   this.cost = 7;
   this.play = function(player, callback) {
     var actions = player.hand
-      .filter(function(c){return c.kind=="action";})
+      .filter(function(c){return c.ofKind("action");})
       .map(function(c){return c.name;});
     if (!actions.length) {
       player.sendMessage("No Actions to play");
@@ -459,16 +459,41 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODOBureaucrat Feast Militia Spy Thief
+  //TODO Bureaucrat Feast Militia Spy Thief
 
   // Prosperity
   KingsCourt: new KingsCourt(),
   Platinum: new Treasure(9, 5)
 };
 
+var toString = function() { return this.name; };
+
 for(var name in cards) {
-  cards[name].name = name;
-  cards[name].toString = function() { return this.name; };
+  var c = cards[name];
+
+  c.name = name;
+  c.toString = toString;
+
+  if (c.kind) {
+    if (typeof c.kind == "string") {
+      c.ofKind = (function(k) {
+        return function(other) { return other == k; };
+      })(c.kind);
+    } else if (Array.isArray(c.kind)) {
+      c.ofKind = (function(ks) {
+        return function(other) { return ks.indexOf(other) != -1; };
+      })(c.kind);
+    } else {
+      console.error("Card " + name + " kind type not defined");
+    }
+    delete c.kind;
+  } else  {
+    console.error("Card " + name + " kind not defined");
+  }
+
+  if (typeof c.cost == "undefined") {
+    console.error("Card " + name + " cost not defined");
+  }
 }
 
 return cards;

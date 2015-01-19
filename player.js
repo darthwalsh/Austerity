@@ -37,7 +37,7 @@ Player.prototype = {
       return;
     }
 
-    var actionCards = this.hand.filter(function(c){return c.kind=="action";});
+    var actionCards = this.hand.filter(function(c){return c.ofKind("action");});
     var choices = actionCards.map(function(c){return c.name;});
 
     if (!choices.length) {
@@ -71,7 +71,7 @@ Player.prototype = {
       return;
     }
 
-    var treasureCards = this.hand.filter(function(c){return c.kind=="treasure";});
+    var treasureCards = this.hand.filter(function(c){return c.ofKind("treasure");});
 
     var choices = treasureCards.map(function(c){return c.name;});
 
@@ -121,7 +121,7 @@ Player.prototype = {
   },
 
   playAllTreasures: function() {
-    var treasures = this.hand.filter(function(c){return c.kind=="treasure";});
+    var treasures = this.hand.filter(function(c){return c.ofKind("treasure");});
     if (treasures.length) {
       this.playCard(treasures[0].name, this.playAllTreasures.bind(this));
     } else {

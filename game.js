@@ -30,7 +30,7 @@ Game.prototype = {
           .sort(function(a, b) { return b.getPoints() - a.getPoints() }) //descending
           .map(function(p){ return p.name + ": " + p.getPoints() + "\n    " +
             p.allCards()
-              .filter(function(c){return c.kind=="property"||c.kind=="curse";})
+              .filter(function(c){return c.ofKind("property")||c.ofKind("curse");})
               .map(function(c){return c.name;})
               .sort()
               .toString();})
