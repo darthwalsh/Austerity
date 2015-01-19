@@ -203,6 +203,32 @@ var tests = {
     handAfter: ["Silver", "Copper"],
   },
 
+  Library: {
+    draw: ["Village", "Gold", "Smithy"],
+    hand: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver"],
+    interactions: [
+      "Gain Action or set aside:",
+      ["Smithy", "Set Aside"],
+      "Set Aside"
+    ],
+    drawAfter: ["Village"],
+    handAfter: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver", "Gold"],
+    discardAfter: ["Smithy"]
+  },
+
+  Library_Out: {
+    draw: [],
+    discard: ["Village"],
+    hand: [],
+    interactions: [
+      "Gain Action or set aside:",
+      ["Village", "Set Aside"],
+      "Village"
+    ],
+    handAfter: ["Village"],
+    discardAfter: []
+  },
+
   Market: {
     dActions: 1,
     dBuys: 1,

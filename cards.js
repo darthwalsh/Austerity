@@ -157,6 +157,50 @@ var Laboratory = new Action(5, function(player) {
   player.actions += 1;
 });
 
+function Library() {
+  this.kind = "action";
+  this.cost = 5;
+  this.play = function(player, callback) {
+    var aside = [];
+
+    var end = function() {
+      Array.prototype.push.apply(player.discardPile, aside);
+      player.sendHand();
+      callback();
+    };
+
+    var promptTake = function() {
+      if (player.hand.length >= 7) {
+        end();
+        return;
+      }
+
+      var card = player.fromDraw();
+
+      if (!card) {
+        end();
+        return;
+      }
+
+      if (card.kind == "action") {
+        player.sendMessage("Gain Action or set aside:");
+        player.sendChoice([card.name, "Set Aside"], function (choice) {
+          if(choice == "Set Aside") {
+            aside.push(card);
+          } else {
+            player.hand.push(card);
+          }
+          promptTake();
+        });
+      } else {
+        player.hand.push(card);
+        promptTake();
+      }
+    };
+
+    promptTake();
+  };
+}
 
 var Market = new Action(5, function(player) {
   player.draw();
@@ -385,6 +429,7 @@ var cards = {
   Festival: Festival,
   Gardens: new Gardens(),
   Laboratory: Laboratory,
+  Library: new Library(),
   Market: Market,
   Mine: new Mine(),
   Moat: new Moat(),
@@ -397,7 +442,7 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Chancellor Bureaucrat Feast Library Militia Spy Thief
+  //TODO Chancellor Bureaucrat Feast Militia Spy Thief
 
   // Prosperity
   KingsCourt: new KingsCourt(),
