@@ -138,6 +138,15 @@ Player.prototype = {
     return card;
   },
 
+  fromDraw: function() {
+    if(!this.drawPile.length) {
+        this.shuffle();
+        if(!this.drawPile.length)
+          return null;
+      }
+    return this.drawPile.pop();
+  },
+
   playCard: function(name, callback) {
     var t = this;
     var card = this.fromHand(name);
@@ -167,12 +176,9 @@ Player.prototype = {
     }
 
     for(var i = 0; i < n; ++i) {
-      if(!this.drawPile.length) {
-        this.shuffle();
-        if(!this.drawPile.length)
-          return;
-      }
-      this.hand.push(this.drawPile.pop());
+      var card = this.fromDraw();
+      if (card)
+        this.hand.push(card);
     }
     this.sendHand();
   },

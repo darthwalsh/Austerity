@@ -70,6 +70,14 @@ var tests = {
     handAfter: [],
   },
 
+  Adventurer_Discard: {
+    draw: [],
+    discard: ["Copper"],
+    hand: [],
+    discardAfter: [],
+    handAfter: ["Copper"],
+  },
+
   Adventurer_Extra: {
     draw: ["Estate", "Copper", "Village", "Silver"],
     hand: [],

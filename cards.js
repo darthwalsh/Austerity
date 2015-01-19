@@ -38,17 +38,16 @@ function Action(cost, play) {
 var Adventurer = new Action(6, function(player) {
   var treasures = 0;
   var drawn = [];
-  while (treasures < 2 && player.drawPile.length) {
-    var card = player.drawPile.pop();
+  while (treasures < 2) {
+    var card = player.fromDraw();
+    if (!card)
+      break;
     if (card.kind == "treasure") {
       player.hand.push(card);
       ++treasures;
     } else {
       drawn.push(card);
     }
-
-    if (!player.drawPile.length)
-      player.shuffle();
   }
 
   player.sendHand();
@@ -157,6 +156,7 @@ var Laboratory = new Action(5, function(player) {
   player.draw(2);
   player.actions += 1;
 });
+
 
 var Market = new Action(5, function(player) {
   player.draw();
@@ -397,7 +397,7 @@ var cards = {
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
 
-  //TODO Chancellor Bureaucrat Feast Militia Spy Thief Library
+  //TODO Chancellor Bureaucrat Feast Library Militia Spy Thief
 
   // Prosperity
   KingsCourt: new KingsCourt(),
