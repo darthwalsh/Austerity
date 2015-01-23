@@ -54,6 +54,33 @@ var Adventurer = new Action(6, function(player) {
   Array.prototype.push.apply(player.discardPile, drawn);
 });
 
+function Bureaucrat() {
+  this.kind = ["action", "attack"];
+  this.cost = 4;
+  this.play = function(player, callback) {
+    if (game.store.counts["Silver"]) {
+      player.discardPile.push(cards.Silver);
+      game.store.bought(cards.Silver);
+    }
+
+    game.parallelAttack(player, function(p, attackDone) {
+      var discardChoices = p.hand
+        .filter(function(c){return c.ofKind("property");})
+        .map(function(c){return c.name;});
+
+     if(discardChoices.length) {
+        p.sendMessage("Put a Victory card onto your deck:");
+        p.sendChoice(discardChoices, function(choice) {
+          p.drawPile.push(p.fromHand(choice));
+          attackDone();
+        })
+      } else {
+        attackDone();
+      }
+    }, callback);
+  };
+}
+
 function Cellar() {
   this.kind = "action";
   this.cost = 2;
@@ -475,6 +502,7 @@ var cards = {
   Curse:       new Curse(),
 
   Adventurer:  Adventurer,
+  Bureaucrat:  new Bureaucrat(),
   Cellar:      new Cellar(),
   Chancellor:  new Chancellor(),
   Chapel:      new Chapel(),
@@ -497,7 +525,7 @@ var cards = {
   Woodcutter:  Woodcutter,
   Workshop:    new Workshop(),
 
-  //TODO       Bureaucrat Spy Thief
+  //TODO       Spy Thief
 
   // Prosperity
   KingsCourt:   new KingsCourt(),

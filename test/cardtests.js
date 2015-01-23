@@ -87,6 +87,30 @@ var tests = {
     handAfter: ["Silver", "Copper"],
   },
 
+  Bureaucrat: {
+    discardAfter: ["Silver"],
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold", "Estate", "Duchy"],
+      interactions: [
+        "Put a Victory card onto your deck:",
+        ["Estate", "Duchy"],
+        "Estate"
+      ],
+      handAfter: ["Copper", "Silver", "Gold", "Duchy"],
+      drawAfter: ["Estate"]
+    }]
+  },
+
+  Bureaucrat_NoVictory: {
+    discardAfter: ["Silver"],
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold"],
+      handAfter: ["Copper", "Silver", "Gold"]
+    }]
+  },
+
   Cellar: {
     dActions: 1,
     draw: ["Silver", "Village"],
@@ -582,10 +606,16 @@ describe("cards", function () {
       }
       var card = cards[tName];
 
+      for(var testKey in test) {
+        expect(defaultTest[testKey]).toBeDefined("typo key " + testKey);
+      }
       for(var key in defaultTest) {
         test[key] = test[key] || defaultTest[key];
       }
       for(var i = 0; i < test.others.length; ++i) {
+        for(var testOtherkey in test.others[i]) {
+          expect(defaultTest[testOtherkey]).toBeDefined("typo other key " + testOtherkey);
+        }
         for(var oKey in defaultOthers) {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
         }
