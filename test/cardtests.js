@@ -11,6 +11,7 @@ var defaultTest = {
   drawAfter: [],
   discardAfter: [],
   handAfter: [],
+  playedAfter: [],
 
   others: [],
 
@@ -196,6 +197,36 @@ var tests = {
     handAfter: ["Gold", "Silver", "Copper", "Estate"],
 
     others: []
+  },
+
+  Feast: {
+    interactions: [
+      "Gain a card:",
+      ["Copper", "Silver", "Estate", "Duchy"],
+      "Copper"
+    ],
+    handAfter: [],
+    discardAfter: ["Copper"]
+  },
+
+  ThroneRoom_Feast_OneTrash: {
+    hand: ["Feast"],
+    interactions: [
+      "Pick an Action to double:",
+      ["Feast"],
+      "Feast",
+      "ALL: Bot played Feast doubled!",
+      "Gain a card:",
+      ["Copper", "Silver", "Estate", "Duchy"],
+      "Copper",
+      "Gain a card:",
+      ["Copper", "Silver", "Estate", "Duchy"],
+      "Silver"
+    ],
+    handAfter: [],
+    discardAfter: ["Copper", "Silver"],
+    playedAfter: [],
+    trashAfter: ["Feast"]
   },
 
   Festival: {
@@ -443,6 +474,7 @@ var tests = {
       "Gold"
     ],
     handAfter: ["Gold"],
+    playedAfter: ["Mine"],
     trashAfter: ["Copper", "Silver"]
   },
 
@@ -534,7 +566,8 @@ var tests = {
       "Woodcutter",
       "ALL: Bot played Woodcutter tripled!!",
     ],
-    handAfter: ["Woodcutter"]
+    handAfter: ["Woodcutter"],
+    playedAfter: ["Woodcutter"]
   }
 };
 
@@ -659,6 +692,9 @@ describe("cards", function () {
             .toEqual(test.discardAfter, "discardAfter");
           expect(p.hand.map(function(c) {return c.name;}))
             .toEqual(test.handAfter, "handAfter");
+
+          expect(p.played.map(function(c) {return c.name;}))
+            .toEqual(test.playedAfter, "playedAfter");
 
           expect(game.trash.map(function(c) {return c.name;}))
             .toEqual(test.trashAfter, "trashAfter");

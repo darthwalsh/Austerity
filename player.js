@@ -155,9 +155,17 @@ Player.prototype = {
       return;
     }
     card.play(this, function() {
-      t.played.push(card);
+      this.afterPlay(card);
       callback();
     });
+  },
+
+  afterPlay: function(card) {
+    if (card.afterPlay) {
+      card.afterPlay(this);
+    } else {
+      this.played.push(card);
+    }
   },
 
   turnDone: function() {

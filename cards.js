@@ -154,6 +154,30 @@ var CouncilRoom = new Action(5, function(player) {
   })
 });
 
+function Feast() {
+  this.kind = "action";
+  this.cost = 5;
+  this.play = function(player, callback) {
+    var gainChoices = game.store
+        .getAvailable(5)
+        .map(function(c){return c.name;});
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
+
+    player.sendMessage("Gain a card:");
+    player.sendChoice(gainChoices, function(gainChoice) {
+      player.discardPile.push(cards[gainChoice]);
+      game.store.bought(gainChoice);
+      callback();
+    });
+  };
+  this.afterPlay = function(player) {
+    game.trash.push(this);
+  };
+}
+
 var Festival = new Action(5, function(player) {
   player.actions += 2;
   player.buys += 1;
@@ -357,7 +381,7 @@ function ThroneRoom() {
       var action = player.fromHand(action);
       action.play(player, function() {
         action.play(player, function() {
-          player.played.push(action);
+          player.afterPlay(action);
           callback();
         });
       });
@@ -430,7 +454,7 @@ function KingsCourt() {
       action.play(player, function() {
         action.play(player, function() {
           action.play(player, function() {
-            player.played.push(action);
+            player.afterPlay(action);
             callback();
         });
         });
@@ -441,42 +465,43 @@ function KingsCourt() {
 
 var cards = {
   // Core game
-  Copper: new Treasure(0, 1),
-  Silver: new Treasure(3, 2),
-  Gold:   new Treasure(6, 3),
+  Copper:      new Treasure(0, 1),
+  Silver:      new Treasure(3, 2),
+  Gold:        new Treasure(6, 3),
 
-  Estate:   new Property(2, 1),
-  Duchy:    new Property(5, 3),
-  Province: new Property(8, 6),
-  Curse:    new Curse(),
+  Estate:      new Property(2, 1),
+  Duchy:       new Property(5, 3),
+  Province:    new Property(8, 6),
+  Curse:       new Curse(),
 
-  Adventurer: Adventurer,
-  Cellar: new Cellar(),
-  Chancellor: new Chancellor(),
-  Chapel: new Chapel(),
+  Adventurer:  Adventurer,
+  Cellar:      new Cellar(),
+  Chancellor:  new Chancellor(),
+  Chapel:      new Chapel(),
   CouncilRoom: CouncilRoom,
-  Festival: Festival,
-  Gardens: new Gardens(),
-  Laboratory: Laboratory,
-  Library: new Library(),
-  Market: Market,
-  Mine: new Mine(),
-  Militia: new Militia(),
-  Moat: new Moat(),
+  Feast:       new Feast(),
+  Festival:    Festival,
+  Gardens:     new Gardens(),
+  Laboratory:  Laboratory,
+  Library:     new Library(),
+  Market:      Market,
+  Mine:        new Mine(),
+  Militia:     new Militia(),
+  Moat:        new Moat(),
   Moneylender: Moneylender,
-  Remodel: new Remodel(),
-  Smithy: Smithy,
-  ThroneRoom: new ThroneRoom(),
-  Village: Village,
-  Witch: new Witch(),
-  Woodcutter: Woodcutter,
-  Workshop: new Workshop(),
+  Remodel:     new Remodel(),
+  Smithy:      Smithy,
+  ThroneRoom:  new ThroneRoom(),
+  Village:     Village,
+  Witch:       new Witch(),
+  Woodcutter:  Woodcutter,
+  Workshop:    new Workshop(),
 
-  //TODO Bureaucrat Feast Spy Thief
+  //TODO       Bureaucrat Spy Thief
 
   // Prosperity
-  KingsCourt: new KingsCourt(),
-  Platinum: new Treasure(9, 5)
+  KingsCourt:   new KingsCourt(),
+  Platinum:     new Treasure(9, 5)
 };
 
 var toString = function() { return this.name; };
