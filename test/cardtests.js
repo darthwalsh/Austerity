@@ -646,8 +646,16 @@ describe("cards", function () {
         }
       }});
 
+      game = new Game(console.error, new Store());
+      game.players[0] = p;
+      game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
+      game.alllog = function(message) {
+        var expected = test.interactions[interactionIndex++];
+        expect("ALL: " + message).toEqual(expected, "all log");
+      };
+
       var otherCount = 0;
-      var others = test.others.map(function(testOther) {
+      test.others.forEach(function(testOther) {
         var oP = new Player("Other#" + otherCount++, {send: function(message) {
           var o = JSON.parse(message);
           if (o.message && o.message.substring(0, 4) == "Hand")
@@ -670,16 +678,9 @@ describe("cards", function () {
         oP.drawPile = testOther.draw.map(function(n) { return cards[n]; });
         oP.discardPile = testOther.discard.map(function(n) { return cards[n]; });
         oP.hand = testOther.hand.map(function(n) { return cards[n]; });
-        return oP;
-      });
 
-      game = new Game(console.error, new Store());
-      game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
-      game.alllog = function(message) {
-        var expected = test.interactions[interactionIndex++];
-        expect("ALL: " + message).toEqual(expected, "all log");
-      };
-      game.otherPlayers = function(player) { return others; };
+        game.players[10 + otherCount] = oP;
+      });
 
       p.money = init.money;
       p.actions = init.actions;
@@ -713,7 +714,7 @@ describe("cards", function () {
 
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
-          others.forEach(function(o) {
+          game.otherPlayers(p).forEach(function(o) {
             var otherTest = test.others[o.TestIndex];
 
             expect(o.drawPile.map(function(c) {return c.name;}))

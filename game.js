@@ -14,7 +14,7 @@ Game.prototype = {
 
   start: function(debugMode) {
     var t = this;
-    ps = Object.keys(this.players).map(function(n){return t.players[n];});
+    ps = this.allPlayers();
 
     if(debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
@@ -81,11 +81,14 @@ Game.prototype = {
     }.bind(this)));
   },
 
-  otherPlayers: function(player) {
+  allPlayers: function() {
     var t = this;
     return Object.keys(this.players)
-      .map(function(n){return t.players[n];})
-      .filter(function(p){return p.name !== player.name;});
+      .map(function(n){return t.players[n];});
+  },
+
+  otherPlayers: function(player) {
+    return this.allPlayers().filter(function(p){return p.name !== player.name;});
   },
 
   parallelAttack: function(player, attackThenCallBack, callback) {
@@ -105,6 +108,35 @@ Game.prototype = {
         attackThenCallBack(p, attackDone);
       }, attackDone);
     });
+  },
+
+  sequentialAttack: function(player, attackThenCallBack, callback) {
+    var ps = this.allPlayers();
+
+    if(ps.length == 1) {
+      callback();
+      return;
+    }
+
+    var pi = ps.indexOf(player);
+    var i = (pi + 1) % ps.length;
+
+    var attackDone = function() {
+      i = (i + 1) % ps.length;
+
+      if (i == pi) {
+        callback();
+        return;
+      }
+
+      ps[i].attacked(function() {
+        attackThenCallBack(ps[i], attackDone);
+      }, attackDone);
+    };
+
+    ps[i].attacked(function() {
+      attackThenCallBack(ps[i], attackDone);
+    }, attackDone);
   },
 
   alllog: function(text) {
