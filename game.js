@@ -103,9 +103,9 @@ Game.prototype = {
     others.forEach(function(p) {
       p.attacked(function() {
         attackThenCallBack(p, attackDone);
-      }, done);
+      }, attackDone);
     });
-  }
+  },
 
   alllog: function(text) {
     for(var id in this.players) {

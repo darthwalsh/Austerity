@@ -155,7 +155,7 @@ Player.prototype = {
       return;
     }
     card.play(this, function() {
-      this.afterPlay(card);
+      t.afterPlay(card);
       callback();
     });
   },

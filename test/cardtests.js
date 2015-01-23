@@ -673,31 +673,13 @@ describe("cards", function () {
         return oP;
       });
 
-      game = {trash: [], store: new Store()};
+      game = new Game(console.error, new Store());
       game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
       game.alllog = function(message) {
         var expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
       };
       game.otherPlayers = function(player) { return others; };
-      game.parallelAttack = function(player, attackThenCallBack, callback) {
-        var others = this.otherPlayers(player);
-        var attacksLeft = others.length;
-        if(!attacksLeft) {
-          callback();
-          return;
-        }
-        var attackDone = function() {
-          if(! --attacksLeft) {
-            callback();
-          }
-        };
-        others.forEach(function(p) {
-          p.attacked(function() {
-            attackThenCallBack(p, attackDone);
-          }, attackDone);
-        });
-      };
 
       p.money = init.money;
       p.actions = init.actions;
