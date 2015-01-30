@@ -390,6 +390,36 @@ var Smithy = new Action(4, function(player) {
   player.draw(3);
 });
 
+function Spy() {
+  this.kind = ["action", "attack"];
+  this.cost = 4;
+  this.play = function(player, callback) {
+    player.actions += 1;
+    player.draw();
+
+    var attack = function(p, attackDone) {
+      var card = p.fromDraw();
+      if(!card) {
+        attackDone();
+        return;
+      }
+      var name = p.name == player.name ? "Your" : (p.name + "'s");
+      player.sendMessage("Put back on deck or discard " + name + " " + card.name);
+      player.sendChoice(["Put back", "Discard"], function(choice) {
+        if(choice == "Put back") {
+          p.drawPile.push(card);
+        } else {
+          p.discardPile.push(card);
+        }
+        attackDone();
+      });
+    };
+    game.sequentialAttack(player, attack, function() {
+      attack(player, callback);
+    });
+  }
+}
+
 function Thief() {
   this.kind = ["action", "attack"];
   this.cost = 4;
@@ -579,14 +609,13 @@ var cards = {
   Moneylender: Moneylender,
   Remodel:     new Remodel(),
   Smithy:      Smithy,
+  Spy:         new Spy(),
   Thief:       new Thief(),
   ThroneRoom:  new ThroneRoom(),
   Village:     Village,
   Witch:       new Witch(),
   Woodcutter:  Woodcutter,
   Workshop:    new Workshop(),
-
-  //TODO       Spy
 
   // Prosperity
   KingsCourt:   new KingsCourt(),

@@ -477,6 +477,47 @@ var tests = {
     handAfter: ["Copper"],
   },
 
+  Spy: {
+    dActions: 1,
+    draw: ["Moneylender", "Copper", "Silver"],
+
+    interactions: [
+      "Put back on deck or discard Other#1's Thief",
+      ["Put back", "Discard"],
+      "Discard",
+      "Put back on deck or discard Other#2's Copper",
+      ["Put back", "Discard"],
+      "Put back",
+      "Put back on deck or discard Your Copper",
+      ["Put back", "Discard"],
+      "Discard"
+    ],
+
+    handAfter: ["Silver"],
+    drawAfter: ["Moneylender"],
+    discardAfter: ["Copper"],
+
+    others: [{
+      draw: []
+    }, {
+      draw: ["Smithy", "Thief"],
+      drawAfter: ["Smithy"],
+      discardAfter: ["Thief"]
+    }, {
+      draw: ["Copper"],
+      drawAfter: ["Copper"]
+    }]
+  },
+
+  Spy_Solo: {
+    dActions: 1,
+    draw: [],
+
+    interactions: [],
+
+    others: []
+  },
+
   Thief: {
     interactions: [
       "Trash or steal a Treasure:",
