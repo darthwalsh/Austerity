@@ -478,16 +478,12 @@ var tests = {
   },
 
   Thief: {
-    dActions: 1,
-    draw: ["Village"],
-
     interactions: [
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver"
     ],
 
-    handAfter: ["Village"],
     discardAfter: ["Silver"],
 
     others: [{
@@ -497,8 +493,6 @@ var tests = {
   },
 
   Thief_NonTreasure: {
-    dActions: 1,
-
     interactions: [],
 
     others: [{
@@ -508,7 +502,6 @@ var tests = {
   },
 
   Thief_SequentialMultiple: {
-    dActions: 1,
     interactions: [
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
@@ -531,15 +524,12 @@ var tests = {
   },
 
   Thief_SequentialSolo: {
-    dActions: 1,
     interactions: [],
 
     others: []
   },
 
   ThroneRoom_Thief: {
-    dActions: 2,
-    draw: ["Village", "Smithy", "Workshop"],
     hand: ["Thief"],
 
     interactions: [
@@ -555,8 +545,7 @@ var tests = {
       "Steal: Gold"
     ],
 
-    drawAfter: ["Village"],
-    handAfter: ["Workshop", "Smithy"],
+    handAfter: [],
     discardAfter: ["Silver", "Gold"],
     playedAfter: ["Thief"],
 
@@ -567,8 +556,6 @@ var tests = {
   },
 
   Thief_Moat: {
-    dActions: 1,
-
     interactions: [
       "Trash or steal a Treasure:",
       ["Trash: Silver", "Steal: Silver"],

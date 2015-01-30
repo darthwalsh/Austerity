@@ -394,9 +394,6 @@ function Thief() {
   this.kind = ["action", "attack"];
   this.cost = 4;
   this.play = function(player, callback) {
-    player.actions += 1;
-    player.draw(1);
-
     game.sequentialAttack(player, function(p, attackDone) {
       var drawn = [];
 
