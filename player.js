@@ -251,6 +251,10 @@ Player.prototype = {
   },
 
   sendChoice: function(choices, handleChoice) {
+    if(!choices.length) {
+      console.error("EMPTY CHOICE!!!");
+    }
+
     var t = this;
     if (this.onChoice)
       console.error("onChoice wasn't empty!!!");

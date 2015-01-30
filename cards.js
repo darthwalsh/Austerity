@@ -390,6 +390,69 @@ var Smithy = new Action(4, function(player) {
   player.draw(3);
 });
 
+function Thief() {
+  this.kind = ["action", "attack"];
+  this.cost = 4;
+  this.play = function(player, callback) {
+    player.actions += 1;
+    player.draw(1);
+
+    game.sequentialAttack(player, function(p, attackDone) {
+      var drawn = [];
+
+      var card = p.fromDraw();
+      if (card) drawn.push(card);
+      card = p.fromDraw();
+      if (card) drawn.push(card);
+
+      var treasures = drawn
+        .filter(function(c){return c.ofKind("treasure");})
+        .map(function(c){return c.name;});
+
+      if (!treasures.length) {
+        Array.prototype.push.apply(p.discardPile, drawn);
+        attackDone();
+        return;
+      }
+
+      var choices = [];
+      for(var i = 0; i < treasures.length; ++i ) {
+        var name = treasures[i];
+        Array.prototype.push.apply(choices, ["Trash: "+name, "Steal: "+name]);
+      }
+
+      player.sendMessage("Trash or steal a Treasure:");
+      player.sendChoice(choices, function(choice) {
+        var steal = choice.substring(0, 7) == "Steal: ";
+        choice = choice.substring(7);
+
+        var chosen;
+        if (choice == treasures[0]) {
+          chosen = treasures.splice(0, 1)[0];
+        } else {
+          chosen = treasures.splice(1, 1)[0];
+        }
+
+        chosen = cards[chosen];
+
+        if (steal) {
+          player.discardPile.push(chosen);
+        } else {
+          game.trash.push(chosen);
+        }
+
+        treasures = treasures.map(function(n){ return cards[n]; });
+
+        Array.prototype.push.apply(p.discardPile, treasures);
+        var notTreasures = drawn.filter(function(c){return !c.ofKind("treasure");});
+        Array.prototype.push.apply(p.discardPile, notTreasures);
+
+        attackDone();
+      });
+    }, callback);
+  };
+}
+
 function ThroneRoom() {
   this.kind = "action";
   this.cost = 4;
@@ -519,13 +582,14 @@ var cards = {
   Moneylender: Moneylender,
   Remodel:     new Remodel(),
   Smithy:      Smithy,
+  Thief:       new Thief(),
   ThroneRoom:  new ThroneRoom(),
   Village:     Village,
   Witch:       new Witch(),
   Woodcutter:  Woodcutter,
   Workshop:    new Workshop(),
 
-  //TODO       Spy Thief
+  //TODO       Spy
 
   // Prosperity
   KingsCourt:   new KingsCourt(),

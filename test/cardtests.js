@@ -477,6 +477,127 @@ var tests = {
     handAfter: ["Copper"],
   },
 
+  Thief: {
+    dActions: 1,
+    draw: ["Village"],
+
+    interactions: [
+      "Trash or steal a Treasure:",
+      ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
+      "Steal: Silver"
+    ],
+
+    handAfter: ["Village"],
+    discardAfter: ["Silver"],
+
+    others: [{
+      draw: ["Silver", "Copper"],
+      discardAfter: ["Copper"]
+    }]
+  },
+
+  Thief_NonTreasure: {
+    dActions: 1,
+
+    interactions: [],
+
+    others: [{
+      draw: ["Village"],
+      discardAfter: ["Village"]
+    }]
+  },
+
+  Thief_SequentialMultiple: {
+    dActions: 1,
+    interactions: [
+      "Trash or steal a Treasure:",
+      ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
+      "Trash: Silver",
+      "Trash or steal a Treasure:",
+      ["Trash: Gold", "Steal: Gold"],
+      "Steal: Gold"
+    ],
+
+    discardAfter: ["Gold"],
+    trashAfter: ["Silver"],
+
+    others: [{
+      draw: ["Silver", "Copper"],
+      discardAfter: ["Copper"]
+    }, {
+      draw: ["Gold"],
+      discardAfter: []
+    }]
+  },
+
+  Thief_SequentialSolo: {
+    dActions: 1,
+    interactions: [],
+
+    others: []
+  },
+
+  ThroneRoom_Thief: {
+    dActions: 2,
+    draw: ["Village", "Smithy", "Workshop"],
+    hand: ["Thief"],
+
+    interactions: [
+      "Pick an Action to double:",
+      ["Thief"],
+      "Thief",
+      "ALL: Bot played Thief doubled!",
+      "Trash or steal a Treasure:",
+      ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
+      "Steal: Silver",
+      "Trash or steal a Treasure:",
+      ["Trash: Gold", "Steal: Gold"],
+      "Steal: Gold"
+    ],
+
+    drawAfter: ["Village"],
+    handAfter: ["Workshop", "Smithy"],
+    discardAfter: ["Silver", "Gold"],
+    playedAfter: ["Thief"],
+
+    others: [{
+      draw: ["Village", "Gold", "Silver", "Copper"],
+      discardAfter: ["Copper", "Village"]
+    }]
+  },
+
+  Thief_Moat: {
+    dActions: 1,
+
+    interactions: [
+      "Trash or steal a Treasure:",
+      ["Trash: Silver", "Steal: Silver"],
+      "Steal: Silver"
+    ],
+
+    discardAfter: ["Silver"],
+
+    others: [{
+      hand: ["Moat"],
+      draw: ["Copper"],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Moat"
+      ],
+      handAfter: ["Moat"],
+      drawAfter: ["Copper"]
+    }, {
+      hand: ["Moat"],
+      draw: ["Silver"],
+      interactions: [
+        ["Moat", "Get Attacked"],
+        "Get Attacked"
+      ],
+      handAfter: ["Moat"],
+      drawAfter: []
+    }]
+  },
+
   ThroneRoom: {
     hand: ["Copper", "Mine"],
     interactions: [
