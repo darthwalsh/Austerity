@@ -27,7 +27,7 @@ Game.prototype = {
       if (t.store.gameOver()) {
         var result = "GAME OVER!!!\r\n";
         result += ps
-          .sort(function(a, b) { return b.getPoints() - a.getPoints() }) //descending
+          .sort(function(a, b) { return b.getPoints() - a.getPoints(); }) //descending
           .map(function(p){ return p.name + ": " + p.getPoints() + "\n    " +
             p.allCards()
               .filter(function(c){return c.ofKind("property")||c.ofKind("curse");})
@@ -144,7 +144,7 @@ Game.prototype = {
       this.players[id].sendMessage(text);
     }
   }
-}
+};
 
 for(var name in Game.prototype)
   Game.prototype[name] = util.wrapErrors(Game.prototype[name]);

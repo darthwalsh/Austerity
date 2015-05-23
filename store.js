@@ -15,7 +15,9 @@ function Store() {
 Store.prototype = {
   optional: function() {
     var t = this;
-    return Object.keys(cards).filter(function(n){return t.default.indexOf(cards[n]) == -1});
+    return Object.keys(cards).filter(function(n){
+      return t.default.indexOf(cards[n]) == -1;
+    });
   },
 
   setIncluded: function(cards) {
@@ -42,10 +44,10 @@ Store.prototype = {
     if(!this.counts[cards.Province])
       return true;
     return this.default.concat(this.included).filter(function(c) {
-      return t.counts[c] == 0;
+      return t.counts[c] === 0;
     }).length >= 3;
   }
-}
+};
 
 for(var name in Store.prototype)
   Store.prototype[name] = util.wrapErrors(Store.prototype[name]);

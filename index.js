@@ -145,6 +145,11 @@ document.addEventListener('DOMContentLoaded', function() {
       case "choices":
         var cc = data;
         var cDiv = $("choices");
+        var onClick = function() {
+          ws.send(JSON.stringify({choice:this.innerHTML}));
+          while(cDiv.firstChild)
+            cDiv.removeChild(cDiv.firstChild);
+        };
         for(var i = 0; i < cc.length; ++i) {
           if(cc[i] === "\n") {
             cDiv.appendChild(document.createElement("br"));
@@ -152,11 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
           else {
             var button = document.createElement("button");
             button.innerHTML = cc[i];
-            button.onclick = function() {
-              ws.send(JSON.stringify({choice:this.innerHTML}));
-              while(cDiv.firstChild)
-                cDiv.removeChild(cDiv.firstChild);
-            };
+            button.onclick = onClick;
             cDiv.appendChild(button);
           }
         }
@@ -178,4 +179,4 @@ document.addEventListener('DOMContentLoaded', function() {
       input.value = '';
     }
   }));
-}, isServer ? 100 : 0)}); //Mitigate race condition in starting webServer?
+}, isServer ? 100 : 0);}); //Mitigate race condition in starting webServer?

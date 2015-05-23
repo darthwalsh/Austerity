@@ -15,7 +15,7 @@ function Property(cost, points) {
   this.cost = cost;
   this.getPoints = function(player) {
     return points;
-  }
+  };
 }
 
 function Curse() {
@@ -23,7 +23,7 @@ function Curse() {
   this.cost = 0;
   this.getPoints = function(player) {
     return -1;
-  }
+  };
 }
 
 function Action(cost, play) {
@@ -32,7 +32,7 @@ function Action(cost, play) {
   this.play = function(player, callback) {
     play(player);
     callback();
-  }
+  };
 }
 
 var Adventurer = new Action(6, function(player) {
@@ -73,7 +73,7 @@ function Bureaucrat() {
         p.sendChoice(discardChoices, function(choice) {
           p.drawPile.push(p.fromHand(choice));
           attackDone();
-        })
+        });
       } else {
         attackDone();
       }
@@ -117,7 +117,7 @@ function Cellar() {
     };
 
     promptDiscard();
-  }
+  };
 }
 
 function Chancellor() {
@@ -170,7 +170,7 @@ function Chapel() {
     };
 
     promptTrash();
-  }
+  };
 }
 
 var CouncilRoom = new Action(5, function(player) {
@@ -178,7 +178,7 @@ var CouncilRoom = new Action(5, function(player) {
   player.draw(4);
   game.otherPlayers(player).forEach(function(p) {
     p.draw();
-  })
+  });
 });
 
 function Feast() {
@@ -216,7 +216,7 @@ function Gardens() {
   this.cost = 4;
   this.getPoints = function(player) {
     return Math.floor(player.allCards().length / 10);
-  }
+  };
 }
 
 var Laboratory = new Action(5, function(player) {
@@ -289,7 +289,7 @@ function Militia() {
         p.sendChoice(discardChoices, function(choice) {
           p.discardPile.push(p.fromHand(choice));
           attack(p, attackDone);
-        })
+        });
       } else {
         attackDone();
       }
@@ -417,7 +417,7 @@ function Spy() {
     game.sequentialAttack(player, attack, function() {
       attack(player, callback);
     });
-  }
+  };
 }
 
 function Thief() {
@@ -493,9 +493,9 @@ function ThroneRoom() {
       return;
     }
     player.sendMessage("Pick an Action to double:");
-    player.sendChoice(actions, function(action) {
-      game.alllog(player.name + " played " + action + " doubled!");
-      var action = player.fromHand(action);
+    player.sendChoice(actions, function(actionName) {
+      game.alllog(player.name + " played " + actionName + " doubled!");
+      var action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {
           player.afterPlay(action);
@@ -564,10 +564,10 @@ function KingsCourt() {
       callback();
       return;
     }
-    player.sendMessage("Pick an Action to triple:")
-    player.sendChoice(actions, function(action) {
-      game.alllog(player.name + " played " + action + " tripled!!");
-      var action = player.fromHand(action);
+    player.sendMessage("Pick an Action to triple:");
+    player.sendChoice(actions, function(actionName) {
+      game.alllog(player.name + " played " + actionName + " tripled!!");
+      var action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {
           action.play(player, function() {

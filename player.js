@@ -5,7 +5,7 @@ function Player(name, socket) {
   this.discardPile = [];
   for(var i = 0; i < 7; ++i)
     this.discardPile.push(cards.Copper);
-  for(var i = 0; i < 3; ++i)
+  for(i = 0; i < 3; ++i)
     this.discardPile.push(cards.Estate);
 
   this.hand = [];
@@ -81,7 +81,7 @@ Player.prototype = {
     }
 
     Array.prototype.push.apply(choices,
-      game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name}));
+      game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name;}));
 
     if (!choices.length) {
       this.sendMessage("Nothing to buy");
@@ -150,7 +150,7 @@ Player.prototype = {
   playCard: function(name, callback) {
     var t = this;
     var card = this.fromHand(name);
-    if (card == null) {
+    if (card === null) {
       console.error("Card doesn't exist: " + name);
       return;
     }
@@ -247,7 +247,7 @@ Player.prototype = {
   },
 
   sendHand: function() {
-    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name}).toString());
+    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name;}).toString());
   },
 
   sendChoice: function(choices, handleChoice) {
@@ -264,7 +264,7 @@ Player.prototype = {
     };
     this.send({choices:choices});
   }
-}
+};
 
 // Loudly fail so nobody can try-catch these errors
 for(var name in Player.prototype)
