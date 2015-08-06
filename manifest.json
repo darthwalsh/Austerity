@@ -17,7 +17,10 @@
       "tcp-connect",
       "tcp-listen"
     ]
-  }],
+  },
+  "storage",
+  "unlimitedStorage"
+  ],
       
   "app": {
     "background": {

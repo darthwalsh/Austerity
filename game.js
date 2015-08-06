@@ -4,6 +4,7 @@ function Game(log, store) {
   this.players = {}; // socketId -> Player
   this.playersChanged = null;
   this.trash = [];
+  this.turn = -1;
 }
 
 Game.prototype = {
@@ -12,7 +13,7 @@ Game.prototype = {
     return Object.keys(this.players).length >= 1;
   },
 
-  start: function(debugMode) {
+  start: function(debugMode, name) {
     var t = this;
     ps = this.allPlayers();
 
@@ -22,7 +23,7 @@ Game.prototype = {
       this.alllog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
-    var turn = Math.floor(Math.random() * ps.length);
+    this.turn = Math.floor(Math.random() * ps.length);
     var nextTurn = function() {
       if (t.store.gameOver()) {
         var result = "GAME OVER!!!\r\n";
@@ -36,14 +37,19 @@ Game.prototype = {
               .toString();})
           .join("\r\n");
         t.alllog(result);
+        chrome.storage.local.remove(name);
         return;
       }
 
-      ++turn;
-      ps[turn % ps.length].takeTurn(nextTurn);
+      ++t.turn;
+      ps[t.turn % ps.length].takeTurn(nextTurn);
+      
+      var toStore = {};
+      toStore[name] = t;
+      chrome.storage.local.set(toStore);
     };
 
-    ps[turn].takeTurn(nextTurn);
+    ps[this.turn].takeTurn(nextTurn);
   },
 
   addConnection: function(socket) {
