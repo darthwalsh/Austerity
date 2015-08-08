@@ -119,14 +119,21 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.get(null, function(stored) { 
       Object.keys(stored).map(function(key) {
         var savedGame = document.createElement("button");
-        savedGame.innerHTML = "Delete Saved Game: " + key;
+        savedGame.innerHTML = "Saved Game: " + key;
         savedGame.onclick = function() {
+          slog("TODO");
+        };
+        manageDiv.insertBefore(savedGame, manageLog);
+        var deleteSave = document.createElement("button");
+        deleteSave.innerHTML = "Delete";
+        deleteSave.onclick = function() {
           chrome.storage.local.remove(key, function() {
-            manageDiv.removeChild(savedGame.nextSibling);
+            manageDiv.removeChild(deleteSave.nextSibling);
+            manageDiv.removeChild(deleteSave);
             manageDiv.removeChild(savedGame);
           });
         };
-        manageDiv.insertBefore(savedGame, manageLog);
+        manageDiv.insertBefore(deleteSave, manageLog);
         manageDiv.insertBefore(document.createElement("br"), manageLog);
       });
     });
