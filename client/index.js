@@ -8,21 +8,17 @@ function log(text) {
 }
 
 function slog(text) {
-  if(isServer){
-    $("manageLog").value += text + "\n";
-    $("manageLog").scrollTop = $("manageLog").scrollHeight;
-  }
+  console.warn("slog: " + text); //TODO(NODE) warn on server?
 }
 
 var port = 8888;
 var isServer = false;
-var game = new Game(slog);
+// var game = new Game(slog); //TODO(NODE) move these to server
+//game.playersChanged = function() {
+//  $("startButton").disabled = !game.canStart();
+//};
 
-game.playersChanged = function() {
-  $("startButton").disabled = !game.canStart();
-};
-
-if (http.Server && http.WebSocketServer) {
+if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
   isServer = true;
 
   var server = new http.Server();
@@ -58,7 +54,7 @@ function timeStamp() {
   return date.join("/") + " " + time.join(":") + " " + suffix;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+window.onload = function() {
   if(isServer) {
     var manageDiv = $("manage");
 
@@ -139,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  setTimeout(function() {
   slog("Port " + port);
   var address = isServer ?
     "ws://localhost:" + port + "/" :
@@ -163,14 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var turnAlert = new Audio("assets/Computer Error Alert from SoundBible.com.mp3");
   var input = $("input");
   var ws = new WebSocket(address);
-  ws.addEventListener("open", util.wrapErrors(function() {
-    log("Connected to Server");
-  }));
-  ws.addEventListener('close', util.wrapErrors(function() {
+  ws.addEventListener("open", () => log("Connected to Server"));
+  ws.addEventListener('close', () => {
     log('Connection to Server lost');
     input.disabled = true;
-  }));
-  ws.addEventListener('message', util.wrapErrors(function(e) {
+  });
+  ws.addEventListener('message', (e) => {
     var data = JSON.parse(e.data);
     var type = Object.keys(data)[0];
     data = data[type];
@@ -208,11 +201,11 @@ document.addEventListener('DOMContentLoaded', function() {
       default:
         console.error("Not implemenented: " + type);
     }
-  }));
-  input.addEventListener('keydown', util.wrapErrors(function(e) {
+  });
+  input.addEventListener('keydown', e => { //TODO(NODE) duplicated above?
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
       ws.send(JSON.stringify({chat: input.value}));
       input.value = '';
     }
-  }));
-}, isServer ? 100 : 0);}); //Mitigate race condition in starting webServer?
+  });
+};
