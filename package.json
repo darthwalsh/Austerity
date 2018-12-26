@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node server/app.js",
-    "test": "test\\run.bat"
+    "test": "test\\run.bat",
+    "watch": "supervisor --ignore client,.git,node_modules server/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,11 @@
   },
   "homepage": "https://github.com/darthwalsh/Austerity",
   "devDependencies": {
-    "jasmine-node": "^1.16.2"
+    "jasmine-node": "^2.0.1",
+    "supervisor": "^0.12.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "ws": "^6.1.2"
   }
 }

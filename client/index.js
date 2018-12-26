@@ -135,7 +135,6 @@ window.onload = function() {
     });
   }
 
-  slog("Port " + port);
   var address = isServer ?
     "ws://localhost:" + port + "/" :
     window.location.href.replace("http", "ws");
@@ -155,7 +154,7 @@ window.onload = function() {
   });
   connectButton.onclick = connect;
 
-  var turnAlert = new Audio("assets/Computer Error Alert from SoundBible.com.mp3");
+  var turnAlert;
   var input = $("input");
   var ws = new WebSocket(address);
   ws.addEventListener("open", () => log("Connected to Server"));
@@ -192,6 +191,9 @@ window.onload = function() {
         }
         $("log").scrollTop = $("log").scrollHeight;
         if(document.hasFocus && !document.hasFocus()) {
+          if (!turnAlert) {
+            turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+          }
           // Audio need to reload sound before each play
           // http://stackoverflow.com/a/8959342/771768
           turnAlert.load();
@@ -202,7 +204,7 @@ window.onload = function() {
         console.error("Not implemenented: " + type);
     }
   });
-  input.addEventListener('keydown', e => { //TODO(NODE) duplicated above?
+  input.addEventListener('keydown', e => {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
       ws.send(JSON.stringify({chat: input.value}));
       input.value = '';
