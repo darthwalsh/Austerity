@@ -11,4 +11,4 @@ You might need to open a firewall port on your computer ([Chrome OS doesn't have
 
 Testing
 -------
-Install [`jasmine-node`](https://github.com/mhevery/jasmine-node), then `test\run`
+Run `npm test` (Windows only, sorry.)

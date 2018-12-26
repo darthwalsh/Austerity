@@ -1,0 +1,25 @@
+{
+  "name": "Austerity",
+  "version": "0.0.0",
+  "description": "Gameboard web server",
+  "main": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test\\run.bat"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/darthwalsh/Austerity.git"
+  },
+  "author": "Carl Walsh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/darthwalsh/Austerity/issues"
+  },
+  "homepage": "https://github.com/darthwalsh/Austerity",
+  "devDependencies": {
+    "jasmine-node": "^1.16.2"
+  }
+}
