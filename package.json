@@ -2,11 +2,12 @@
   "name": "austerity",
   "version": "0.0.0",
   "description": "Gameboard web server",
-  "main": "",
+  "main": "server/app.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "start": "node server/app.js",
     "test": "test\\run.bat"
   },
   "repository": {
