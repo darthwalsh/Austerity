@@ -13,10 +13,6 @@ function slog(text) {
 
 var port = 8888;
 var isServer = false;
-// var game = new Game(slog); //TODO(NODE) move these to server
-//game.playersChanged = function() {
-//  $("startButton").disabled = !game.canStart();
-//};
 
 if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
   isServer = true;

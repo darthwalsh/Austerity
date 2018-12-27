@@ -1,15 +1,19 @@
-function Game(log, store) {
+const util = require("./util");
+const Store = require("./store").Store;
+const Player = require("./player").Player;
+
+function Game(log) {
   this.log = log;
   this.store = new Store();
-  this.players = {}; // socketId -> Player
-  this.playersChanged = null;
+  this.players = {}; // name -> Player
+  this.playersChanged = () => {}; //TODO(NODE-TURNS)
   this.trash = [];
   this.turn = -1;
 }
 
 Game.prototype = {
   canStart: function() {
-    //TODO Game of 1 is only fun for debugging
+    //TODO Game of 1 is only fun when debugging
     return Object.keys(this.players).length >= 1;
   },
 
@@ -52,17 +56,17 @@ Game.prototype = {
     ps[this.turn].takeTurn(nextTurn);
   },
 
-  addConnection: function(socket) {
+  addConnection: function(ws) {
     var me;
-    socket.addEventListener('message', util.wrapErrors(function(e) {
-      var data = JSON.parse(e.data);
+    ws.on("message", util.wrapErrors(function(data) {
+      var data = JSON.parse(data);
       var type = Object.keys(data)[0];
       data = data[type];
       switch(type) {
       case "connect":
           //TODO what if name already signed in?
-          me = new Player(data, socket);
-          this.players[socket.socketId_] = me;
+          me = new Player(data, ws);
+          this.players[name] = me;
           this.log(data + " connected");
           this.playersChanged();
           break;
@@ -73,15 +77,15 @@ Game.prototype = {
           this.alllog(me.name + ": " + data);
           break;
         default:
-          console.error("Not implemenented: " + type);
+          console.error("Not implemented: " + type);
       }
     }.bind(this)));
 
-    socket.addEventListener('close', util.wrapErrors(function() {
-      var player = this.players[socket.socketId_];
+    ws.on("close", util.wrapErrors(function() {
+      var player = this.players[me.name];
       if (player) {
         this.log(player.name + " disconnected");
-        delete this.players[socket.socketId_];
+        delete this.players[me.name];
         this.playersChanged();
       }
     }.bind(this)));
@@ -154,3 +158,5 @@ Game.prototype = {
 
 for(var name in Game.prototype)
   Game.prototype[name] = util.wrapErrors(Game.prototype[name]);
+
+module.exports.Game = Game;

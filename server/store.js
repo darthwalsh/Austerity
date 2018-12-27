@@ -1,3 +1,6 @@
+const util = require("./util");
+const cards = require("./cards");
+
 function Store() {
   var DEFAULT_TREASURE_COUNT = 30;
   var DEFAULT_PROPERTY_COUNT = 8; //TODO make correct
@@ -51,3 +54,5 @@ Store.prototype = {
 
 for(var name in Store.prototype)
   Store.prototype[name] = util.wrapErrors(Store.prototype[name]);
+
+module.exports.Store = Store;

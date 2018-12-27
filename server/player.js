@@ -1,3 +1,6 @@
+const util = require("./util");
+const cards = require("./cards");
+
 function Player(name, socket) {
   this.name = name;
   this.socket = socket;
@@ -269,3 +272,5 @@ Player.prototype = {
 // Loudly fail so nobody can try-catch these errors
 for(var name in Player.prototype)
   Player.prototype[name] = util.wrapErrors(Player.prototype[name]);
+
+module.exports.Player = Player;

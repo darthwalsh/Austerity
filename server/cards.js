@@ -655,3 +655,4 @@ for(var name in cards) {
 return cards;
 })();
 
+module.exports = cards;

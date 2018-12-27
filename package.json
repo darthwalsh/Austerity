@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server/app.js",
     "test": "test\\run.bat",
-    "watch": "supervisor --ignore client,.git,node_modules server/app.js"
+    "watch": "supervisor --poll-interval 2000 --quiet --ignore client,.git,node_modules server/app.js"
   },
   "repository": {
     "type": "git",
