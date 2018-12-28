@@ -811,7 +811,7 @@ describe("cards", function () {
       test.others.forEach(function(testOther) {
         const oP = new Player("Other#" + otherCount++, {send: function(message) {
           const o = JSON.parse(message);
-        if (o.message && o.message.startsWith("Your hand"))
+          if (o.message && o.message.startsWith("Your hand"))
             return;
 
           const expected = testOther.interactions[oP.InteractionIndex++];

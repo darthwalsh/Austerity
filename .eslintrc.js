@@ -13,12 +13,24 @@ module.exports = {
         "require-jsdoc": "off",
         "quotes": ["error", "double"],
 
+        "indent": [
+            "error", 2, {
+                "FunctionDeclaration": {
+                    "body": 1,
+                    "parameters": 2,
+                },
+                "FunctionExpression": {
+                    "body": 1,
+                    "parameters": 2,
+                },
+            }
+        ],
+
         /* //TODO fix these */
         "block-spacing": "off",
         "comma-dangle": "off",
         "comma-spacing": "off",
         "guard-for-in": "off",
-        "indent": "off",
         "no-multi-spaces": "off",
         "no-redeclare": "off",
         "object-curly-spacing": "off",

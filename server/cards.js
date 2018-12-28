@@ -1,5 +1,3 @@
-const cards = (function() {
-
 function Treasure(cost, money) {
   this.kind = "treasure";
   this.cost = cost;
@@ -68,7 +66,7 @@ function Bureaucrat() {
         .filter(function(c){return c.ofKind("property");})
         .map(function(c){return c.name;});
 
-     if(discardChoices.length) {
+      if(discardChoices.length) {
         p.sendMessage("Put a Victory card onto your deck:");
         p.sendChoice(discardChoices, function(choice) {
           p.drawPile.push(p.fromHand(choice));
@@ -186,8 +184,8 @@ function Feast() {
   this.cost = 5;
   this.play = function(player, callback) {
     const gainChoices = game.store
-        .getAvailable(5)
-        .map(function(c){return c.name;});
+      .getAvailable(5)
+      .map(function(c){return c.name;});
     if (!gainChoices.length) {
       callback();
       return;
@@ -536,19 +534,19 @@ function Workshop() {
   this.cost = 3;
   this.play = function(player, callback) {
     const gainChoices = game.store
-        .getAvailable(4)
-        .map(function(c){return c.name;});
-      if (!gainChoices.length) {
-        callback();
-        return;
-      }
+      .getAvailable(4)
+      .map(function(c){return c.name;});
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
 
-      player.sendMessage("Gain a card:");
-      player.sendChoice(gainChoices, function(gainChoice) {
-        player.discardPile.push(cards[gainChoice]);
-        game.store.bought(gainChoice);
-        callback();
-      });
+    player.sendMessage("Gain a card:");
+    player.sendChoice(gainChoices, function(gainChoice) {
+      player.discardPile.push(cards[gainChoice]);
+      game.store.bought(gainChoice);
+      callback();
+    });
   };
 }
 
@@ -573,7 +571,7 @@ function KingsCourt() {
           action.play(player, function() {
             player.afterPlay(action);
             callback();
-        });
+          });
         });
       });
     });
@@ -651,8 +649,5 @@ for(const name in cards) {
     console.error("Card " + name + " cost not defined");
   }
 }
-
-return cards;
-})();
 
 module.exports = cards;

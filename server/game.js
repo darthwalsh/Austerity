@@ -58,20 +58,20 @@ Game.prototype = {
       data = data[type];
       switch(type) {
       case "connect":
-          //TODO what if name already signed in?
-          me = new Player(data, ws);
-          this.players[name] = me;
-          this.log(data + " connected");
-          this.playersChanged();
-          break;
-        case "choice":
-          me.onChoice(data);
-          break;
-        case "chat":
-          this.allLog(me.name + ": " + data);
-          break;
-        default:
-          console.error("Not implemented: " + type);
+        //TODO what if name already signed in?
+        me = new Player(data, ws);
+        this.players[name] = me;
+        this.log(data + " connected");
+        this.playersChanged();
+        break;
+      case "choice":
+        me.onChoice(data);
+        break;
+      case "chat":
+        this.allLog(me.name + ": " + data);
+        break;
+      default:
+        console.error("Not implemented: " + type);
       }
     }.bind(this)));
 

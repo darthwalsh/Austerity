@@ -143,10 +143,10 @@ Player.prototype = {
 
   fromDraw: function() {
     if(!this.drawPile.length) {
-        this.shuffle();
-        if(!this.drawPile.length)
-          return null;
-      }
+      this.shuffle();
+      if(!this.drawPile.length)
+        return null;
+    }
     return this.drawPile.pop();
   },
 

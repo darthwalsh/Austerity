@@ -131,34 +131,34 @@ window.onload = function() {
     };
 
     switch(type) {
-      case "message":
-        log(data);
-        break;
-      case "choices":
-        for(let i = 0; i < data.length; ++i) {
-          if(data[i] === "\n") {
-            choicesDiv.appendChild(document.createElement("br"));
-          }
-          else {
-            const button = document.createElement("button");
-            button.innerHTML = data[i];
-            button.onclick = choiceOnClick;
-            choicesDiv.appendChild(button);
-          }
+    case "message":
+      log(data);
+      break;
+    case "choices":
+      for(let i = 0; i < data.length; ++i) {
+        if(data[i] === "\n") {
+          choicesDiv.appendChild(document.createElement("br"));
         }
-        $("log").scrollTop = $("log").scrollHeight;
-        if(document.hasFocus && !document.hasFocus()) {
-          if (!turnAlert) {
-            turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
-          }
-          // Audio need to reload sound before each play
-          // http://stackoverflow.com/a/8959342/771768
-          turnAlert.load();
-          turnAlert.play();
+        else {
+          const button = document.createElement("button");
+          button.innerHTML = data[i];
+          button.onclick = choiceOnClick;
+          choicesDiv.appendChild(button);
         }
-        break;
-      default:
-        console.error("Not implemented: " + type);
+      }
+      $("log").scrollTop = $("log").scrollHeight;
+      if(document.hasFocus && !document.hasFocus()) {
+        if (!turnAlert) {
+          turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+        }
+        // Audio need to reload sound before each play
+        // http://stackoverflow.com/a/8959342/771768
+        turnAlert.load();
+        turnAlert.play();
+      }
+      break;
+    default:
+      console.error("Not implemented: " + type);
     }
   });
   input.addEventListener("keydown", e => {
