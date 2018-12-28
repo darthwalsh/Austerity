@@ -250,7 +250,7 @@ Player.prototype = {
   },
 
   sendHand: function() {
-    this.sendMessage("Hand: " + this.hand.map(function(c){return c.name;}).toString());
+    this.sendMessage("Your hand: " + this.hand.map(function(c){return c.name;}).join(", "));
   },
 
   sendChoice: function(choices, handleChoice) {
