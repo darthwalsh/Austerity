@@ -34,14 +34,14 @@ class Action {
   constructor(cost, play) {
     this.kind = "action";
     this.cost = cost;
-    this.play = function (player, callback) {
-      play(player);
+    this.play = (player, callback, game) => {
+      play(player, game);
       callback();
     };
   }
 }
 
-const Adventurer = new Action(6, function(player) {
+const Adventurer = new Action(6, (player, game) => {
   let treasures = 0;
   const drawn = [];
   while (treasures < 2) {
@@ -64,7 +64,7 @@ class Bureaucrat {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       if (game.store.counts["Silver"]) {
         player.discardPile.push(cards.Silver);
         game.store.bought(cards.Silver);
@@ -92,7 +92,7 @@ class Cellar {
   constructor() {
     this.kind = "action";
     this.cost = 2;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.actions += 1;
       let discarded = 0;
       const end = function () {
@@ -127,7 +127,7 @@ class Chancellor {
   constructor() {
     this.kind = "action";
     this.cost = 3;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.money += 2;
       player.sendMessage("Discard your draw pile?");
       player.sendChoice(["No", "Discard"], function (choice) {
@@ -144,7 +144,7 @@ class Chapel {
   constructor() {
     this.kind = "action";
     this.cost = 2;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       let canTrash = 4;
       const promptTrash = function () {
         const trashChoices = player.hand.map(function (c) { return c.name; });
@@ -175,7 +175,7 @@ class Chapel {
   }
 }
 
-const CouncilRoom = new Action(5, function(player) {
+const CouncilRoom = new Action(5, (player, game) => {
   player.buys += 1;
   player.draw(4);
   game.otherPlayers(player).forEach(function(p) {
@@ -187,7 +187,7 @@ class Feast {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const gainChoices = game.store
         .getAvailable(5)
         .map(function (c) { return c.name; });
@@ -202,13 +202,13 @@ class Feast {
         callback();
       });
     };
-    this.afterPlay = function (player) {
+    this.afterPlay = game => {
       game.trash.push(this);
     };
   }
 }
 
-const Festival = new Action(5, function(player) {
+const Festival = new Action(5, (player, game) => {
   player.actions += 2;
   player.buys += 1;
   player.money += 2;
@@ -224,7 +224,7 @@ class Gardens {
   }
 }
 
-const Laboratory = new Action(5, function(player) {
+const Laboratory = new Action(5, (player, game) => {
   player.draw(2);
   player.actions += 1;
 });
@@ -233,7 +233,7 @@ class Library {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const aside = [];
       const end = function () {
         Array.prototype.push.apply(player.discardPile, aside);
@@ -272,7 +272,7 @@ class Library {
   }
 }
 
-const Market = new Action(5, function(player) {
+const Market = new Action(5, (player, game) => {
   player.draw();
   player.actions += 1;
   player.buys += 1;
@@ -283,7 +283,7 @@ class Militia {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 5;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.money += 2;
       const attack = function (p, attackDone) {
         if (p.hand.length > 3) {
@@ -307,7 +307,7 @@ class Mine {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const trashChoices = player.hand
         .filter(function (c) { return c.ofKind("treasure"); })
         .map(function (c) { return c.name; });
@@ -343,15 +343,15 @@ class Moat {
   constructor() {
     this.kind = ["action", "reaction"];
     this.cost = 2;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.draw(2);
       callback();
     };
   }
 }
 
-const Moneylender = new Action(4, function(player) {
-  const copper = player.fromHand(cards.Copper.name);
+const Moneylender = new Action(4, (player, game) => {
+  const copper = player.fromHand("Copper");
   if (copper) {
     player.money += 3;
     game.trash.push(copper);
@@ -362,7 +362,7 @@ class Remodel {
   constructor() {
     this.kind = "action";
     this.cost = 4;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const trashChoices = player.hand
         .map(function (c) { return c.name; });
       if (!trashChoices.length) {
@@ -392,7 +392,7 @@ class Remodel {
   }
 }
 
-const Smithy = new Action(4, function(player) {
+const Smithy = new Action(4, (player, game) => {
   player.draw(3);
 });
 
@@ -400,7 +400,7 @@ class Spy {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.actions += 1;
       player.draw();
       const attack = function (p, attackDone) {
@@ -432,7 +432,7 @@ class Thief {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       game.sequentialAttack(player, function (p, attackDone) {
         const drawn = [];
         let card = p.fromDraw();
@@ -487,7 +487,7 @@ class ThroneRoom {
   constructor() {
     this.kind = "action";
     this.cost = 4;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const actions = player.hand
         .filter(function (c) { return c.ofKind("action"); })
         .map(function (c) { return c.name; });
@@ -504,14 +504,14 @@ class ThroneRoom {
           action.play(player, function () {
             player.afterPlay(action);
             callback();
-          });
-        });
+          }, game);
+        }, game);
       });
     };
   }
 }
 
-const Village = new Action(3, function(player) {
+const Village = new Action(3, (player, game) => {
   player.draw();
   player.actions += 2;
 });
@@ -520,7 +520,7 @@ class Witch {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 5;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       player.draw(2);
       game.parallelAttack(player, function (p, attackDone) {
         if (game.store.counts["Curse"]) {
@@ -533,7 +533,7 @@ class Witch {
   }
 }
 
-const Woodcutter = new Action(3, function(player) {
+const Woodcutter = new Action(3, (player, game) => {
   player.buys += 1;
   player.money += 2;
 });
@@ -542,7 +542,7 @@ class Workshop {
   constructor() {
     this.kind = "action";
     this.cost = 3;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const gainChoices = game.store
         .getAvailable(4)
         .map(function (c) { return c.name; });
@@ -564,7 +564,7 @@ class KingsCourt {
   constructor() {
     this.kind = "action";
     this.cost = 7;
-    this.play = function (player, callback) {
+    this.play = (player, callback, game) => {
       const actions = player.hand
         .filter(function (c) { return c.ofKind("action"); })
         .map(function (c) { return c.name; });
@@ -582,9 +582,9 @@ class KingsCourt {
             action.play(player, function () {
               player.afterPlay(action);
               callback();
-            });
-          });
-        });
+            }, game);
+          }, game);
+        }, game);
       });
     };
   }

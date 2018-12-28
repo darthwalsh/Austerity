@@ -1,3 +1,5 @@
+/* global describe it expect */
+
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
@@ -781,7 +783,7 @@ describe("cards", function () {
 
       let interactionIndex = 0;
 
-      game = new Game(console.error); //TODO(NODE-GAME) shouldn't be a global
+      const game = new Game(console.error);
 
       const p = new Player("Bot", {send: function(message) {
         const o = JSON.parse(message);
@@ -882,7 +884,7 @@ describe("cards", function () {
 
           expect(called).toBeFalsy("called twice");
           called = true;
-        });
+        }, game);
 
         expect(called).toBeTruthy("wasn't called");
       } else if(card.ofKind("property") || card.ofKind("curse")) {

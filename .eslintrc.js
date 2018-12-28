@@ -37,7 +37,6 @@ module.exports = {
         "space-before-blocks": "off",
         "space-before-function-paren": "off",
         "spaced-comment": "off",
-        "no-undef": "off",  //TODO(NODE-GAME)
         "keyword-spacing": "off",
         "key-spacing": "off",
         "no-invalid-this": "off",

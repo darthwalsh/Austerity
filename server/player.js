@@ -158,12 +158,12 @@ class Player {
     card.play(this, function() {
       t.afterPlay(card);
       callback();
-    });
+    }, this.game);
   }
 
   afterPlay(card) {
     if (card.afterPlay) {
-      card.afterPlay(this);
+      card.afterPlay(this.game);
     } else {
       this.played.push(card);
     }
