@@ -125,7 +125,7 @@ window.onload = function() {
 
     const choicesDiv = $("choices");
     const choiceOnClick = function() {
-      ws.send(JSON.stringify({choice:this.innerHTML}));
+      ws.send(JSON.stringify({choice: this.innerHTML}));
       while(cDiv.firstChild)
         cDiv.removeChild(cDiv.firstChild);
     };

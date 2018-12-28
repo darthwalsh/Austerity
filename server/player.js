@@ -246,7 +246,7 @@ Player.prototype = {
   },
 
   sendMessage: function(msg) {
-    this.send({message:msg});
+    this.send({message: msg});
   },
 
   sendHand: function() {
@@ -265,7 +265,7 @@ Player.prototype = {
       t.onChoice = null;
       handleChoice.call(t, choice);
     };
-    this.send({choices:choices});
+    this.send({choices: choices});
   },
 };
 

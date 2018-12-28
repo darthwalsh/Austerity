@@ -525,7 +525,7 @@ function Witch() {
 }
 
 const Woodcutter = new Action(3, function(player) {
-  player.buys  += 1;
+  player.buys += 1;
   player.money += 2;
 });
 
@@ -641,7 +641,7 @@ for(const name in cards) {
       console.error("Card " + name + " kind type not defined");
     }
     delete card.kind;
-  } else  {
+  } else {
     console.error("Card " + name + " kind not defined");
   }
 

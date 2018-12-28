@@ -11,8 +11,9 @@ module.exports = {
     "rules": {
         "linebreak-style": "off",
         "require-jsdoc": "off",
+        "max-len": "off",
+        "one-var": "off",
         "quotes": ["error", "double"],
-
         "indent": [
             "error", 2, {
                 "FunctionDeclaration": {
@@ -28,12 +29,8 @@ module.exports = {
 
         /* //TODO fix these */
         "block-spacing": "off",
-        "comma-spacing": "off",
         "guard-for-in": "off",
-        "no-multi-spaces": "off",
-        "no-redeclare": "off",
         "object-curly-spacing": "off",
-        "one-var": "off",
         "padded-blocks": "off",
         "prefer-rest-params": "off",
         "semi-spacing": "off",
@@ -41,14 +38,12 @@ module.exports = {
         "space-before-function-paren": "off",
         "spaced-comment": "off",
         "no-undef": "off",
-        "curly": "off",
         "keyword-spacing": "off",
         "key-spacing": "off",
         "no-invalid-this": "off",
         "brace-style": "off",
-        "max-len": "off",
         "no-console": "off",
         "arrow-parens": "off",
-        "eol-last": "off"
+        "curly": "off"
     }
 };

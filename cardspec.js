@@ -421,7 +421,7 @@ const tests = {
       ],
       handAfter: ["Copper", "Silver", "Gold", "Village", "Moat"],
       discardAfter: [],
-    },{
+    }, {
       hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
       interactions: [
         ["Moat", "Get Attacked"],
