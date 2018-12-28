@@ -766,8 +766,8 @@ describe("cards", function () {
         test[key] = test[key] || defaultTest[key];
       }
       for(var i = 0; i < test.others.length; ++i) {
-        for(var testOtherkey in test.others[i]) {
-          expect(defaultTest[testOtherkey]).toBeDefined("typo other key " + testOtherkey);
+        for(var testOtherKey in test.others[i]) {
+          expect(defaultTest[testOtherKey]).toBeDefined("typo other key " + testOtherKey);
         }
         for(var oKey in defaultOthers) {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
@@ -802,7 +802,7 @@ describe("cards", function () {
       game = new Game(console.error, new Store());
       game.players[0] = p;
       game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
-      game.alllog = function(message) {
+      game.allLog = function(message) {
         var expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
       };

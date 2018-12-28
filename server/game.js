@@ -23,7 +23,7 @@ Game.prototype = {
     if(debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
       ps[0].sendHand();
-      this.alllog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
+      this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
     var turn = Math.floor(Math.random() * ps.length);
@@ -39,7 +39,7 @@ Game.prototype = {
               .sort()
               .toString();})
           .join("\r\n");
-        t.alllog(result);
+        t.allLog(result);
         return;
       }
 
@@ -68,7 +68,7 @@ Game.prototype = {
           me.onChoice(data);
           break;
         case "chat":
-          this.alllog(me.name + ": " + data);
+          this.allLog(me.name + ": " + data);
           break;
         default:
           console.error("Not implemented: " + type);
@@ -143,7 +143,7 @@ Game.prototype = {
     }, attackDone);
   },
 
-  alllog: function(text) {
+  allLog: function(text) {
     for(var id in this.players) {
       this.players[id].sendMessage(text);
     }

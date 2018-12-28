@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node server/app.js",
+    "pretest": "eslint server client *.js",
     "test": "jasmine-node .",
     "watch": "supervisor --poll-interval 2000 --quiet --ignore client,.git,node_modules server/app.js"
   },
@@ -22,6 +23,8 @@
   },
   "homepage": "https://github.com/darthwalsh/Austerity",
   "devDependencies": {
+    "eslint": "^5.11.1",
+    "eslint-config-google": "^0.11.0",
     "jasmine-node": "^2.0.1",
     "supervisor": "^0.12.0"
   },

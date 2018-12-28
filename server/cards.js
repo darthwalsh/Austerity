@@ -494,7 +494,7 @@ function ThroneRoom() {
     }
     player.sendMessage("Pick an Action to double:");
     player.sendChoice(actions, function(actionName) {
-      game.alllog(player.name + " played " + actionName + " doubled!");
+      game.allLog(player.name + " played " + actionName + " doubled!");
       var action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {
@@ -566,7 +566,7 @@ function KingsCourt() {
     }
     player.sendMessage("Pick an Action to triple:");
     player.sendChoice(actions, function(actionName) {
-      game.alllog(player.name + " played " + actionName + " tripled!!");
+      game.allLog(player.name + " played " + actionName + " tripled!!");
       var action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {

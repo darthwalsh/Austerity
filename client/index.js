@@ -7,10 +7,6 @@ function log(text) {
   $("log").scrollTop = $("log").scrollHeight;
 }
 
-function slog(text) {
-  console.warn("slog: " + text); //TODO(NODE) warn on server?
-}
-
 var port = 8888;
 var isServer = false;
 
@@ -21,15 +17,15 @@ if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
   var wsServer = new http.WebSocketServer(server);
   server.listen(port);
 
-  server.addEventListener('request', util.wrapErrors(function(req) {
+  server.addEventListener("request", util.wrapErrors(function(req) {
     var url = req.headers.url;
-    if (url == '/')
-      url = '/index.html';
+    if (url == "/")
+      url = "/index.html";
     req.serveUrl(url);
     return true;
   }));
 
-  wsServer.addEventListener('request', util.wrapErrors(function(req) {
+  wsServer.addEventListener("request", util.wrapErrors(function(req) {
     game.addConnection(req.accept());
     return true;
   }));
@@ -107,7 +103,7 @@ window.onload = function() {
     input.disabled = false;
   };
 
-  name.addEventListener('keydown', function(e) {
+  name.addEventListener("keydown", function(e) {
     if (e.keyCode == 13) {
       connect();
     }
@@ -118,11 +114,11 @@ window.onload = function() {
   var input = $("input");
   var ws = new WebSocket(address);
   ws.addEventListener("open", () => log("Connected to Server"));
-  ws.addEventListener('close', () => {
-    log('Connection to Server lost');
+  ws.addEventListener("close", () => {
+    log("Connection to Server lost");
     input.disabled = true;
   });
-  ws.addEventListener('message', (e) => {
+  ws.addEventListener("message", (e) => {
     var data = JSON.parse(e.data);
     var type = Object.keys(data)[0];
     data = data[type];
@@ -161,13 +157,13 @@ window.onload = function() {
         }
         break;
       default:
-        console.error("Not implemenented: " + type);
+        console.error("Not implemented: " + type);
     }
   });
-  input.addEventListener('keydown', e => {
+  input.addEventListener("keydown", e => {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
       ws.send(JSON.stringify({chat: input.value}));
-      input.value = '';
+      input.value = "";
     }
   });
 };

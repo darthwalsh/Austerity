@@ -64,7 +64,7 @@ Player.prototype = {
 
     --this.actions;
 
-    game.alllog(this.name + " played " + choice);
+    game.allLog(this.name + " played " + choice);
     this.playCard(choice, this.promptAction.bind(this));
   },
 
@@ -115,7 +115,7 @@ Player.prototype = {
       this.money -= buying.cost;
       --this.buys;
 
-      game.alllog(this.name + " bought " + buying.name);
+      game.allLog(this.name + " bought " + buying.name);
       game.store.bought(buying);
       this.promptBuys();
     } else {
