@@ -27,7 +27,7 @@ module.exports = {
             }
         ],
 
-        /* //TODO fix these */
+        /* //TODO(lint) fix these */
         "block-spacing": "off",
         "guard-for-in": "off",
         "object-curly-spacing": "off",

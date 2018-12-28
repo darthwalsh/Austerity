@@ -2,21 +2,21 @@ const util = require("./util");
 const Store = require("./store").Store;
 const Player = require("./player").Player;
 
-function Game(log) {
-  this.log = log;
-  this.store = new Store();
-  this.players = {}; // name -> Player
-  this.playersChanged = () => {}; //TODO(NODE-TURNS)
-  this.trash = [];
-}
+class Game {
+  constructor(log) {
+    this.log = log;
+    this.store = new Store();
+    this.players = {}; // name -> Player
+    this.playersChanged = () => { }; //TODO(NODE-TURNS)
+    this.trash = [];
+  }
 
-Game.prototype = {
-  canStart: function() {
+  canStart() {
     //TODO Game of 1 is only fun when debugging
     return Object.keys(this.players).length >= 1;
-  },
+  }
 
-  start: function(debugMode) {
+  start(debugMode) {
     const t = this;
     ps = this.allPlayers();
 
@@ -48,9 +48,9 @@ Game.prototype = {
     };
 
     ps[turn].takeTurn(nextTurn);
-  },
+  }
 
-  addConnection: function(ws) {
+  addConnection(ws) {
     let me;
     ws.on("message", util.wrapErrors(function(data) {
       data = JSON.parse(data);
@@ -83,19 +83,19 @@ Game.prototype = {
         this.playersChanged();
       }
     }.bind(this)));
-  },
+  }
 
-  allPlayers: function() {
+  allPlayers() {
     const t = this;
     return Object.keys(this.players)
       .map(function(n){return t.players[n];});
-  },
+  }
 
-  otherPlayers: function(player) {
+  otherPlayers(player) {
     return this.allPlayers().filter(function(p){return p.name !== player.name;});
-  },
+  }
 
-  parallelAttack: function(player, attackThenCallBack, callback) {
+  parallelAttack(player, attackThenCallBack, callback) {
     const others = this.otherPlayers(player);
     let attacksLeft = others.length;
     if(!attacksLeft) {
@@ -112,9 +112,9 @@ Game.prototype = {
         attackThenCallBack(p, attackDone);
       }, attackDone);
     });
-  },
+  }
 
-  sequentialAttack: function(player, attackThenCallBack, callback) {
+  sequentialAttack(player, attackThenCallBack, callback) {
     const ps = this.allPlayers();
 
     if(ps.length == 1) {
@@ -141,16 +141,16 @@ Game.prototype = {
     ps[i].attacked(function() {
       attackThenCallBack(ps[i], attackDone);
     }, attackDone);
-  },
+  }
 
-  allLog: function(text) {
+  allLog(text) {
     for(const id in this.players) {
       this.players[id].sendMessage(text);
     }
-  },
-};
+  }
+}
 
 for(const name in Game.prototype)
-  Game.prototype[name] = util.wrapErrors(Game.prototype[name]);
+{Game.prototype[name] = util.wrapErrors(Game.prototype[name]);}
 
 module.exports.Game = Game;
