@@ -35,20 +35,6 @@ if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
   }));
 }
 
-function timeStamp() {
-  var now = new Date();
-  var date = [ now.getMonth() + 1, now.getDate(), now.getFullYear() ];
-  var time = [ now.getHours(), now.getMinutes(), now.getSeconds() ];
-  var suffix = ( time[0] < 12 ) ? "AM" : "PM";
-  time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
-  time[0] = time[0] || 12;
-  for ( var i = 1; i < 3; i++ ) {
-    if ( time[i] < 10 ) {
-      time[i] = "0" + time[i];
-    }
-  }
-  return date.join("/") + " " + time.join(":") + " " + suffix;
-}
 
 window.onload = function() {
   if(isServer) {
@@ -89,7 +75,7 @@ window.onload = function() {
       var debugMode = $("debugMode").checked;
       while (manageDiv.firstChild !== manageLog)
         manageDiv.removeChild(manageDiv.firstChild);
-      game.start(debugMode, timeStamp());
+      game.start(debugMode);
     };
 
     manageDiv.appendChild(startButton);
@@ -107,28 +93,6 @@ window.onload = function() {
     manageDiv.appendChild(document.createElement("br"));
 
     manageDiv.appendChild(manageLog);
-    
-    chrome.storage.local.get(null, function(stored) { 
-      Object.keys(stored).map(function(key) {
-        var savedGame = document.createElement("button");
-        savedGame.innerHTML = "Saved Game: " + key;
-        savedGame.onclick = function() {
-          slog("TODO");
-        };
-        manageDiv.insertBefore(savedGame, manageLog);
-        var deleteSave = document.createElement("button");
-        deleteSave.innerHTML = "Delete";
-        deleteSave.onclick = function() {
-          chrome.storage.local.remove(key, function() {
-            manageDiv.removeChild(deleteSave.nextSibling);
-            manageDiv.removeChild(deleteSave);
-            manageDiv.removeChild(savedGame);
-          });
-        };
-        manageDiv.insertBefore(deleteSave, manageLog);
-        manageDiv.insertBefore(document.createElement("br"), manageLog);
-      });
-    });
   }
 
   var address = isServer ?
