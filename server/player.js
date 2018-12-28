@@ -2,9 +2,10 @@ const util = require("./util");
 const cards = require("./cards");
 
 class Player {
-  constructor(name, socket) {
+  constructor(name, socket, game) {
     this.name = name;
     this.socket = socket;
+    this.game = game;
     this.drawPile = [];
     this.discardPile = [];
     for (let i = 0; i < 7; ++i)
@@ -61,7 +62,7 @@ class Player {
 
     --this.actions;
 
-    game.allLog(this.name + " played " + choice);
+    this.game.allLog(this.name + " played " + choice);
     this.playCard(choice, this.promptAction.bind(this));
   }
 
@@ -81,7 +82,7 @@ class Player {
     }
 
     Array.prototype.push.apply(choices,
-      game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name;}));
+      this.game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name;}));
 
     if (!choices.length) {
       this.sendMessage("Nothing to buy");
@@ -112,8 +113,8 @@ class Player {
       this.money -= buying.cost;
       --this.buys;
 
-      game.allLog(this.name + " bought " + buying.name);
-      game.store.bought(buying);
+      this.game.allLog(this.name + " bought " + buying.name);
+      this.game.store.bought(buying);
       this.promptBuys();
     } else {
       this.playCard(choice, this.promptBuys.bind(this));

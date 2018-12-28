@@ -60,7 +60,7 @@ class Game {
       switch(type) {
       case "connect":
         //TODO what if name already signed in?
-        me = new Player(data, ws);
+        me = new Player(data, ws, this);
         this.players[data] = me;
         this.log(data + " connected");
         this.playersChanged();

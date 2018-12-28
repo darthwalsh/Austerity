@@ -1,7 +1,6 @@
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
-const Store = require("./server/store").Store;
 
 const defaultTest = {
   dMoney: 0,
@@ -782,6 +781,8 @@ describe("cards", function () {
 
       let interactionIndex = 0;
 
+      game = new Game(console.error); //TODO(NODE-GAME) shouldn't be a global
+
       const p = new Player("Bot", {send: function(message) {
         const o = JSON.parse(message);
         if (o.message && o.message.startsWith("Your hand"))
@@ -797,9 +798,8 @@ describe("cards", function () {
         } else {
           that.fail(Error("Not implemented: " + message));
         }
-      }});
+      }}, game);
 
-      game = new Game(console.error, new Store());
       game.players[0] = p;
       game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
       game.allLog = function(message) {
@@ -825,7 +825,7 @@ describe("cards", function () {
           } else {
             that.fail(Error("Not implemented: " + message));
           }
-        }});
+        }}, game);
         oP.TestIndex = otherCount - 1;
         oP.InteractionIndex = 0;
         oP.drawPile = testOther.draw.map(function(n) { return cards[n]; });
