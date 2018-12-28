@@ -2,100 +2,73 @@ function $(id) {
   return document.getElementById(id);
 }
 
+function $input(id) {
+  return /** @type {HTMLInputElement} */ ($(id));
+}
+
 function log(text) {
-  $("log").value += text + "\n";
+  $("log").textContent += text + "\n";
   $("log").scrollTop = $("log").scrollHeight;
 }
 
-const port = 8888;
-let isServer = false;
+function addManage(options, ws) {
+  const manageDiv = $("manage");
 
-if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
-  isServer = true;
+  for(let i = 0; i < options.length; ++i) {
+    const id = "optional" + options[i];
 
-  const server = new http.Server();
-  const wsServer = new http.WebSocketServer(server);
-  server.listen(port);
+    const box = document.createElement("input");
+    box.setAttribute("type", "checkbox");
+    box.setAttribute("id", id);
+    manageDiv.appendChild(box);
 
-  server.addEventListener("request", util.wrapErrors(function(req) {
-    let url = req.headers.url;
-    if (url == "/")
-      url = "/index.html";
-    req.serveUrl(url);
-    return true;
-  }));
-
-  wsServer.addEventListener("request", util.wrapErrors(function(req) {
-    game.addConnection(req.accept());
-    return true;
-  }));
-}
-
-
-window.onload = function() {
-  if(isServer) {
-    const manageDiv = $("manage");
-
-    const options = game.store.optional();
-    for(let i = 0; i < options.length; ++i) {
-      const id = "optional" + options[i];
-
-      const box = document.createElement("input");
-      box.setAttribute("type", "checkbox");
-      box.setAttribute("id", id);
-      manageDiv.appendChild(box);
-
-      const label = document.createElement("label");
-      label.innerText = options[i];
-      label.htmlFor = id;
-      manageDiv.appendChild(label);
-    }
-
-    manageDiv.appendChild(document.createElement("br"));
-
-    const manageLog = document.createElement("textarea");
-    manageLog.readOnly = true;
-    manageLog.id = "manageLog";
-
-    const startButton = document.createElement("button");
-    startButton.innerHTML = "Start";
-    startButton.disabled = true;
-    startButton.id = "startButton";
-    startButton.onclick = function() {
-      game.store.setIncluded(game.store.optional().filter(function(n) {
-        return $("optional" + n).checked;
-      }).map(function(n) {
-        return cards[n];
-      }));
-
-      const debugMode = $("debugMode").checked;
-      while (manageDiv.firstChild !== manageLog)
-        manageDiv.removeChild(manageDiv.firstChild);
-      game.start(debugMode);
-    };
-
-    manageDiv.appendChild(startButton);
-
-    const debugBox = document.createElement("input");
-    debugBox.setAttribute("type", "checkbox");
-    debugBox.setAttribute("id", "debugMode");
-    manageDiv.appendChild(debugBox);
-
-    const debugLabel = document.createElement("label");
-    debugLabel.innerText = "Debug";
-    debugLabel.htmlFor = "debugMode";
-    manageDiv.appendChild(debugLabel);
-
-    manageDiv.appendChild(document.createElement("br"));
-
-    manageDiv.appendChild(manageLog);
+    const label = document.createElement("label");
+    label.innerText = options[i];
+    label.htmlFor = id;
+    manageDiv.appendChild(label);
   }
 
-  const address = isServer ?
-    "ws://localhost:" + port + "/" :
-    window.location.href.replace("http", "ws");
-  const name = $("name");
-  const connectButton = $("connectButton");
+  manageDiv.appendChild(document.createElement("br"));
+
+  const manageLog = document.createElement("textarea");
+  manageLog.readOnly = true;
+  manageLog.id = "manageLog";
+
+  const startButton = document.createElement("button");
+  startButton.innerHTML = "Start";
+  // startButton.disabled = true; //TODO(NODE) figure out players / game.playersChanged
+  startButton.id = "startButton";
+  startButton.onclick = function() {
+    const included = options.filter(n => $input("optional" + n).checked);
+    const debugMode = $input("debugMode").checked;
+
+    while (manageDiv.firstChild !== manageLog)
+      manageDiv.removeChild(manageDiv.firstChild);
+
+    ws.send(JSON.stringify({gameStart: {included, debugMode}}));
+  };
+
+  manageDiv.appendChild(startButton);
+
+  const debugBox = document.createElement("input");
+  debugBox.setAttribute("type", "checkbox");
+  debugBox.setAttribute("id", "debugMode");
+  manageDiv.appendChild(debugBox);
+
+  const debugLabel = document.createElement("label");
+  debugLabel.innerText = "Debug";
+  debugLabel.htmlFor = "debugMode";
+  manageDiv.appendChild(debugLabel);
+
+  manageDiv.appendChild(document.createElement("br"));
+
+  manageDiv.appendChild(manageLog);
+}
+
+window.onload = function() {
+  const address = window.location.href.replace("http", "ws");
+  const name = $input("name");
+  const connectButton = $input("connectButton");
   const connect = function() {
     ws.send(JSON.stringify({connect: name.value}));
     name.disabled = true;
@@ -111,7 +84,7 @@ window.onload = function() {
   connectButton.onclick = connect;
 
   let turnAlert;
-  const input = $("input");
+  const input = $input("input");
   const ws = new WebSocket(address);
   ws.addEventListener("open", () => log("Connected to Server"));
   ws.addEventListener("close", () => {
@@ -126,8 +99,8 @@ window.onload = function() {
     const choicesDiv = $("choices");
     const choiceOnClick = function() {
       ws.send(JSON.stringify({choice: this.innerHTML}));
-      while(cDiv.firstChild)
-        cDiv.removeChild(cDiv.firstChild);
+      while(choicesDiv.firstChild)
+        choicesDiv.removeChild(choicesDiv.firstChild);
     };
 
     switch(type) {
@@ -156,6 +129,9 @@ window.onload = function() {
         turnAlert.load();
         turnAlert.play();
       }
+      break;
+    case "isLeader":
+      addManage(data, ws);
       break;
     default:
       console.error("Not implemented: " + type);

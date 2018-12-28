@@ -1,5 +1,6 @@
 const util = require("./util");
 const Store = require("./store").Store;
+const cards = require("./cards");
 const Player = require("./player").Player;
 
 class Game {
@@ -18,7 +19,7 @@ class Game {
 
   start(debugMode) {
     const t = this;
-    ps = this.allPlayers();
+    const ps = this.allPlayers();
 
     if(debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
@@ -60,15 +61,22 @@ class Game {
       case "connect":
         //TODO what if name already signed in?
         me = new Player(data, ws);
-        this.players[name] = me;
+        this.players[data] = me;
         this.log(data + " connected");
         this.playersChanged();
+        if (Object.keys(this.players).length == 1) {
+          me.send({isLeader: this.store.optional()});
+        }
         break;
       case "choice":
         me.onChoice(data);
         break;
       case "chat":
         this.allLog(me.name + ": " + data);
+        break;
+      case "gameStart":
+        this.store.setIncluded(data.included.map(n => cards[n]));
+        this.start(data.debugMode);
         break;
       default:
         console.error("Not implemented: " + type);
