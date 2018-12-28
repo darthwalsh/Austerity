@@ -784,7 +784,7 @@ describe("cards", function () {
 
       var p = new Player("Bot", {send: function(message) {
         var o = JSON.parse(message);
-        if (o.message && o.message.substring(0, 4) == "Hand")
+        if (o.message && o.message.startsWith("Your hand"))
           return;
 
         var expected = test.interactions[interactionIndex++];
@@ -811,7 +811,7 @@ describe("cards", function () {
       test.others.forEach(function(testOther) {
         var oP = new Player("Other#" + otherCount++, {send: function(message) {
           var o = JSON.parse(message);
-          if (o.message && o.message.substring(0, 4) == "Hand")
+        if (o.message && o.message.startsWith("Your hand"))
             return;
 
           var expected = testOther.interactions[oP.InteractionIndex++];
