@@ -28,7 +28,6 @@ module.exports = {
 
         /* //TODO fix these */
         "block-spacing": "off",
-        "comma-dangle": "off",
         "comma-spacing": "off",
         "guard-for-in": "off",
         "no-multi-spaces": "off",

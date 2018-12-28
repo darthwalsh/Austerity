@@ -20,7 +20,7 @@ const defaultTest = {
   others: [],
 
   store: [],
-  trashAfter: []
+  trashAfter: [],
 };
 
 const defaultOthers = {
@@ -30,34 +30,34 @@ const defaultOthers = {
   interactions: [],
   drawAfter: [],
   discardAfter: [],
-  handAfter: []
+  handAfter: [],
 };
 
 const tests = {
   Copper: {
-    dMoney: 1
+    dMoney: 1,
   },
   Silver: {
-    dMoney: 2
+    dMoney: 2,
   },
   Gold: {
-    dMoney: 3
+    dMoney: 3,
   },
   Platinum: {
-    dMoney: 5
+    dMoney: 5,
   },
 
   Estate: {
-    points: 1
+    points: 1,
   },
   Duchy: {
-    points: 3
+    points: 3,
   },
   Province: {
-    points: 6
+    points: 6,
   },
   Curse: {
-    points: -1
+    points: -1,
   },
 
 
@@ -99,11 +99,11 @@ const tests = {
       interactions: [
         "Put a Victory card onto your deck:",
         ["Estate", "Duchy"],
-        "Estate"
+        "Estate",
       ],
       handAfter: ["Copper", "Silver", "Gold", "Duchy"],
-      drawAfter: ["Estate"]
-    }]
+      drawAfter: ["Estate"],
+    }],
   },
 
   Bureaucrat_NoVictory: {
@@ -111,8 +111,8 @@ const tests = {
 
     others: [{
       hand: ["Copper", "Silver", "Gold"],
-      handAfter: ["Copper", "Silver", "Gold"]
-    }]
+      handAfter: ["Copper", "Silver", "Gold"],
+    }],
   },
 
   Cellar: {
@@ -126,11 +126,11 @@ const tests = {
       "Copper",
       "Discard cards:",
       ["Gold", "Done Discarding"],
-      "Gold"
+      "Gold",
     ],
     drawAfter: [],
     discardAfter: ["Copper", "Gold"],
-    handAfter: ["Village", "Silver"]
+    handAfter: ["Village", "Silver"],
   },
 
   Cellar_Done: {
@@ -141,11 +141,11 @@ const tests = {
     interactions: [
       "Discard cards:",
       ["Copper", "Done Discarding"],
-      "Done Discarding"
+      "Done Discarding",
     ],
     drawAfter: ["Silver"],
     discardAfter: [],
-    handAfter: ["Copper"]
+    handAfter: ["Copper"],
   },
 
   Chancellor: {
@@ -154,10 +154,10 @@ const tests = {
     interactions: [
       "Discard your draw pile?",
       ["No", "Discard"],
-      "Discard"
+      "Discard",
     ],
     drawAfter: [],
-    discardAfter: ["Silver"]
+    discardAfter: ["Silver"],
   },
 
   Chancellor_No: {
@@ -166,7 +166,7 @@ const tests = {
     interactions: [
       "Discard your draw pile?",
       ["No", "Discard"],
-      "No"
+      "No",
     ],
     drawAfter: ["Silver"],
   },
@@ -185,10 +185,10 @@ const tests = {
       "Village",
       "Trash up to 1 cards:",
       ["Silver", "Chapel", "Done Trashing"],
-      "Chapel"
+      "Chapel",
     ],
     handAfter: ["Silver"],
-    trashAfter: ["Copper", "Gold", "Village", "Chapel"]
+    trashAfter: ["Copper", "Gold", "Village", "Chapel"],
   },
 
   Chapel_Done: {
@@ -196,10 +196,10 @@ const tests = {
     interactions: [
       "Trash up to 4 cards:",
       ["Copper", "Done Trashing"],
-      "Done Trashing"
+      "Done Trashing",
     ],
     handAfter: ["Copper"],
-    trashAfter: []
+    trashAfter: [],
   },
 
   CouncilRoom: {
@@ -213,8 +213,8 @@ const tests = {
       draw: ["Copper", "Silver"],
       hand: [],
       drawAfter: ["Copper"],
-      handAfter: ["Silver"]
-    }]
+      handAfter: ["Silver"],
+    }],
   },
 
   CouncilRoom_Self: {
@@ -224,17 +224,17 @@ const tests = {
     drawAfter: ["Village"],
     handAfter: ["Gold", "Silver", "Copper", "Estate"],
 
-    others: []
+    others: [],
   },
 
   Feast: {
     interactions: [
       "Gain a card:",
       ["Copper", "Silver", "Estate", "Duchy"],
-      "Copper"
+      "Copper",
     ],
     handAfter: [],
-    discardAfter: ["Copper"]
+    discardAfter: ["Copper"],
   },
 
   ThroneRoom_Feast_OneTrash: {
@@ -249,33 +249,33 @@ const tests = {
       "Copper",
       "Gain a card:",
       ["Copper", "Silver", "Estate", "Duchy"],
-      "Silver"
+      "Silver",
     ],
     handAfter: [],
     discardAfter: ["Copper", "Silver"],
     playedAfter: [],
-    trashAfter: ["Feast"]
+    trashAfter: ["Feast"],
   },
 
   Festival: {
     dActions: 2,
     dBuys: 1,
-    dMoney: 2
+    dMoney: 2,
   },
 
   Gardens: {
     points: 1,
     hand: ["Copper", "Silver", "Gold", "Village"],
     draw: ["Copper", "Silver", "Gold"],
-    discard: ["Copper", "Silver", "Gold"]
+    discard: ["Copper", "Silver", "Gold"],
   },
 
   Gardens_Rounding: {
     points: 0,
     hand: [
       "Copper", "Silver", "Gold", "Village", "Smithy",
-      "Copper", "Silver", "Gold", "Village"
-    ]
+      "Copper", "Silver", "Gold", "Village",
+    ],
   },
 
   Laboratory: {
@@ -291,11 +291,11 @@ const tests = {
     interactions: [
       "Gain Action or set aside:",
       ["Smithy", "Set Aside"],
-      "Set Aside"
+      "Set Aside",
     ],
     drawAfter: ["Village"],
     handAfter: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver", "Gold"],
-    discardAfter: ["Smithy"]
+    discardAfter: ["Smithy"],
   },
 
   Library_Out: {
@@ -305,10 +305,10 @@ const tests = {
     interactions: [
       "Gain Action or set aside:",
       ["Village", "Set Aside"],
-      "Village"
+      "Village",
     ],
     handAfter: ["Village"],
-    discardAfter: []
+    discardAfter: [],
   },
 
   Market: {
@@ -331,11 +331,11 @@ const tests = {
         "Village",
         "Discard down to three cards:",
         ["Copper", "Silver", "Gold", "Smithy"],
-        "Silver"
+        "Silver",
       ],
       handAfter: ["Copper", "Gold", "Smithy"],
-      discardAfter: ["Village", "Silver"]
-    }]
+      discardAfter: ["Village", "Silver"],
+    }],
   },
 
   Militia_FewCards: {
@@ -343,8 +343,8 @@ const tests = {
 
     others: [{
       hand: ["Copper", "Silver", "Gold"],
-      handAfter: ["Copper", "Silver", "Gold"]
-    }]
+      handAfter: ["Copper", "Silver", "Gold"],
+    }],
   },
 
   Mine: {
@@ -355,25 +355,25 @@ const tests = {
       "Silver",
       "Gain a Treasure:",
       ["Copper", "Silver", "Gold"],
-      "Gold"
+      "Gold",
     ],
     handAfter: ["Copper", "Gold"],
-    trashAfter: ["Silver"]
+    trashAfter: ["Silver"],
   },
 
   Mine_NoMoney: {
     hand: [],
     interactions: [
-      "No Treasures to trash"
+      "No Treasures to trash",
     ],
-    handAfter: []
+    handAfter: [],
   },
 
   Moat: {
     draw: ["Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Copper"],
-    handAfter: ["Gold", "Silver"]
+    handAfter: ["Gold", "Silver"],
   },
 
   Witch_Moat: {
@@ -386,11 +386,11 @@ const tests = {
       discard: [],
       interactions: [
         ["Moat", "Get Attacked"],
-        "Moat"
+        "Moat",
       ],
       handAfter: ["Moat"],
-      discardAfter: []
-    }]
+      discardAfter: [],
+    }],
   },
 
   Witch_MoatAttacked: {
@@ -403,11 +403,11 @@ const tests = {
       discard: [],
       interactions: [
         ["Moat", "Get Attacked"],
-        "Get Attacked"
+        "Get Attacked",
       ],
       handAfter: ["Moat"],
-      discardAfter: ["Curse"]
-    }]
+      discardAfter: ["Curse"],
+    }],
   },
 
   Militia_Moat: {
@@ -417,10 +417,10 @@ const tests = {
       hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
       interactions: [
         ["Moat", "Get Attacked"],
-        "Moat"
+        "Moat",
       ],
       handAfter: ["Copper", "Silver", "Gold", "Village", "Moat"],
-      discardAfter: []
+      discardAfter: [],
     },{
       hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
       interactions: [
@@ -431,25 +431,25 @@ const tests = {
         "Village",
         "Discard down to three cards:",
         ["Copper", "Silver", "Gold", "Moat"],
-        "Silver"
+        "Silver",
       ],
       handAfter: ["Copper", "Gold", "Moat"],
-      discardAfter: ["Village", "Silver"]
-    }]
+      discardAfter: ["Village", "Silver"],
+    }],
   },
 
   Moneylender: {
     dMoney: 3,
     hand: ["Copper", "Copper"],
     handAfter: ["Copper"],
-    trashAfter: ["Copper"]
+    trashAfter: ["Copper"],
   },
 
   Moneylender_NoCopper: {
     dMoney: 0,
     hand: ["Silver"],
     handAfter: ["Silver"],
-    trashAfter: []
+    trashAfter: [],
   },
 
   Remodel: {
@@ -460,11 +460,11 @@ const tests = {
       "Copper",
       "Gain a card:",
       ["Copper", "Estate"],
-      "Estate"
+      "Estate",
     ],
     handAfter: ["Silver"],
     discardAfter: ["Estate"],
-    trashAfter: ["Copper"]
+    trashAfter: ["Copper"],
   },
 
   Smithy: {
@@ -494,7 +494,7 @@ const tests = {
       "Put back",
       "Put back on deck or discard Your Copper",
       ["Put back", "Discard"],
-      "Discard"
+      "Discard",
     ],
 
     handAfter: ["Silver"],
@@ -502,15 +502,15 @@ const tests = {
     discardAfter: ["Copper"],
 
     others: [{
-      draw: []
+      draw: [],
     }, {
       draw: ["Smithy", "Thief"],
       drawAfter: ["Smithy"],
-      discardAfter: ["Thief"]
+      discardAfter: ["Thief"],
     }, {
       draw: ["Copper"],
-      drawAfter: ["Copper"]
-    }]
+      drawAfter: ["Copper"],
+    }],
   },
 
   Spy_Solo: {
@@ -519,22 +519,22 @@ const tests = {
 
     interactions: [],
 
-    others: []
+    others: [],
   },
 
   Thief: {
     interactions: [
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
-      "Steal: Silver"
+      "Steal: Silver",
     ],
 
     discardAfter: ["Silver"],
 
     others: [{
       draw: ["Silver", "Copper"],
-      discardAfter: ["Copper"]
-    }]
+      discardAfter: ["Copper"],
+    }],
   },
 
   Thief_NonTreasure: {
@@ -542,8 +542,8 @@ const tests = {
 
     others: [{
       draw: ["Village"],
-      discardAfter: ["Village"]
-    }]
+      discardAfter: ["Village"],
+    }],
   },
 
   Thief_SequentialMultiple: {
@@ -553,7 +553,7 @@ const tests = {
       "Trash: Silver",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
-      "Steal: Gold"
+      "Steal: Gold",
     ],
 
     discardAfter: ["Gold"],
@@ -561,17 +561,17 @@ const tests = {
 
     others: [{
       draw: ["Silver", "Copper"],
-      discardAfter: ["Copper"]
+      discardAfter: ["Copper"],
     }, {
       draw: ["Gold"],
-      discardAfter: []
-    }]
+      discardAfter: [],
+    }],
   },
 
   Thief_SequentialSolo: {
     interactions: [],
 
-    others: []
+    others: [],
   },
 
   ThroneRoom_Thief: {
@@ -587,7 +587,7 @@ const tests = {
       "Steal: Silver",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
-      "Steal: Gold"
+      "Steal: Gold",
     ],
 
     handAfter: [],
@@ -596,15 +596,15 @@ const tests = {
 
     others: [{
       draw: ["Village", "Gold", "Silver", "Copper"],
-      discardAfter: ["Copper", "Village"]
-    }]
+      discardAfter: ["Copper", "Village"],
+    }],
   },
 
   Thief_Moat: {
     interactions: [
       "Trash or steal a Treasure:",
       ["Trash: Silver", "Steal: Silver"],
-      "Steal: Silver"
+      "Steal: Silver",
     ],
 
     discardAfter: ["Silver"],
@@ -614,20 +614,20 @@ const tests = {
       draw: ["Copper"],
       interactions: [
         ["Moat", "Get Attacked"],
-        "Moat"
+        "Moat",
       ],
       handAfter: ["Moat"],
-      drawAfter: ["Copper"]
+      drawAfter: ["Copper"],
     }, {
       hand: ["Moat"],
       draw: ["Silver"],
       interactions: [
         ["Moat", "Get Attacked"],
-        "Get Attacked"
+        "Get Attacked",
       ],
       handAfter: ["Moat"],
-      drawAfter: []
-    }]
+      drawAfter: [],
+    }],
   },
 
   ThroneRoom: {
@@ -648,19 +648,19 @@ const tests = {
       "Silver",
       "Gain a Treasure:",
       ["Copper", "Silver", "Gold"],
-      "Gold"
+      "Gold",
     ],
     handAfter: ["Gold"],
     playedAfter: ["Mine"],
-    trashAfter: ["Copper", "Silver"]
+    trashAfter: ["Copper", "Silver"],
   },
 
   ThroneRoom_None: {
     hand: ["Copper", "Silver"],
     interactions: [
-      "No Actions to play"
+      "No Actions to play",
     ],
-    handAfter: ["Copper", "Silver"]
+    handAfter: ["Copper", "Silver"],
   },
 
   Village: {
@@ -679,8 +679,8 @@ const tests = {
 
     others: [{
       discard: [],
-      discardAfter: ["Curse"]
-    }]
+      discardAfter: ["Curse"],
+    }],
   },
 
   Witch_NoCurse: {
@@ -690,8 +690,8 @@ const tests = {
 
     others: [{
       discard: [],
-      discardAfter: []
-    }]
+      discardAfter: [],
+    }],
   },
 
   Witch_Self: {
@@ -700,7 +700,7 @@ const tests = {
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
-    others: []
+    others: [],
   },
 
   Witch_Many: {
@@ -712,25 +712,25 @@ const tests = {
 
     others: [{
       discard: [],
-      discardAfter: ["Curse"]
+      discardAfter: ["Curse"],
     }, {
       discard: [],
-      discardAfter: ["Curse"]
-    }]
+      discardAfter: ["Curse"],
+    }],
   },
 
   Woodcutter: {
     dBuys: 1,
-    dMoney: 2
+    dMoney: 2,
   },
 
   Workshop: {
     interactions: [
       "Gain a card:",
       ["Copper", "Silver", "Estate"],
-      "Estate"
+      "Estate",
     ],
-    discardAfter: ["Estate"]
+    discardAfter: ["Estate"],
   },
 
   KingsCourt: {
@@ -744,8 +744,8 @@ const tests = {
       "ALL: Bot played Woodcutter tripled!!",
     ],
     handAfter: ["Woodcutter"],
-    playedAfter: ["Woodcutter"]
-  }
+    playedAfter: ["Woodcutter"],
+  },
 };
 
 describe("cards", function () {
@@ -777,7 +777,7 @@ describe("cards", function () {
       const init = {
         actions: 3,
         buys: 3,
-        money: 3
+        money: 3,
       };
 
       let interactionIndex = 0;

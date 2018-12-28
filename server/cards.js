@@ -617,7 +617,7 @@ const cards = {
 
   // Prosperity
   KingsCourt:   new KingsCourt(),
-  Platinum:     new Treasure(9, 5)
+  Platinum:     new Treasure(9, 5),
 };
 
 const toString = function() { return this.name; };

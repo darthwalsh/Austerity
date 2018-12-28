@@ -266,7 +266,7 @@ Player.prototype = {
       handleChoice.call(t, choice);
     };
     this.send({choices:choices});
-  }
+  },
 };
 
 // Loudly fail so nobody can try-catch these errors

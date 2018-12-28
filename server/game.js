@@ -147,7 +147,7 @@ Game.prototype = {
     for(const id in this.players) {
       this.players[id].sendMessage(text);
     }
-  }
+  },
 };
 
 for(const name in Game.prototype)

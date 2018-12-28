@@ -49,7 +49,7 @@ Store.prototype = {
     return this.default.concat(this.included).filter(function(c) {
       return t.counts[c] === 0;
     }).length >= 3;
-  }
+  },
 };
 
 for(const name in Store.prototype)
