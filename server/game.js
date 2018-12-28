@@ -17,7 +17,7 @@ Game.prototype = {
   },
 
   start: function(debugMode) {
-    var t = this;
+    const t = this;
     ps = this.allPlayers();
 
     if(debugMode) {
@@ -26,10 +26,10 @@ Game.prototype = {
       this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
-    var turn = Math.floor(Math.random() * ps.length);
-    var nextTurn = function() {
+    let turn = Math.floor(Math.random() * ps.length);
+    const nextTurn = function() {
       if (t.store.gameOver()) {
-        var result = "GAME OVER!!!\r\n";
+        let result = "GAME OVER!!!\r\n";
         result += ps
           .sort(function(a, b) { return b.getPoints() - a.getPoints(); }) //descending
           .map(function(p){ return p.name + ": " + p.getPoints() + "\n    " +
@@ -51,10 +51,10 @@ Game.prototype = {
   },
 
   addConnection: function(ws) {
-    var me;
+    let me;
     ws.on("message", util.wrapErrors(function(data) {
-      var data = JSON.parse(data);
-      var type = Object.keys(data)[0];
+      data = JSON.parse(data);
+      const type = Object.keys(data)[0];
       data = data[type];
       switch(type) {
       case "connect":
@@ -76,7 +76,7 @@ Game.prototype = {
     }.bind(this)));
 
     ws.on("close", util.wrapErrors(function() {
-      var player = this.players[me.name];
+      const player = this.players[me.name];
       if (player) {
         this.log(player.name + " disconnected");
         delete this.players[me.name];
@@ -86,7 +86,7 @@ Game.prototype = {
   },
 
   allPlayers: function() {
-    var t = this;
+    const t = this;
     return Object.keys(this.players)
       .map(function(n){return t.players[n];});
   },
@@ -96,13 +96,13 @@ Game.prototype = {
   },
 
   parallelAttack: function(player, attackThenCallBack, callback) {
-    var others = this.otherPlayers(player);
-    var attacksLeft = others.length;
+    const others = this.otherPlayers(player);
+    let attacksLeft = others.length;
     if(!attacksLeft) {
       callback();
       return;
     }
-    var attackDone = function() {
+    const attackDone = function() {
       if(! --attacksLeft) {
         callback();
       }
@@ -115,17 +115,17 @@ Game.prototype = {
   },
 
   sequentialAttack: function(player, attackThenCallBack, callback) {
-    var ps = this.allPlayers();
+    const ps = this.allPlayers();
 
     if(ps.length == 1) {
       callback();
       return;
     }
 
-    var pi = ps.indexOf(player);
-    var i = (pi + 1) % ps.length;
+    const pi = ps.indexOf(player);
+    let i = (pi + 1) % ps.length;
 
-    var attackDone = function() {
+    const attackDone = function() {
       i = (i + 1) % ps.length;
 
       if (i == pi) {
@@ -144,13 +144,13 @@ Game.prototype = {
   },
 
   allLog: function(text) {
-    for(var id in this.players) {
+    for(const id in this.players) {
       this.players[id].sendMessage(text);
     }
   }
 };
 
-for(var name in Game.prototype)
+for(const name in Game.prototype)
   Game.prototype[name] = util.wrapErrors(Game.prototype[name]);
 
 module.exports.Game = Game;

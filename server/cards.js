@@ -1,4 +1,4 @@
-var cards = (function() {
+const cards = (function() {
 
 function Treasure(cost, money) {
   this.kind = "treasure";
@@ -35,11 +35,11 @@ function Action(cost, play) {
   };
 }
 
-var Adventurer = new Action(6, function(player) {
-  var treasures = 0;
-  var drawn = [];
+const Adventurer = new Action(6, function(player) {
+  let treasures = 0;
+  const drawn = [];
   while (treasures < 2) {
-    var card = player.fromDraw();
+    const card = player.fromDraw();
     if (!card)
       break;
     if (card.ofKind("treasure")) {
@@ -64,7 +64,7 @@ function Bureaucrat() {
     }
 
     game.parallelAttack(player, function(p, attackDone) {
-      var discardChoices = p.hand
+      const discardChoices = p.hand
         .filter(function(c){return c.ofKind("property");})
         .map(function(c){return c.name;});
 
@@ -86,15 +86,15 @@ function Cellar() {
   this.cost = 2;
   this.play = function(player, callback) {
     player.actions += 1;
-    var discarded = 0;
+    let discarded = 0;
 
-    var end = function() {
+    const end = function() {
       player.draw(discarded);
       callback();
     };
 
-    var promptDiscard = function() {
-      var choices = player.hand.map(function(c){return c.name;});
+    const promptDiscard = function() {
+      const choices = player.hand.map(function(c){return c.name;});
       if (!choices.length) {
         end();
         return;
@@ -108,7 +108,7 @@ function Cellar() {
           return;
         }
 
-        var discard = player.fromHand(choice);
+        const discard = player.fromHand(choice);
         ++discarded;
         player.discardPile.push(discard);
 
@@ -140,10 +140,10 @@ function Chapel() {
   this.kind = "action";
   this.cost = 2;
   this.play = function(player, callback) {
-    var canTrash = 4;
+    let canTrash = 4;
 
-    var promptTrash = function() {
-      var trashChoices = player.hand.map(function(c){return c.name;});
+    const promptTrash = function() {
+      const trashChoices = player.hand.map(function(c){return c.name;});
       if (!trashChoices.length) {
         callback();
         return;
@@ -157,7 +157,7 @@ function Chapel() {
           return;
         }
 
-        var trash = player.fromHand(choice);
+        const trash = player.fromHand(choice);
         game.trash.push(trash);
         --canTrash;
 
@@ -173,7 +173,7 @@ function Chapel() {
   };
 }
 
-var CouncilRoom = new Action(5, function(player) {
+const CouncilRoom = new Action(5, function(player) {
   player.buys += 1;
   player.draw(4);
   game.otherPlayers(player).forEach(function(p) {
@@ -185,7 +185,7 @@ function Feast() {
   this.kind = "action";
   this.cost = 5;
   this.play = function(player, callback) {
-    var gainChoices = game.store
+    const gainChoices = game.store
         .getAvailable(5)
         .map(function(c){return c.name;});
     if (!gainChoices.length) {
@@ -205,7 +205,7 @@ function Feast() {
   };
 }
 
-var Festival = new Action(5, function(player) {
+const Festival = new Action(5, function(player) {
   player.actions += 2;
   player.buys += 1;
   player.money += 2;
@@ -219,7 +219,7 @@ function Gardens() {
   };
 }
 
-var Laboratory = new Action(5, function(player) {
+const Laboratory = new Action(5, function(player) {
   player.draw(2);
   player.actions += 1;
 });
@@ -228,21 +228,21 @@ function Library() {
   this.kind = "action";
   this.cost = 5;
   this.play = function(player, callback) {
-    var aside = [];
+    const aside = [];
 
-    var end = function() {
+    const end = function() {
       Array.prototype.push.apply(player.discardPile, aside);
       player.sendHand();
       callback();
     };
 
-    var promptTake = function() {
+    const promptTake = function() {
       if (player.hand.length >= 7) {
         end();
         return;
       }
 
-      var card = player.fromDraw();
+      const card = player.fromDraw();
 
       if (!card) {
         end();
@@ -269,7 +269,7 @@ function Library() {
   };
 }
 
-var Market = new Action(5, function(player) {
+const Market = new Action(5, function(player) {
   player.draw();
   player.actions += 1;
   player.buys += 1;
@@ -282,9 +282,9 @@ function Militia() {
   this.play = function(player, callback) {
     player.money += 2;
 
-    var attack = function(p, attackDone) {
+    const attack = function(p, attackDone) {
       if(p.hand.length > 3) {
-        var discardChoices = p.hand.map(function(c){return c.name;});
+        const discardChoices = p.hand.map(function(c){return c.name;});
         p.sendMessage("Discard down to three cards:");
         p.sendChoice(discardChoices, function(choice) {
           p.discardPile.push(p.fromHand(choice));
@@ -303,7 +303,7 @@ function Mine() {
   this.kind = "action";
   this.cost = 5;
   this.play = function(player, callback) {
-    var trashChoices = player.hand
+    const trashChoices = player.hand
       .filter(function(c){return c.ofKind("treasure");})
       .map(function(c){return c.name;});
     if (!trashChoices.length) {
@@ -313,10 +313,10 @@ function Mine() {
     }
     player.sendMessage("Trash a Treasure:");
     player.sendChoice(trashChoices, function(trashChoice) {
-      var trash = player.fromHand(trashChoice);
+      const trash = player.fromHand(trashChoice);
       game.trash.push(trash);
 
-      var gainChoices = game.store
+      const gainChoices = game.store
         .getAvailable(trash.cost+3)
         .filter(function(c){return c.ofKind("treasure");})
         .map(function(c){return c.name;});
@@ -344,8 +344,8 @@ function Moat() {
   };
 }
 
-var Moneylender = new Action(4, function(player) {
-  var copper = player.fromHand(cards.Copper.name);
+const Moneylender = new Action(4, function(player) {
+  const copper = player.fromHand(cards.Copper.name);
   if (copper) {
     player.money += 3;
     game.trash.push(copper);
@@ -356,7 +356,7 @@ function Remodel() {
   this.kind = "action";
   this.cost = 4;
   this.play = function(player, callback) {
-    var trashChoices = player.hand
+    const trashChoices = player.hand
       .map(function(c){return c.name;});
     if (!trashChoices.length) {
       player.sendMessage("No Cards to trash");
@@ -365,10 +365,10 @@ function Remodel() {
     }
     player.sendMessage("Trash a card:");
     player.sendChoice(trashChoices, function(trashChoice) {
-      var trash = player.fromHand(trashChoice);
+      const trash = player.fromHand(trashChoice);
       game.trash.push(trash);
 
-      var gainChoices = game.store
+      const gainChoices = game.store
         .getAvailable(trash.cost+2)
         .map(function(c){return c.name;});
       if (!gainChoices.length) {
@@ -386,7 +386,7 @@ function Remodel() {
   };
 }
 
-var Smithy = new Action(4, function(player) {
+const Smithy = new Action(4, function(player) {
   player.draw(3);
 });
 
@@ -397,13 +397,13 @@ function Spy() {
     player.actions += 1;
     player.draw();
 
-    var attack = function(p, attackDone) {
-      var card = p.fromDraw();
+    const attack = function(p, attackDone) {
+      const card = p.fromDraw();
       if(!card) {
         attackDone();
         return;
       }
-      var name = p.name == player.name ? "Your" : (p.name + "'s");
+      const name = p.name == player.name ? "Your" : (p.name + "'s");
       player.sendMessage("Put back on deck or discard " + name + " " + card.name);
       player.sendChoice(["Put back", "Discard"], function(choice) {
         if(choice == "Put back") {
@@ -425,14 +425,14 @@ function Thief() {
   this.cost = 4;
   this.play = function(player, callback) {
     game.sequentialAttack(player, function(p, attackDone) {
-      var drawn = [];
+      const drawn = [];
 
-      var card = p.fromDraw();
+      let card = p.fromDraw();
       if (card) drawn.push(card);
       card = p.fromDraw();
       if (card) drawn.push(card);
 
-      var treasures = drawn
+      let treasures = drawn
         .filter(function(c){return c.ofKind("treasure");})
         .map(function(c){return c.name;});
 
@@ -442,18 +442,18 @@ function Thief() {
         return;
       }
 
-      var choices = [];
-      for(var i = 0; i < treasures.length; ++i ) {
-        var name = treasures[i];
+      const choices = [];
+      for(let i = 0; i < treasures.length; ++i ) {
+        const name = treasures[i];
         Array.prototype.push.apply(choices, ["Trash: "+name, "Steal: "+name]);
       }
 
       player.sendMessage("Trash or steal a Treasure:");
       player.sendChoice(choices, function(choice) {
-        var steal = choice.substring(0, 7) == "Steal: ";
+        const steal = choice.substring(0, 7) == "Steal: ";
         choice = choice.substring(7);
 
-        var chosen;
+        let chosen;
         if (choice == treasures[0]) {
           chosen = treasures.splice(0, 1)[0];
         } else {
@@ -471,7 +471,7 @@ function Thief() {
         treasures = treasures.map(function(n){ return cards[n]; });
 
         Array.prototype.push.apply(p.discardPile, treasures);
-        var notTreasures = drawn.filter(function(c){return !c.ofKind("treasure");});
+        const notTreasures = drawn.filter(function(c){return !c.ofKind("treasure");});
         Array.prototype.push.apply(p.discardPile, notTreasures);
 
         attackDone();
@@ -484,7 +484,7 @@ function ThroneRoom() {
   this.kind = "action";
   this.cost = 4;
   this.play = function(player, callback) {
-    var actions = player.hand
+    const actions = player.hand
       .filter(function(c){return c.ofKind("action");})
       .map(function(c){return c.name;});
     if (!actions.length) {
@@ -495,7 +495,7 @@ function ThroneRoom() {
     player.sendMessage("Pick an Action to double:");
     player.sendChoice(actions, function(actionName) {
       game.allLog(player.name + " played " + actionName + " doubled!");
-      var action = player.fromHand(actionName);
+      const action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {
           player.afterPlay(action);
@@ -506,7 +506,7 @@ function ThroneRoom() {
   };
 }
 
-var Village = new Action(3, function(player) {
+const Village = new Action(3, function(player) {
   player.draw();
   player.actions += 2;
 });
@@ -526,7 +526,7 @@ function Witch() {
   };
 }
 
-var Woodcutter = new Action(3, function(player) {
+const Woodcutter = new Action(3, function(player) {
   player.buys  += 1;
   player.money += 2;
 });
@@ -535,7 +535,7 @@ function Workshop() {
   this.kind = "action";
   this.cost = 3;
   this.play = function(player, callback) {
-    var gainChoices = game.store
+    const gainChoices = game.store
         .getAvailable(4)
         .map(function(c){return c.name;});
       if (!gainChoices.length) {
@@ -556,7 +556,7 @@ function KingsCourt() {
   this.kind = "action";
   this.cost = 7;
   this.play = function(player, callback) {
-    var actions = player.hand
+    const actions = player.hand
       .filter(function(c){return c.ofKind("action");})
       .map(function(c){return c.name;});
     if (!actions.length) {
@@ -567,7 +567,7 @@ function KingsCourt() {
     player.sendMessage("Pick an Action to triple:");
     player.sendChoice(actions, function(actionName) {
       game.allLog(player.name + " played " + actionName + " tripled!!");
-      var action = player.fromHand(actionName);
+      const action = player.fromHand(actionName);
       action.play(player, function() {
         action.play(player, function() {
           action.play(player, function() {
@@ -580,7 +580,7 @@ function KingsCourt() {
   };
 }
 
-var cards = {
+const cards = {
   // Core game
   Copper:      new Treasure(0, 1),
   Silver:      new Treasure(3, 2),
@@ -622,32 +622,32 @@ var cards = {
   Platinum:     new Treasure(9, 5)
 };
 
-var toString = function() { return this.name; };
+const toString = function() { return this.name; };
 
-for(var name in cards) {
-  var c = cards[name];
+for(const name in cards) {
+  const card = cards[name];
 
-  c.name = name;
-  c.toString = toString;
+  card.name = name;
+  card.toString = toString;
 
-  if (c.kind) {
-    if (typeof c.kind == "string") {
-      c.ofKind = (function(k) {
+  if (card.kind) {
+    if (typeof card.kind == "string") {
+      card.ofKind = (function(k) {
         return function(other) { return other == k; };
-      })(c.kind);
-    } else if (Array.isArray(c.kind)) {
-      c.ofKind = (function(ks) {
+      })(card.kind);
+    } else if (Array.isArray(card.kind)) {
+      card.ofKind = (function(ks) {
         return function(other) { return ks.indexOf(other) != -1; };
-      })(c.kind);
+      })(card.kind);
     } else {
       console.error("Card " + name + " kind type not defined");
     }
-    delete c.kind;
+    delete card.kind;
   } else  {
     console.error("Card " + name + " kind not defined");
   }
 
-  if (typeof c.cost == "undefined") {
+  if (typeof card.cost == "undefined") {
     console.error("Card " + name + " cost not defined");
   }
 }

@@ -3,7 +3,7 @@ const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
 const Store = require("./server/store").Store;
 
-var defaultTest = {
+const defaultTest = {
   dMoney: 0,
   dActions: 0,
   dBuys: 0,
@@ -23,7 +23,7 @@ var defaultTest = {
   trashAfter: []
 };
 
-var defaultOthers = {
+const defaultOthers = {
   draw: [],
   discard: [],
   hand: [],
@@ -33,7 +33,7 @@ var defaultOthers = {
   handAfter: []
 };
 
-var tests = {
+const tests = {
   Copper: {
     dMoney: 1
   },
@@ -749,45 +749,45 @@ var tests = {
 };
 
 describe("cards", function () {
-  for(var tName in tests) {
+  for(const tName in tests) {
     it("plays " + tName, function(tName) { return function() {
-      var that = this;
-      var test = tests[tName];
+      const that = this;
+      const test = tests[tName];
 
       if (tName.indexOf("_") != -1) {
         tName = tName.substring(0, tName.indexOf("_"));
       }
-      var card = cards[tName];
+      const card = cards[tName];
 
-      for(var testKey in test) {
+      for(const testKey in test) {
         expect(defaultTest[testKey]).toBeDefined("typo key " + testKey);
       }
-      for(var key in defaultTest) {
+      for(const key in defaultTest) {
         test[key] = test[key] || defaultTest[key];
       }
-      for(var i = 0; i < test.others.length; ++i) {
-        for(var testOtherKey in test.others[i]) {
+      for(let i = 0; i < test.others.length; ++i) {
+        for(const testOtherKey in test.others[i]) {
           expect(defaultTest[testOtherKey]).toBeDefined("typo other key " + testOtherKey);
         }
-        for(var oKey in defaultOthers) {
+        for(const oKey in defaultOthers) {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
         }
       }
 
-      var init = {
+      const init = {
         actions: 3,
         buys: 3,
         money: 3
       };
 
-      var interactionIndex = 0;
+      let interactionIndex = 0;
 
-      var p = new Player("Bot", {send: function(message) {
-        var o = JSON.parse(message);
+      const p = new Player("Bot", {send: function(message) {
+        const o = JSON.parse(message);
         if (o.message && o.message.startsWith("Your hand"))
           return;
 
-        var expected = test.interactions[interactionIndex++];
+        const expected = test.interactions[interactionIndex++];
 
         if (o.message) {
           expect(o.message).toEqual(expected);
@@ -803,18 +803,18 @@ describe("cards", function () {
       game.players[0] = p;
       game.store.setIncluded(test.store.map(function(n) { return cards[n]; }));
       game.allLog = function(message) {
-        var expected = test.interactions[interactionIndex++];
+        const expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
       };
 
-      var otherCount = 0;
+      let otherCount = 0;
       test.others.forEach(function(testOther) {
-        var oP = new Player("Other#" + otherCount++, {send: function(message) {
-          var o = JSON.parse(message);
+        const oP = new Player("Other#" + otherCount++, {send: function(message) {
+          const o = JSON.parse(message);
         if (o.message && o.message.startsWith("Your hand"))
             return;
 
-          var expected = testOther.interactions[oP.InteractionIndex++];
+          const expected = testOther.interactions[oP.InteractionIndex++];
 
           if (o.message) {
             expect(o.message).toEqual(expected);
@@ -844,7 +844,7 @@ describe("cards", function () {
       p.discardPile = test.discard.map(function(n) { return cards[n]; });
       p.hand = test.hand.map(function(n) { return cards[n]; });
 
-      var called = false;
+      let called = false;
 
       if(card.ofKind("action") || card.ofKind("treasure")) {
         card.play(p, function() {
@@ -868,7 +868,7 @@ describe("cards", function () {
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
           game.otherPlayers(p).forEach(function(o) {
-            var otherTest = test.others[o.TestIndex];
+            const otherTest = test.others[o.TestIndex];
 
             expect(o.drawPile.map(function(c) {return c.name;}))
               .toEqual(otherTest.drawAfter, o.name + " drawAfter");
@@ -894,7 +894,7 @@ describe("cards", function () {
   }
 
   it("tests all", function() {
-    for (var cardName in cards) {
+    for (const cardName in cards) {
       expect(tests[cardName]).toBeDefined("tests " + cardName);
     }
   });

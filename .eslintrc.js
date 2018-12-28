@@ -38,7 +38,6 @@ module.exports = {
         "max-len": "off",
         "no-console": "off",
         "arrow-parens": "off",
-        "eol-last": "off",
-        "no-var": "off"
+        "eol-last": "off"
     }
 };

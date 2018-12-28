@@ -6,9 +6,9 @@ function Player(name, socket) {
   this.socket = socket;
   this.drawPile = [];
   this.discardPile = [];
-  for(var i = 0; i < 7; ++i)
+  for(let i = 0; i < 7; ++i)
     this.discardPile.push(cards.Copper);
-  for(i = 0; i < 3; ++i)
+  for(let i = 0; i < 3; ++i)
     this.discardPile.push(cards.Estate);
 
   this.hand = [];
@@ -40,8 +40,8 @@ Player.prototype = {
       return;
     }
 
-    var actionCards = this.hand.filter(function(c){return c.ofKind("action");});
-    var choices = actionCards.map(function(c){return c.name;});
+    const actionCards = this.hand.filter(function(c){return c.ofKind("action");});
+    const choices = actionCards.map(function(c){return c.name;});
 
     if (!choices.length) {
       this.sendMessage("No Actions to play");
@@ -51,7 +51,7 @@ Player.prototype = {
 
     choices.push("Done With Actions");
 
-    var message = "Actions: " + this.actions + " Money: " + this.money + " Buys: " + this.buys;
+    const message = "Actions: " + this.actions + " Money: " + this.money + " Buys: " + this.buys;
     this.sendMessage(message);
     this.sendChoice(choices, this.receiveAction);
   },
@@ -74,9 +74,9 @@ Player.prototype = {
       return;
     }
 
-    var treasureCards = this.hand.filter(function(c){return c.ofKind("treasure");});
+    const treasureCards = this.hand.filter(function(c){return c.ofKind("treasure");});
 
-    var choices = treasureCards.map(function(c){return c.name;});
+    const choices = treasureCards.map(function(c){return c.name;});
 
     if (choices.length) {
       choices.unshift("Play All Treasures");
@@ -110,7 +110,7 @@ Player.prototype = {
     }
 
     if (choice.substring(0, 5) == "Buy: ") {
-      var buying = cards[choice.substring(5)];
+      const buying = cards[choice.substring(5)];
       this.discardPile.push(buying);
       this.money -= buying.cost;
       --this.buys;
@@ -124,7 +124,7 @@ Player.prototype = {
   },
 
   playAllTreasures: function() {
-    var treasures = this.hand.filter(function(c){return c.ofKind("treasure");});
+    const treasures = this.hand.filter(function(c){return c.ofKind("treasure");});
     if (treasures.length) {
       this.playCard(treasures[0].name, this.playAllTreasures.bind(this));
     } else {
@@ -133,10 +133,10 @@ Player.prototype = {
   },
 
   fromHand: function(name) {
-    var hi = this.hand.map(function(c){return c.name;}).indexOf(name);
+    const hi = this.hand.map(function(c){return c.name;}).indexOf(name);
     if (hi == -1)
       return null;
-    var card = this.hand.splice(hi, 1)[0];
+    const card = this.hand.splice(hi, 1)[0];
     this.sendHand();
     return card;
   },
@@ -151,8 +151,8 @@ Player.prototype = {
   },
 
   playCard: function(name, callback) {
-    var t = this;
-    var card = this.fromHand(name);
+    const t = this;
+    const card = this.fromHand(name);
     if (card === null) {
       console.error("Card doesn't exist: " + name);
       return;
@@ -186,8 +186,8 @@ Player.prototype = {
       n = 1;
     }
 
-    for(var i = 0; i < n; ++i) {
-      var card = this.fromDraw();
+    for(let i = 0; i < n; ++i) {
+      const card = this.fromDraw();
       if (card)
         this.hand.push(card);
     }
@@ -198,10 +198,10 @@ Player.prototype = {
     if(this.drawPile.length)
       console.error("drawPile isn't empty!");
 
-    var array = this.discardPile;
+    const array = this.discardPile;
 
     // Fisher-Yates (aka Knuth) Shuffle.
-    var currentIndex = array.length, temporaryValue, randomIndex ;
+    let currentIndex = array.length, temporaryValue, randomIndex ;
     while (0 !== currentIndex) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
@@ -229,13 +229,13 @@ Player.prototype = {
   },
 
   getPoints: function() {
-    var t = this;
+    const t = this;
     return this.allCards().reduce(
       function(a, c) { return a + (c.getPoints ? c.getPoints(t) : 0); }, 0);
   },
 
   allCards: function() {
-    var all = this.drawPile.concat(this.discardPile).concat(this.hand);
+    const all = this.drawPile.concat(this.discardPile).concat(this.hand);
     if (this.played)
       return all.concat(this.played);
     return all;
@@ -258,7 +258,7 @@ Player.prototype = {
       console.error("EMPTY CHOICE!!!");
     }
 
-    var t = this;
+    const t = this;
     if (this.onChoice)
       console.error("onChoice wasn't empty!!!");
     this.onChoice = function(choice) {
@@ -270,7 +270,7 @@ Player.prototype = {
 };
 
 // Loudly fail so nobody can try-catch these errors
-for(var name in Player.prototype)
+for(const name in Player.prototype)
   Player.prototype[name] = util.wrapErrors(Player.prototype[name]);
 
 module.exports.Player = Player;

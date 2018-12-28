@@ -5,7 +5,7 @@ const Game = require("./game").Game;
 const port = 8080;
 const app = express();
 app.use(express.static("client"));
-var server = app.listen(port, () => console.log(`Example HTTP app listening on port ${port}!`));
+const server = app.listen(port, () => console.log(`Example HTTP app listening on port ${port}!`));
 
 const game = new Game(console.log);
 //TODO(NODE-TURNS) game.playersChanged = function() { $("startButton").disabled = !game.canStart(); };

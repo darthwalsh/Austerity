@@ -7,18 +7,18 @@ function log(text) {
   $("log").scrollTop = $("log").scrollHeight;
 }
 
-var port = 8888;
-var isServer = false;
+const port = 8888;
+let isServer = false;
 
 if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
   isServer = true;
 
-  var server = new http.Server();
-  var wsServer = new http.WebSocketServer(server);
+  const server = new http.Server();
+  const wsServer = new http.WebSocketServer(server);
   server.listen(port);
 
   server.addEventListener("request", util.wrapErrors(function(req) {
-    var url = req.headers.url;
+    let url = req.headers.url;
     if (url == "/")
       url = "/index.html";
     req.serveUrl(url);
@@ -34,18 +34,18 @@ if (typeof http !== "undefined" && http.Server && http.WebSocketServer) {
 
 window.onload = function() {
   if(isServer) {
-    var manageDiv = $("manage");
+    const manageDiv = $("manage");
 
-    var options = game.store.optional();
-    for(var i = 0; i < options.length; ++i) {
-      var id = "optional" + options[i];
+    const options = game.store.optional();
+    for(let i = 0; i < options.length; ++i) {
+      const id = "optional" + options[i];
 
-      var box = document.createElement("input");
+      const box = document.createElement("input");
       box.setAttribute("type", "checkbox");
       box.setAttribute("id", id);
       manageDiv.appendChild(box);
 
-      var label = document.createElement("label");
+      const label = document.createElement("label");
       label.innerText = options[i];
       label.htmlFor = id;
       manageDiv.appendChild(label);
@@ -53,11 +53,11 @@ window.onload = function() {
 
     manageDiv.appendChild(document.createElement("br"));
 
-    var manageLog = document.createElement("textarea");
+    const manageLog = document.createElement("textarea");
     manageLog.readOnly = true;
     manageLog.id = "manageLog";
 
-    var startButton = document.createElement("button");
+    const startButton = document.createElement("button");
     startButton.innerHTML = "Start";
     startButton.disabled = true;
     startButton.id = "startButton";
@@ -68,7 +68,7 @@ window.onload = function() {
         return cards[n];
       }));
 
-      var debugMode = $("debugMode").checked;
+      const debugMode = $("debugMode").checked;
       while (manageDiv.firstChild !== manageLog)
         manageDiv.removeChild(manageDiv.firstChild);
       game.start(debugMode);
@@ -76,12 +76,12 @@ window.onload = function() {
 
     manageDiv.appendChild(startButton);
 
-    var debugBox = document.createElement("input");
+    const debugBox = document.createElement("input");
     debugBox.setAttribute("type", "checkbox");
     debugBox.setAttribute("id", "debugMode");
     manageDiv.appendChild(debugBox);
 
-    var debugLabel = document.createElement("label");
+    const debugLabel = document.createElement("label");
     debugLabel.innerText = "Debug";
     debugLabel.htmlFor = "debugMode";
     manageDiv.appendChild(debugLabel);
@@ -91,12 +91,12 @@ window.onload = function() {
     manageDiv.appendChild(manageLog);
   }
 
-  var address = isServer ?
+  const address = isServer ?
     "ws://localhost:" + port + "/" :
     window.location.href.replace("http", "ws");
-  var name = $("name");
-  var connectButton = $("connectButton");
-  var connect = function() {
+  const name = $("name");
+  const connectButton = $("connectButton");
+  const connect = function() {
     ws.send(JSON.stringify({connect: name.value}));
     name.disabled = true;
     connectButton.disabled = true;
@@ -110,39 +110,40 @@ window.onload = function() {
   });
   connectButton.onclick = connect;
 
-  var turnAlert;
-  var input = $("input");
-  var ws = new WebSocket(address);
+  let turnAlert;
+  const input = $("input");
+  const ws = new WebSocket(address);
   ws.addEventListener("open", () => log("Connected to Server"));
   ws.addEventListener("close", () => {
     log("Connection to Server lost");
     input.disabled = true;
   });
   ws.addEventListener("message", (e) => {
-    var data = JSON.parse(e.data);
-    var type = Object.keys(data)[0];
+    let data = JSON.parse(e.data);
+    const type = Object.keys(data)[0];
     data = data[type];
+
+    const choicesDiv = $("choices");
+    const choiceOnClick = function() {
+      ws.send(JSON.stringify({choice:this.innerHTML}));
+      while(cDiv.firstChild)
+        cDiv.removeChild(cDiv.firstChild);
+    };
+
     switch(type) {
       case "message":
         log(data);
         break;
       case "choices":
-        var cc = data;
-        var cDiv = $("choices");
-        var onClick = function() {
-          ws.send(JSON.stringify({choice:this.innerHTML}));
-          while(cDiv.firstChild)
-            cDiv.removeChild(cDiv.firstChild);
-        };
-        for(var i = 0; i < cc.length; ++i) {
-          if(cc[i] === "\n") {
-            cDiv.appendChild(document.createElement("br"));
+        for(let i = 0; i < data.length; ++i) {
+          if(data[i] === "\n") {
+            choicesDiv.appendChild(document.createElement("br"));
           }
           else {
-            var button = document.createElement("button");
-            button.innerHTML = cc[i];
-            button.onclick = onClick;
-            cDiv.appendChild(button);
+            const button = document.createElement("button");
+            button.innerHTML = data[i];
+            button.onclick = choiceOnClick;
+            choicesDiv.appendChild(button);
           }
         }
         $("log").scrollTop = $("log").scrollHeight;

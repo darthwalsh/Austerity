@@ -2,8 +2,8 @@ const util = require("./util");
 const cards = require("./cards");
 
 function Store() {
-  var DEFAULT_TREASURE_COUNT = 30;
-  var DEFAULT_PROPERTY_COUNT = 8; //TODO make correct
+  const DEFAULT_TREASURE_COUNT = 30;
+  const DEFAULT_PROPERTY_COUNT = 8; //TODO make correct
 
   this.default = [
     cards.Copper, cards.Silver, cards.Gold,
@@ -17,7 +17,7 @@ function Store() {
 
 Store.prototype = {
   optional: function() {
-    var t = this;
+    const t = this;
     return Object.keys(cards).filter(function(n){
       return t.default.indexOf(cards[n]) == -1;
     });
@@ -32,7 +32,7 @@ Store.prototype = {
   },
 
   getAvailable: function(price) {
-    var t = this;
+    const t = this;
     return this.default.concat(this.included)
       .filter(function(c){return c.cost <= price && t.counts[c.name];});
   },
@@ -43,7 +43,7 @@ Store.prototype = {
   },
 
   gameOver: function() {
-    var t = this;
+    const t = this;
     if(!this.counts[cards.Province])
       return true;
     return this.default.concat(this.included).filter(function(c) {
@@ -52,7 +52,7 @@ Store.prototype = {
   }
 };
 
-for(var name in Store.prototype)
+for(const name in Store.prototype)
   Store.prototype[name] = util.wrapErrors(Store.prototype[name]);
 
 module.exports.Store = Store;
