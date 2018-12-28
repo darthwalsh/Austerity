@@ -201,13 +201,13 @@ Player.prototype = {
     const array = this.discardPile;
 
     // Fisher-Yates (aka Knuth) Shuffle.
-    let currentIndex = array.length, temporaryValue, randomIndex ;
+    let currentIndex = array.length, temporaryValue, rIndex;
     while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
+      rIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
       temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+      array[currentIndex] = array[rIndex];
+      array[rIndex] = temporaryValue;
     }
 
     this.drawPile = this.discardPile;
