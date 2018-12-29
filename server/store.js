@@ -1,4 +1,3 @@
-const util = require("./util");
 const cards = require("./cards");
 
 class Store {
@@ -51,8 +50,5 @@ class Store {
     }).length >= 3;
   }
 }
-
-for(const name in Store.prototype)
-  Store.prototype[name] = util.wrapErrors(Store.prototype[name]);
 
 module.exports.Store = Store;

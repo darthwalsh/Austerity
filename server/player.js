@@ -1,4 +1,3 @@
-const util = require("./util");
 const cards = require("./cards");
 
 class Player {
@@ -266,9 +265,5 @@ class Player {
     this.send({choices: choices});
   }
 }
-
-// Loudly fail so nobody can try-catch these errors
-for(const name in Player.prototype)
-  Player.prototype[name] = util.wrapErrors(Player.prototype[name]);
 
 module.exports.Player = Player;

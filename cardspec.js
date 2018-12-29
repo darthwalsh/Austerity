@@ -761,14 +761,14 @@ describe("cards", function () {
       const card = cards[tName];
 
       for(const testKey in test) {
-        expect(defaultTest[testKey]).toBeDefined("typo key " + testKey);
+        expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultKeys: " + testKey);
       }
       for(const key in defaultTest) {
         test[key] = test[key] || defaultTest[key];
       }
       for(let i = 0; i < test.others.length; ++i) {
         for(const testOtherKey in test.others[i]) {
-          expect(defaultTest[testOtherKey]).toBeDefined("typo other key " + testOtherKey);
+          expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultKeys: " + testOtherKey);
         }
         for(const oKey in defaultOthers) {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];

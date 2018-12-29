@@ -13,6 +13,8 @@ module.exports = {
         "require-jsdoc": "off",
         "max-len": "off",
         "one-var": "off",
+        "guard-for-in": "off",
+
         "quotes": ["error", "double"],
         "arrow-parens": ["error", "as-needed"],
         "indent": [
@@ -30,7 +32,6 @@ module.exports = {
 
         /* //TODO(lint) fix these */
         "block-spacing": "off",
-        "guard-for-in": "off",
         "object-curly-spacing": "off",
         "padded-blocks": "off",
         "prefer-rest-params": "off",

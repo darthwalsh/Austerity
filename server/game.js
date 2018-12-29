@@ -1,4 +1,3 @@
-const util = require("./util");
 const Store = require("./store").Store;
 const cards = require("./cards");
 const Player = require("./player").Player;
@@ -53,7 +52,7 @@ class Game {
 
   addConnection(ws) {
     let me;
-    ws.on("message", util.wrapErrors(function(data) {
+    ws.on("message", function(data) {
       data = JSON.parse(data);
       const type = Object.keys(data)[0];
       data = data[type];
@@ -81,16 +80,16 @@ class Game {
       default:
         console.error("Not implemented: " + type);
       }
-    }.bind(this)));
+    }.bind(this));
 
-    ws.on("close", util.wrapErrors(function() {
+    ws.on("close", function() {
       const player = this.players[me.name];
       if (player) {
         this.log(player.name + " disconnected");
         delete this.players[me.name];
         this.playersChanged();
       }
-    }.bind(this)));
+    }.bind(this));
   }
 
   allPlayers() {
@@ -157,8 +156,5 @@ class Game {
     }
   }
 }
-
-for(const name in Game.prototype)
-{Game.prototype[name] = util.wrapErrors(Game.prototype[name]);}
 
 module.exports.Game = Game;
