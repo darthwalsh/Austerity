@@ -91,7 +91,7 @@ window.onload = function() {
     log("Connection to Server lost");
     input.disabled = true;
   });
-  ws.addEventListener("message", (e) => {
+  ws.addEventListener("message", e => {
     let data = JSON.parse(e.data);
     const type = Object.keys(data)[0];
     data = data[type];

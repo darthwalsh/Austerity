@@ -14,6 +14,7 @@ module.exports = {
         "max-len": "off",
         "one-var": "off",
         "quotes": ["error", "double"],
+        "arrow-parens": ["error", "as-needed"],
         "indent": [
             "error", 2, {
                 "FunctionDeclaration": {
@@ -42,7 +43,6 @@ module.exports = {
         "no-invalid-this": "off",
         "brace-style": "off",
         "no-console": "off",
-        "arrow-parens": "off",
         "curly": "off"
     }
 };
