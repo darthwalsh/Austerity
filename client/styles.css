@@ -13,6 +13,7 @@ body {
 
 button {
   height: 2em;
+  margin: 5px;
 }
 
 #log {
