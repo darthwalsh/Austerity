@@ -4,6 +4,7 @@ class Treasure {
     this.cost = cost;
     this.money = money;
   }
+
   play(player, callback) {
     player.money += this.money;
     callback();
@@ -14,9 +15,11 @@ class Property {
   constructor(cost, points) {
     this.kind = "property";
     this.cost = cost;
-    this.getPoints = function (player) { //TODO(lint) edit all field functions to be class methods
-      return points;
-    };
+    this.points = points;
+  }
+
+  getPoints(player) {
+    return this.points;
   }
 }
 
@@ -24,20 +27,26 @@ class Curse {
   constructor() {
     this.kind = "curse";
     this.cost = 0;
-    this.getPoints = function (player) {
-      return -1;
-    };
+  }
+
+  getPoints(player) {
+    return -1;
   }
 }
 
+/**
+ * For simple cards, with synchronous play methods
+ */
 class Action {
-  constructor(cost, play) {
+  constructor(cost, toPlay) {
     this.kind = "action";
     this.cost = cost;
-    this.play = (player, callback, game) => {
-      play(player, game);
-      callback();
-    };
+    this.toPlay = toPlay;
+  }
+
+  play(player, callback, game) {
+    this.toPlay(player, game);
+    callback();
   }
 }
 
@@ -64,27 +73,28 @@ class Bureaucrat {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = (player, callback, game) => {
-      if (game.store.counts["Silver"]) {
-        player.discardPile.push(cards.Silver);
-        game.store.bought(cards.Silver);
-      }
-      game.parallelAttack(player, function (p, attackDone) {
-        const discardChoices = p.hand
-          .filter(function (c) { return c.ofKind("property"); })
-          .map(function (c) { return c.name; });
-        if (discardChoices.length) {
-          p.sendMessage("Put a Victory card onto your deck:");
-          p.sendChoice(discardChoices, function (choice) {
-            p.drawPile.push(p.fromHand(choice));
-            attackDone();
-          });
-        }
-        else {
+  }
+
+  play(player, callback, game) {
+    if (game.store.counts["Silver"]) {
+      player.discardPile.push(cards.Silver);
+      game.store.bought(cards.Silver);
+    }
+    game.parallelAttack(player, function (p, attackDone) {
+      const discardChoices = p.hand
+        .filter(function (c) { return c.ofKind("property"); })
+        .map(function (c) { return c.name; });
+      if (discardChoices.length) {
+        p.sendMessage("Put a Victory card onto your deck:");
+        p.sendChoice(discardChoices, function (choice) {
+          p.drawPile.push(p.fromHand(choice));
           attackDone();
-        }
-      }, callback);
-    };
+        });
+      }
+      else {
+        attackDone();
+      }
+    }, callback);
   }
 }
 
@@ -92,34 +102,35 @@ class Cellar {
   constructor() {
     this.kind = "action";
     this.cost = 2;
-    this.play = (player, callback, game) => {
-      player.actions += 1;
-      let discarded = 0;
-      const end = function () {
-        player.draw(discarded);
-        callback();
-      };
-      const promptDiscard = function () {
-        const choices = player.hand.map(function (c) { return c.name; });
-        if (!choices.length) {
+  }
+
+  play(player, callback, game) {
+    player.actions += 1;
+    let discarded = 0;
+    const end = function () {
+      player.draw(discarded);
+      callback();
+    };
+    const promptDiscard = function () {
+      const choices = player.hand.map(function (c) { return c.name; });
+      if (!choices.length) {
+        end();
+        return;
+      }
+      choices.push("Done Discarding");
+      player.sendMessage("Discard cards:");
+      player.sendChoice(choices, function (choice) {
+        if (choice == "Done Discarding") {
           end();
           return;
         }
-        choices.push("Done Discarding");
-        player.sendMessage("Discard cards:");
-        player.sendChoice(choices, function (choice) {
-          if (choice == "Done Discarding") {
-            end();
-            return;
-          }
-          const discard = player.fromHand(choice);
-          ++discarded;
-          player.discardPile.push(discard);
-          promptDiscard();
-        });
-      };
-      promptDiscard();
+        const discard = player.fromHand(choice);
+        ++discarded;
+        player.discardPile.push(discard);
+        promptDiscard();
+      });
     };
+    promptDiscard();
   }
 }
 
@@ -127,16 +138,17 @@ class Chancellor {
   constructor() {
     this.kind = "action";
     this.cost = 3;
-    this.play = (player, callback, game) => {
-      player.money += 2;
-      player.sendMessage("Discard your draw pile?");
-      player.sendChoice(["No", "Discard"], function (choice) {
-        if (choice == "Discard") {
-          Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
-        }
-        callback();
-      });
-    };
+  }
+
+  play(player, callback, game) {
+    player.money += 2;
+    player.sendMessage("Discard your draw pile?");
+    player.sendChoice(["No", "Discard"], function (choice) {
+      if (choice == "Discard") {
+        Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
+      }
+      callback();
+    });
   }
 }
 
@@ -144,34 +156,35 @@ class Chapel {
   constructor() {
     this.kind = "action";
     this.cost = 2;
-    this.play = (player, callback, game) => {
-      let canTrash = 4;
-      const promptTrash = function () {
-        const trashChoices = player.hand.map(function (c) { return c.name; });
-        if (!trashChoices.length) {
+  }
+
+  play(player, callback, game) {
+    let canTrash = 4;
+    const promptTrash = function () {
+      const trashChoices = player.hand.map(function (c) { return c.name; });
+      if (!trashChoices.length) {
+        callback();
+        return;
+      }
+      trashChoices.push("Done Trashing");
+      player.sendMessage("Trash up to " + canTrash + " cards:");
+      player.sendChoice(trashChoices, function (choice) {
+        if (choice == "Done Trashing") {
           callback();
           return;
         }
-        trashChoices.push("Done Trashing");
-        player.sendMessage("Trash up to " + canTrash + " cards:");
-        player.sendChoice(trashChoices, function (choice) {
-          if (choice == "Done Trashing") {
-            callback();
-            return;
-          }
-          const trash = player.fromHand(choice);
-          game.trash.push(trash);
-          --canTrash;
-          if (canTrash) {
-            promptTrash();
-          }
-          else {
-            callback();
-          }
-        });
-      };
-      promptTrash();
+        const trash = player.fromHand(choice);
+        game.trash.push(trash);
+        --canTrash;
+        if (canTrash) {
+          promptTrash();
+        }
+        else {
+          callback();
+        }
+      });
     };
+    promptTrash();
   }
 }
 
@@ -187,24 +200,26 @@ class Feast {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = (player, callback, game) => {
-      const gainChoices = game.store
-        .getAvailable(5)
-        .map(function (c) { return c.name; });
-      if (!gainChoices.length) {
-        callback();
-        return;
-      }
-      player.sendMessage("Gain a card:");
-      player.sendChoice(gainChoices, function (gainChoice) {
-        player.discardPile.push(cards[gainChoice]);
-        game.store.bought(gainChoice);
-        callback();
-      });
-    };
-    this.afterPlay = game => {
-      game.trash.push(this);
-    };
+  }
+
+  play(player, callback, game) {
+    const gainChoices = game.store
+      .getAvailable(5)
+      .map(function (c) { return c.name; });
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    player.sendChoice(gainChoices, function (gainChoice) {
+      player.discardPile.push(cards[gainChoice]);
+      game.store.bought(gainChoice);
+      callback();
+    });
+  }
+
+  afterPlay(game) {
+    game.trash.push(this);
   }
 }
 
@@ -218,9 +233,10 @@ class Gardens {
   constructor() {
     this.kind = "property";
     this.cost = 4;
-    this.getPoints = function (player) {
-      return Math.floor(player.allCards().length / 10);
-    };
+  }
+
+  getPoints(player) {
+    return Math.floor(player.allCards().length / 10);
   }
 }
 
@@ -233,42 +249,43 @@ class Library {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = (player, callback, game) => {
-      const aside = [];
-      const end = function () {
-        Array.prototype.push.apply(player.discardPile, aside);
-        player.sendHand();
-        callback();
-      };
-      const promptTake = function () {
-        if (player.hand.length >= 7) {
-          end();
-          return;
-        }
-        const card = player.fromDraw();
-        if (!card) {
-          end();
-          return;
-        }
-        if (card.ofKind("action")) {
-          player.sendMessage("Gain Action or set aside:");
-          player.sendChoice([card.name, "Set Aside"], function (choice) {
-            if (choice == "Set Aside") {
-              aside.push(card);
-            }
-            else {
-              player.hand.push(card);
-            }
-            promptTake();
-          });
-        }
-        else {
-          player.hand.push(card);
-          promptTake();
-        }
-      };
-      promptTake();
+  }
+
+  play(player, callback, game) {
+    const aside = [];
+    const end = function () {
+      Array.prototype.push.apply(player.discardPile, aside);
+      player.sendHand();
+      callback();
     };
+    const promptTake = function () {
+      if (player.hand.length >= 7) {
+        end();
+        return;
+      }
+      const card = player.fromDraw();
+      if (!card) {
+        end();
+        return;
+      }
+      if (card.ofKind("action")) {
+        player.sendMessage("Gain Action or set aside:");
+        player.sendChoice([card.name, "Set Aside"], function (choice) {
+          if (choice == "Set Aside") {
+            aside.push(card);
+          }
+          else {
+            player.hand.push(card);
+          }
+          promptTake();
+        });
+      }
+      else {
+        player.hand.push(card);
+        promptTake();
+      }
+    };
+    promptTake();
   }
 }
 
@@ -283,23 +300,24 @@ class Militia {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 5;
-    this.play = (player, callback, game) => {
-      player.money += 2;
-      const attack = function (p, attackDone) {
-        if (p.hand.length > 3) {
-          const discardChoices = p.hand.map(function (c) { return c.name; });
-          p.sendMessage("Discard down to three cards:");
-          p.sendChoice(discardChoices, function (choice) {
-            p.discardPile.push(p.fromHand(choice));
-            attack(p, attackDone);
-          });
-        }
-        else {
-          attackDone();
-        }
-      };
-      game.parallelAttack(player, attack, callback);
+  }
+
+  play(player, callback, game) {
+    player.money += 2;
+    const attack = function (p, attackDone) {
+      if (p.hand.length > 3) {
+        const discardChoices = p.hand.map(function (c) { return c.name; });
+        p.sendMessage("Discard down to three cards:");
+        p.sendChoice(discardChoices, function (choice) {
+          p.discardPile.push(p.fromHand(choice));
+          attack(p, attackDone);
+        });
+      }
+      else {
+        attackDone();
+      }
     };
+    game.parallelAttack(player, attack, callback);
   }
 }
 
@@ -307,35 +325,36 @@ class Mine {
   constructor() {
     this.kind = "action";
     this.cost = 5;
-    this.play = (player, callback, game) => {
-      const trashChoices = player.hand
+  }
+
+  play(player, callback, game) {
+    const trashChoices = player.hand
+      .filter(function (c) { return c.ofKind("treasure"); })
+      .map(function (c) { return c.name; });
+    if (!trashChoices.length) {
+      player.sendMessage("No Treasures to trash");
+      callback();
+      return;
+    }
+    player.sendMessage("Trash a Treasure:");
+    player.sendChoice(trashChoices, function (trashChoice) {
+      const trash = player.fromHand(trashChoice);
+      game.trash.push(trash);
+      const gainChoices = game.store
+        .getAvailable(trash.cost + 3)
         .filter(function (c) { return c.ofKind("treasure"); })
         .map(function (c) { return c.name; });
-      if (!trashChoices.length) {
-        player.sendMessage("No Treasures to trash");
+      if (!gainChoices.length) {
         callback();
         return;
       }
-      player.sendMessage("Trash a Treasure:");
-      player.sendChoice(trashChoices, function (trashChoice) {
-        const trash = player.fromHand(trashChoice);
-        game.trash.push(trash);
-        const gainChoices = game.store
-          .getAvailable(trash.cost + 3)
-          .filter(function (c) { return c.ofKind("treasure"); })
-          .map(function (c) { return c.name; });
-        if (!gainChoices.length) {
-          callback();
-          return;
-        }
-        player.sendMessage("Gain a Treasure:");
-        player.sendChoice(gainChoices, function (gainChoice) {
-          player.hand.push(cards[gainChoice]);
-          game.store.bought(gainChoice);
-          callback();
-        });
+      player.sendMessage("Gain a Treasure:");
+      player.sendChoice(gainChoices, function (gainChoice) {
+        player.hand.push(cards[gainChoice]);
+        game.store.bought(gainChoice);
+        callback();
       });
-    };
+    });
   }
 }
 
@@ -343,10 +362,11 @@ class Moat {
   constructor() {
     this.kind = ["action", "reaction"];
     this.cost = 2;
-    this.play = (player, callback, game) => {
-      player.draw(2);
-      callback();
-    };
+  }
+
+  play(player, callback, game) {
+    player.draw(2);
+    callback();
   }
 }
 
@@ -362,33 +382,34 @@ class Remodel {
   constructor() {
     this.kind = "action";
     this.cost = 4;
-    this.play = (player, callback, game) => {
-      const trashChoices = player.hand
+  }
+
+  play(player, callback, game) {
+    const trashChoices = player.hand
+      .map(function (c) { return c.name; });
+    if (!trashChoices.length) {
+      player.sendMessage("No Cards to trash");
+      callback();
+      return;
+    }
+    player.sendMessage("Trash a card:");
+    player.sendChoice(trashChoices, function (trashChoice) {
+      const trash = player.fromHand(trashChoice);
+      game.trash.push(trash);
+      const gainChoices = game.store
+        .getAvailable(trash.cost + 2)
         .map(function (c) { return c.name; });
-      if (!trashChoices.length) {
-        player.sendMessage("No Cards to trash");
+      if (!gainChoices.length) {
         callback();
         return;
       }
-      player.sendMessage("Trash a card:");
-      player.sendChoice(trashChoices, function (trashChoice) {
-        const trash = player.fromHand(trashChoice);
-        game.trash.push(trash);
-        const gainChoices = game.store
-          .getAvailable(trash.cost + 2)
-          .map(function (c) { return c.name; });
-        if (!gainChoices.length) {
-          callback();
-          return;
-        }
-        player.sendMessage("Gain a card:");
-        player.sendChoice(gainChoices, function (gainChoice) {
-          player.discardPile.push(cards[gainChoice]);
-          game.store.bought(gainChoice);
-          callback();
-        });
+      player.sendMessage("Gain a card:");
+      player.sendChoice(gainChoices, function (gainChoice) {
+        player.discardPile.push(cards[gainChoice]);
+        game.store.bought(gainChoice);
+        callback();
       });
-    };
+    });
   }
 }
 
@@ -400,31 +421,32 @@ class Spy {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = (player, callback, game) => {
-      player.actions += 1;
-      player.draw();
-      const attack = function (p, attackDone) {
-        const card = p.fromDraw();
-        if (!card) {
-          attackDone();
-          return;
+  }
+
+  play(player, callback, game) {
+    player.actions += 1;
+    player.draw();
+    const attack = function (p, attackDone) {
+      const card = p.fromDraw();
+      if (!card) {
+        attackDone();
+        return;
+      }
+      const name = p.name == player.name ? "Your" : (p.name + "'s");
+      player.sendMessage("Put back on deck or discard " + name + " " + card.name);
+      player.sendChoice(["Put back", "Discard"], function (choice) {
+        if (choice == "Put back") {
+          p.drawPile.push(card);
         }
-        const name = p.name == player.name ? "Your" : (p.name + "'s");
-        player.sendMessage("Put back on deck or discard " + name + " " + card.name);
-        player.sendChoice(["Put back", "Discard"], function (choice) {
-          if (choice == "Put back") {
-            p.drawPile.push(card);
-          }
-          else {
-            p.discardPile.push(card);
-          }
-          attackDone();
-        });
-      };
-      game.sequentialAttack(player, attack, function () {
-        attack(player, callback);
+        else {
+          p.discardPile.push(card);
+        }
+        attackDone();
       });
     };
+    game.sequentialAttack(player, attack, function () {
+      attack(player, callback);
+    });
   }
 }
 
@@ -432,54 +454,55 @@ class Thief {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 4;
-    this.play = (player, callback, game) => {
-      game.sequentialAttack(player, function (p, attackDone) {
-        const drawn = [];
-        let card = p.fromDraw();
-        if (card)
-          drawn.push(card);
-        card = p.fromDraw();
-        if (card)
-          drawn.push(card);
-        let treasures = drawn
-          .filter(function (c) { return c.ofKind("treasure"); })
-          .map(function (c) { return c.name; });
-        if (!treasures.length) {
-          Array.prototype.push.apply(p.discardPile, drawn);
-          attackDone();
-          return;
+  }
+
+  play(player, callback, game) {
+    game.sequentialAttack(player, function (p, attackDone) {
+      const drawn = [];
+      let card = p.fromDraw();
+      if (card)
+        drawn.push(card);
+      card = p.fromDraw();
+      if (card)
+        drawn.push(card);
+      let treasures = drawn
+        .filter(function (c) { return c.ofKind("treasure"); })
+        .map(function (c) { return c.name; });
+      if (!treasures.length) {
+        Array.prototype.push.apply(p.discardPile, drawn);
+        attackDone();
+        return;
+      }
+      const choices = [];
+      for (let i = 0; i < treasures.length; ++i) {
+        const name = treasures[i];
+        Array.prototype.push.apply(choices, ["Trash: " + name, "Steal: " + name]);
+      }
+      player.sendMessage("Trash or steal a Treasure:");
+      player.sendChoice(choices, function (choice) {
+        const steal = choice.substring(0, 7) == "Steal: ";
+        choice = choice.substring(7);
+        let chosen;
+        if (choice == treasures[0]) {
+          chosen = treasures.splice(0, 1)[0];
         }
-        const choices = [];
-        for (let i = 0; i < treasures.length; ++i) {
-          const name = treasures[i];
-          Array.prototype.push.apply(choices, ["Trash: " + name, "Steal: " + name]);
+        else {
+          chosen = treasures.splice(1, 1)[0];
         }
-        player.sendMessage("Trash or steal a Treasure:");
-        player.sendChoice(choices, function (choice) {
-          const steal = choice.substring(0, 7) == "Steal: ";
-          choice = choice.substring(7);
-          let chosen;
-          if (choice == treasures[0]) {
-            chosen = treasures.splice(0, 1)[0];
-          }
-          else {
-            chosen = treasures.splice(1, 1)[0];
-          }
-          chosen = cards[chosen];
-          if (steal) {
-            player.discardPile.push(chosen);
-          }
-          else {
-            game.trash.push(chosen);
-          }
-          treasures = treasures.map(function (n) { return cards[n]; });
-          Array.prototype.push.apply(p.discardPile, treasures);
-          const notTreasures = drawn.filter(function (c) { return !c.ofKind("treasure"); });
-          Array.prototype.push.apply(p.discardPile, notTreasures);
-          attackDone();
-        });
-      }, callback);
-    };
+        chosen = cards[chosen];
+        if (steal) {
+          player.discardPile.push(chosen);
+        }
+        else {
+          game.trash.push(chosen);
+        }
+        treasures = treasures.map(function (n) { return cards[n]; });
+        Array.prototype.push.apply(p.discardPile, treasures);
+        const notTreasures = drawn.filter(function (c) { return !c.ofKind("treasure"); });
+        Array.prototype.push.apply(p.discardPile, notTreasures);
+        attackDone();
+      });
+    }, callback);
   }
 }
 
@@ -487,27 +510,28 @@ class ThroneRoom {
   constructor() {
     this.kind = "action";
     this.cost = 4;
-    this.play = (player, callback, game) => {
-      const actions = player.hand
-        .filter(function (c) { return c.ofKind("action"); })
-        .map(function (c) { return c.name; });
-      if (!actions.length) {
-        player.sendMessage("No Actions to play");
-        callback();
-        return;
-      }
-      player.sendMessage("Pick an Action to double:");
-      player.sendChoice(actions, function (actionName) {
-        game.allLog(player.name + " played " + actionName + " doubled!");
-        const action = player.fromHand(actionName);
+  }
+
+  play(player, callback, game) {
+    const actions = player.hand
+      .filter(function (c) { return c.ofKind("action"); })
+      .map(function (c) { return c.name; });
+    if (!actions.length) {
+      player.sendMessage("No Actions to play");
+      callback();
+      return;
+    }
+    player.sendMessage("Pick an Action to double:");
+    player.sendChoice(actions, function (actionName) {
+      game.allLog(player.name + " played " + actionName + " doubled!");
+      const action = player.fromHand(actionName);
+      action.play(player, function () {
         action.play(player, function () {
-          action.play(player, function () {
-            player.afterPlay(action);
-            callback();
-          }, game);
+          player.afterPlay(action);
+          callback();
         }, game);
-      });
-    };
+      }, game);
+    });
   }
 }
 
@@ -520,16 +544,17 @@ class Witch {
   constructor() {
     this.kind = ["action", "attack"];
     this.cost = 5;
-    this.play = (player, callback, game) => {
-      player.draw(2);
-      game.parallelAttack(player, function (p, attackDone) {
-        if (game.store.counts["Curse"]) {
-          p.discardPile.push(cards.Curse);
-          game.store.bought(cards.Curse);
-        }
-        attackDone();
-      }, callback);
-    };
+  }
+
+  play(player, callback, game) {
+    player.draw(2);
+    game.parallelAttack(player, function (p, attackDone) {
+      if (game.store.counts["Curse"]) {
+        p.discardPile.push(cards.Curse);
+        game.store.bought(cards.Curse);
+      }
+      attackDone();
+    }, callback);
   }
 }
 
@@ -542,21 +567,22 @@ class Workshop {
   constructor() {
     this.kind = "action";
     this.cost = 3;
-    this.play = (player, callback, game) => {
-      const gainChoices = game.store
-        .getAvailable(4)
-        .map(function (c) { return c.name; });
-      if (!gainChoices.length) {
-        callback();
-        return;
-      }
-      player.sendMessage("Gain a card:");
-      player.sendChoice(gainChoices, function (gainChoice) {
-        player.discardPile.push(cards[gainChoice]);
-        game.store.bought(gainChoice);
-        callback();
-      });
-    };
+  }
+
+  play(player, callback, game) {
+    const gainChoices = game.store
+      .getAvailable(4)
+      .map(function (c) { return c.name; });
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    player.sendChoice(gainChoices, function (gainChoice) {
+      player.discardPile.push(cards[gainChoice]);
+      game.store.bought(gainChoice);
+      callback();
+    });
   }
 }
 
@@ -564,29 +590,30 @@ class KingsCourt {
   constructor() {
     this.kind = "action";
     this.cost = 7;
-    this.play = (player, callback, game) => {
-      const actions = player.hand
-        .filter(function (c) { return c.ofKind("action"); })
-        .map(function (c) { return c.name; });
-      if (!actions.length) {
-        player.sendMessage("No Actions to play");
-        callback();
-        return;
-      }
-      player.sendMessage("Pick an Action to triple:");
-      player.sendChoice(actions, function (actionName) {
-        game.allLog(player.name + " played " + actionName + " tripled!!");
-        const action = player.fromHand(actionName);
+  }
+
+  play(player, callback, game) {
+    const actions = player.hand
+      .filter(function (c) { return c.ofKind("action"); })
+      .map(function (c) { return c.name; });
+    if (!actions.length) {
+      player.sendMessage("No Actions to play");
+      callback();
+      return;
+    }
+    player.sendMessage("Pick an Action to triple:");
+    player.sendChoice(actions, function (actionName) {
+      game.allLog(player.name + " played " + actionName + " tripled!!");
+      const action = player.fromHand(actionName);
+      action.play(player, function () {
         action.play(player, function () {
           action.play(player, function () {
-            action.play(player, function () {
-              player.afterPlay(action);
-              callback();
-            }, game);
+            player.afterPlay(action);
+            callback();
           }, game);
         }, game);
-      });
-    };
+      }, game);
+    });
   }
 }
 

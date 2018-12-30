@@ -9,6 +9,15 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}\\server\\app.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Tests",
+      "program": "${workspaceRoot}\\node_modules\\jasmine-node\\bin\\jasmine-node", 
+      "args": [ 
+          "cardspec.js" 
+      ], 
     }
   ]
 }
