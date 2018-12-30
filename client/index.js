@@ -97,8 +97,8 @@ window.onload = () => {
     data = data[type];
 
     const choicesDiv = $("choices");
-    const choiceOnClick = function() {
-      ws.send(JSON.stringify({choice: this.innerHTML}));
+    const choiceOnClick = event => {
+      ws.send(JSON.stringify({choice: event.target.innerHTML}));
       while (choicesDiv.firstChild)
         choicesDiv.removeChild(choicesDiv.firstChild);
     };

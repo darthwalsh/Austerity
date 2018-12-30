@@ -33,7 +33,6 @@ module.exports = {
         ],
 
         /* //TODO(lint) fix these */
-        "no-invalid-this": "off",
         "no-console": "off",
         "curly": "off"
     }
