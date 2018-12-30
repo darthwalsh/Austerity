@@ -76,7 +76,7 @@ window.onload = function() {
     input.disabled = false;
   };
 
-  name.addEventListener("keydown", function(e) {
+  name.addEventListener("keydown", e => {
     if (e.keyCode == 13) {
       connect();
     }

@@ -80,13 +80,13 @@ class Bureaucrat {
       player.discardPile.push(cards.Silver);
       game.store.bought(cards.Silver);
     }
-    game.parallelAttack(player, function (p, attackDone) {
+    game.parallelAttack(player, (p, attackDone) => {
       const discardChoices = p.hand
-        .filter(function (c) { return c.ofKind("property"); })
-        .map(function (c) { return c.name; });
+        .filter(c => c.ofKind("property"))
+        .map(c => c.name);
       if (discardChoices.length) {
         p.sendMessage("Put a Victory card onto your deck:");
-        p.sendChoice(discardChoices, function (choice) {
+        p.sendChoice(discardChoices, choice => {
           p.drawPile.push(p.fromHand(choice));
           attackDone();
         });
@@ -112,14 +112,14 @@ class Cellar {
       callback();
     };
     const promptDiscard = function () {
-      const choices = player.hand.map(function (c) { return c.name; });
+      const choices = player.hand.map(c => c.name);
       if (!choices.length) {
         end();
         return;
       }
       choices.push("Done Discarding");
       player.sendMessage("Discard cards:");
-      player.sendChoice(choices, function (choice) {
+      player.sendChoice(choices, choice => {
         if (choice == "Done Discarding") {
           end();
           return;
@@ -143,7 +143,7 @@ class Chancellor {
   play(player, callback, game) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
-    player.sendChoice(["No", "Discard"], function (choice) {
+    player.sendChoice(["No", "Discard"], choice => {
       if (choice == "Discard") {
         Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
       }
@@ -161,14 +161,14 @@ class Chapel {
   play(player, callback, game) {
     let canTrash = 4;
     const promptTrash = function () {
-      const trashChoices = player.hand.map(function (c) { return c.name; });
+      const trashChoices = player.hand.map(c => c.name);
       if (!trashChoices.length) {
         callback();
         return;
       }
       trashChoices.push("Done Trashing");
       player.sendMessage("Trash up to " + canTrash + " cards:");
-      player.sendChoice(trashChoices, function (choice) {
+      player.sendChoice(trashChoices, choice => {
         if (choice == "Done Trashing") {
           callback();
           return;
@@ -191,7 +191,7 @@ class Chapel {
 const CouncilRoom = new Action(5, (player, game) => {
   player.buys += 1;
   player.draw(4);
-  game.otherPlayers(player).forEach(function(p) {
+  game.otherPlayers(player).forEach(p => {
     p.draw();
   });
 });
@@ -205,13 +205,13 @@ class Feast {
   play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(5)
-      .map(function (c) { return c.name; });
+      .map(c => c.name);
     if (!gainChoices.length) {
       callback();
       return;
     }
     player.sendMessage("Gain a card:");
-    player.sendChoice(gainChoices, function (gainChoice) {
+    player.sendChoice(gainChoices, gainChoice => {
       player.discardPile.push(cards[gainChoice]);
       game.store.bought(gainChoice);
       callback();
@@ -270,7 +270,7 @@ class Library {
       }
       if (card.ofKind("action")) {
         player.sendMessage("Gain Action or set aside:");
-        player.sendChoice([card.name, "Set Aside"], function (choice) {
+        player.sendChoice([card.name, "Set Aside"], choice => {
           if (choice == "Set Aside") {
             aside.push(card);
           }
@@ -306,9 +306,9 @@ class Militia {
     player.money += 2;
     const attack = function (p, attackDone) {
       if (p.hand.length > 3) {
-        const discardChoices = p.hand.map(function (c) { return c.name; });
+        const discardChoices = p.hand.map(c => c.name);
         p.sendMessage("Discard down to three cards:");
-        p.sendChoice(discardChoices, function (choice) {
+        p.sendChoice(discardChoices, choice => {
           p.discardPile.push(p.fromHand(choice));
           attack(p, attackDone);
         });
@@ -329,27 +329,27 @@ class Mine {
 
   play(player, callback, game) {
     const trashChoices = player.hand
-      .filter(function (c) { return c.ofKind("treasure"); })
-      .map(function (c) { return c.name; });
+      .filter(c => c.ofKind("treasure"))
+      .map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No Treasures to trash");
       callback();
       return;
     }
     player.sendMessage("Trash a Treasure:");
-    player.sendChoice(trashChoices, function (trashChoice) {
+    player.sendChoice(trashChoices, trashChoice => {
       const trash = player.fromHand(trashChoice);
       game.trash.push(trash);
       const gainChoices = game.store
         .getAvailable(trash.cost + 3)
-        .filter(function (c) { return c.ofKind("treasure"); })
-        .map(function (c) { return c.name; });
+        .filter(c => c.ofKind("treasure"))
+        .map(c => c.name);
       if (!gainChoices.length) {
         callback();
         return;
       }
       player.sendMessage("Gain a Treasure:");
-      player.sendChoice(gainChoices, function (gainChoice) {
+      player.sendChoice(gainChoices, gainChoice => {
         player.hand.push(cards[gainChoice]);
         game.store.bought(gainChoice);
         callback();
@@ -386,25 +386,25 @@ class Remodel {
 
   play(player, callback, game) {
     const trashChoices = player.hand
-      .map(function (c) { return c.name; });
+      .map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No Cards to trash");
       callback();
       return;
     }
     player.sendMessage("Trash a card:");
-    player.sendChoice(trashChoices, function (trashChoice) {
+    player.sendChoice(trashChoices, trashChoice => {
       const trash = player.fromHand(trashChoice);
       game.trash.push(trash);
       const gainChoices = game.store
         .getAvailable(trash.cost + 2)
-        .map(function (c) { return c.name; });
+        .map(c => c.name);
       if (!gainChoices.length) {
         callback();
         return;
       }
       player.sendMessage("Gain a card:");
-      player.sendChoice(gainChoices, function (gainChoice) {
+      player.sendChoice(gainChoices, gainChoice => {
         player.discardPile.push(cards[gainChoice]);
         game.store.bought(gainChoice);
         callback();
@@ -434,7 +434,7 @@ class Spy {
       }
       const name = p.name == player.name ? "Your" : (p.name + "'s");
       player.sendMessage("Put back on deck or discard " + name + " " + card.name);
-      player.sendChoice(["Put back", "Discard"], function (choice) {
+      player.sendChoice(["Put back", "Discard"], choice => {
         if (choice == "Put back") {
           p.drawPile.push(card);
         }
@@ -444,7 +444,7 @@ class Spy {
         attackDone();
       });
     };
-    game.sequentialAttack(player, attack, function () {
+    game.sequentialAttack(player, attack, () => {
       attack(player, callback);
     });
   }
@@ -457,7 +457,7 @@ class Thief {
   }
 
   play(player, callback, game) {
-    game.sequentialAttack(player, function (p, attackDone) {
+    game.sequentialAttack(player, (p, attackDone) => {
       const drawn = [];
       let card = p.fromDraw();
       if (card)
@@ -466,8 +466,8 @@ class Thief {
       if (card)
         drawn.push(card);
       let treasures = drawn
-        .filter(function (c) { return c.ofKind("treasure"); })
-        .map(function (c) { return c.name; });
+        .filter(c => c.ofKind("treasure"))
+        .map(c => c.name);
       if (!treasures.length) {
         Array.prototype.push.apply(p.discardPile, drawn);
         attackDone();
@@ -479,7 +479,7 @@ class Thief {
         Array.prototype.push.apply(choices, ["Trash: " + name, "Steal: " + name]);
       }
       player.sendMessage("Trash or steal a Treasure:");
-      player.sendChoice(choices, function (choice) {
+      player.sendChoice(choices, choice => {
         const steal = choice.substring(0, 7) == "Steal: ";
         choice = choice.substring(7);
         let chosen;
@@ -496,9 +496,9 @@ class Thief {
         else {
           game.trash.push(chosen);
         }
-        treasures = treasures.map(function (n) { return cards[n]; });
+        treasures = treasures.map(n => cards[n]);
         Array.prototype.push.apply(p.discardPile, treasures);
-        const notTreasures = drawn.filter(function (c) { return !c.ofKind("treasure"); });
+        const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
         Array.prototype.push.apply(p.discardPile, notTreasures);
         attackDone();
       });
@@ -514,19 +514,19 @@ class ThroneRoom {
 
   play(player, callback, game) {
     const actions = player.hand
-      .filter(function (c) { return c.ofKind("action"); })
-      .map(function (c) { return c.name; });
+      .filter(c => c.ofKind("action"))
+      .map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Actions to play");
       callback();
       return;
     }
     player.sendMessage("Pick an Action to double:");
-    player.sendChoice(actions, function (actionName) {
+    player.sendChoice(actions, actionName => {
       game.allLog(player.name + " played " + actionName + " doubled!");
       const action = player.fromHand(actionName);
-      action.play(player, function () {
-        action.play(player, function () {
+      action.play(player, () => {
+        action.play(player, () => {
           player.afterPlay(action);
           callback();
         }, game);
@@ -548,7 +548,7 @@ class Witch {
 
   play(player, callback, game) {
     player.draw(2);
-    game.parallelAttack(player, function (p, attackDone) {
+    game.parallelAttack(player, (p, attackDone) => {
       if (game.store.counts["Curse"]) {
         p.discardPile.push(cards.Curse);
         game.store.bought(cards.Curse);
@@ -572,13 +572,13 @@ class Workshop {
   play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(4)
-      .map(function (c) { return c.name; });
+      .map(c => c.name);
     if (!gainChoices.length) {
       callback();
       return;
     }
     player.sendMessage("Gain a card:");
-    player.sendChoice(gainChoices, function (gainChoice) {
+    player.sendChoice(gainChoices, gainChoice => {
       player.discardPile.push(cards[gainChoice]);
       game.store.bought(gainChoice);
       callback();
@@ -594,20 +594,20 @@ class KingsCourt {
 
   play(player, callback, game) {
     const actions = player.hand
-      .filter(function (c) { return c.ofKind("action"); })
-      .map(function (c) { return c.name; });
+      .filter(c => c.ofKind("action"))
+      .map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Actions to play");
       callback();
       return;
     }
     player.sendMessage("Pick an Action to triple:");
-    player.sendChoice(actions, function (actionName) {
+    player.sendChoice(actions, actionName => {
       game.allLog(player.name + " played " + actionName + " tripled!!");
       const action = player.fromHand(actionName);
-      action.play(player, function () {
-        action.play(player, function () {
-          action.play(player, function () {
+      action.play(player, () => {
+        action.play(player, () => {
+          action.play(player, () => {
             player.afterPlay(action);
             callback();
           }, game);

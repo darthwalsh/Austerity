@@ -37,8 +37,8 @@ class Player {
       return;
     }
 
-    const actionCards = this.hand.filter(function(c){return c.ofKind("action");});
-    const choices = actionCards.map(function(c){return c.name;});
+    const actionCards = this.hand.filter(c => c.ofKind("action"));
+    const choices = actionCards.map(c => c.name);
 
     if (!choices.length) {
       this.sendMessage("No Actions to play");
@@ -71,9 +71,9 @@ class Player {
       return;
     }
 
-    const treasureCards = this.hand.filter(function(c){return c.ofKind("treasure");});
+    const treasureCards = this.hand.filter(c => c.ofKind("treasure"));
 
-    const choices = treasureCards.map(function(c){return c.name;});
+    const choices = treasureCards.map(c => c.name);
 
     if (choices.length) {
       choices.unshift("Play All Treasures");
@@ -81,7 +81,7 @@ class Player {
     }
 
     Array.prototype.push.apply(choices,
-      this.game.store.getAvailable(this.money).map(function(c){return "Buy: " + c.name;}));
+      this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
 
     if (!choices.length) {
       this.sendMessage("Nothing to buy");
@@ -121,7 +121,7 @@ class Player {
   }
 
   playAllTreasures() {
-    const treasures = this.hand.filter(function(c){return c.ofKind("treasure");});
+    const treasures = this.hand.filter(c => c.ofKind("treasure"));
     if (treasures.length) {
       this.playCard(treasures[0].name, this.playAllTreasures.bind(this));
     } else {
@@ -130,7 +130,7 @@ class Player {
   }
 
   fromHand(name) {
-    const hi = this.hand.map(function(c){return c.name;}).indexOf(name);
+    const hi = this.hand.map(c => c.name).indexOf(name);
     if (hi == -1)
       return null;
     const card = this.hand.splice(hi, 1)[0];
@@ -154,7 +154,7 @@ class Player {
       console.error("Card doesn't exist: " + name);
       return;
     }
-    card.play(this, function() {
+    card.play(this, () => {
       t.afterPlay(card);
       callback();
     }, this.game);
@@ -212,8 +212,8 @@ class Player {
   }
 
   attacked(attackThenCallBack, callback) {
-    if(this.hand.filter(function(c){return c.name=="Moat";}).length) {
-      this.sendChoice(["Moat", "Get Attacked"], function(choice) {
+    if(this.hand.filter(c => c.name=="Moat").length) {
+      this.sendChoice(["Moat", "Get Attacked"], choice => {
         if(choice == "Get Attacked") {
           attackThenCallBack();
         } else {
@@ -228,7 +228,7 @@ class Player {
   getPoints() {
     const t = this;
     return this.allCards().reduce(
-      function(a, c) { return a + (c.getPoints ? c.getPoints(t) : 0); }, 0);
+      (a, c) => a + (c.getPoints ? c.getPoints(t) : 0), 0);
   }
 
   allCards() {
@@ -247,7 +247,7 @@ class Player {
   }
 
   sendHand() {
-    this.sendMessage("Your hand: " + this.hand.map(function(c){return c.name;}).join(", "));
+    this.sendMessage("Your hand: " + this.hand.map(c => c.name).join(", "));
   }
 
   sendChoice(choices, handleChoice) {

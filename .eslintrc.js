@@ -17,6 +17,8 @@ module.exports = {
 
         "quotes": ["error", "double"],
         "arrow-parens": ["error", "as-needed"],
+        "prefer-arrow-callback": "error",
+        "arrow-body-style": "error",
         "indent": [
             "error", 2, {
                 "FunctionDeclaration": {

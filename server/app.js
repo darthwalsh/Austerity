@@ -11,6 +11,6 @@ const game = new Game(console.log);
 //TODO(NODE-TURNS) game.playersChanged = function() { $("startButton").disabled = !game.canStart(); };
 
 const wss = new ws.Server({ server });
-wss.on("connection", function connection(ws) {
+wss.on("connection", ws => {
   game.addConnection(ws);
 });

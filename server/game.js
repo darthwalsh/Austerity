@@ -31,13 +31,13 @@ class Game {
       if (t.store.gameOver()) {
         let result = "GAME OVER!!!\r\n";
         result += ps
-          .sort(function(a, b) { return b.getPoints() - a.getPoints(); }) //descending
-          .map(function(p){ return p.name + ": " + p.getPoints() + "\n    " +
+          .sort((a, b) => b.getPoints() - a.getPoints()) //descending
+          .map(p => p.name + ": " + p.getPoints() + "\n    " +
             p.allCards()
-              .filter(function(c){return c.ofKind("property")||c.ofKind("curse");})
-              .map(function(c){return c.name;})
+              .filter(c => c.ofKind("property")||c.ofKind("curse"))
+              .map(c => c.name)
               .sort()
-              .toString();})
+              .toString())
           .join("\r\n");
         t.allLog(result);
         return;
@@ -52,7 +52,7 @@ class Game {
 
   addConnection(ws) {
     let me;
-    ws.on("message", function(data) {
+    ws.on("message", data => {
       data = JSON.parse(data);
       const type = Object.keys(data)[0];
       data = data[type];
@@ -80,26 +80,26 @@ class Game {
       default:
         console.error("Not implemented: " + type);
       }
-    }.bind(this));
+    });
 
-    ws.on("close", function() {
+    ws.on("close", () => {
       const player = this.players[me.name];
       if (player) {
         this.log(player.name + " disconnected");
         delete this.players[me.name];
         this.playersChanged();
       }
-    }.bind(this));
+    });
   }
 
   allPlayers() {
     const t = this;
     return Object.keys(this.players)
-      .map(function(n){return t.players[n];});
+      .map(n => t.players[n]);
   }
 
   otherPlayers(player) {
-    return this.allPlayers().filter(function(p){return p.name !== player.name;});
+    return this.allPlayers().filter(p => p.name !== player.name);
   }
 
   parallelAttack(player, attackThenCallBack, callback) {
@@ -114,8 +114,8 @@ class Game {
         callback();
       }
     };
-    others.forEach(function(p) {
-      p.attacked(function() {
+    others.forEach(p => {
+      p.attacked(() => {
         attackThenCallBack(p, attackDone);
       }, attackDone);
     });
@@ -140,12 +140,12 @@ class Game {
         return;
       }
 
-      ps[i].attacked(function() {
+      ps[i].attacked(() => {
         attackThenCallBack(ps[i], attackDone);
       }, attackDone);
     };
 
-    ps[i].attacked(function() {
+    ps[i].attacked(() => {
       attackThenCallBack(ps[i], attackDone);
     }, attackDone);
   }
