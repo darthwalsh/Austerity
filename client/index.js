@@ -38,7 +38,7 @@ function addManage(options, ws) {
   startButton.innerHTML = "Start";
   // startButton.disabled = true; //TODO(NODE) figure out players / game.playersChanged
   startButton.id = "startButton";
-  startButton.onclick = function() {
+  startButton.onclick = () => {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
@@ -65,11 +65,11 @@ function addManage(options, ws) {
   manageDiv.appendChild(manageLog);
 }
 
-window.onload = function() {
+window.onload = () => {
   const address = window.location.href.replace("http", "ws");
   const name = $input("name");
   const connectButton = $input("connectButton");
-  const connect = function() {
+  const connect = () => {
     ws.send(JSON.stringify({connect: name.value}));
     name.disabled = true;
     connectButton.disabled = true;

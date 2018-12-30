@@ -785,7 +785,7 @@ describe("cards", () => {
 
       const game = new Game(console.error);
 
-      const p = new Player("Bot", {send: function(message) {
+      const p = new Player("Bot", {send: message => {
         const o = JSON.parse(message);
         if (o.message && o.message.startsWith("Your hand"))
           return;
@@ -804,14 +804,14 @@ describe("cards", () => {
 
       game.players[0] = p;
       game.store.setIncluded(test.store.map(n => cards[n]));
-      game.allLog = function(message) {
+      game.allLog = message => {
         const expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
       };
 
       let otherCount = 0;
       test.others.forEach(testOther => {
-        const oP = new Player("Other#" + otherCount++, {send: function(message) {
+        const oP = new Player("Other#" + otherCount++, {send: message => {
           const o = JSON.parse(message);
           if (o.message && o.message.startsWith("Your hand"))
             return;

@@ -262,7 +262,7 @@ class Player {
     const t = this;
     if (this.onChoice)
       console.error("onChoice wasn't empty!!!");
-    this.onChoice = function(choice) {
+    this.onChoice = choice => {
       t.onChoice = null;
       handleChoice.call(t, choice);
     };

@@ -8,7 +8,7 @@ app.use(express.static("client"));
 const server = app.listen(port, () => console.log(`Example HTTP app listening on port ${port}!`));
 
 const game = new Game(console.log);
-//TODO(NODE-TURNS) game.playersChanged = function() { $("startButton").disabled = !game.canStart(); };
+//TODO(NODE-TURNS) game.playersChanged = () => { $("startButton").disabled = !game.canStart(); };
 
 const wss = new ws.Server({server});
 wss.on("connection", ws => {

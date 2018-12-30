@@ -27,7 +27,7 @@ class Game {
     }
 
     let turn = Math.floor(Math.random() * ps.length);
-    const nextTurn = function() {
+    const nextTurn = () => {
       if (t.store.gameOver()) {
         let result = "GAME OVER!!!\r\n";
         result += ps
@@ -109,7 +109,7 @@ class Game {
       callback();
       return;
     }
-    const attackDone = function() {
+    const attackDone = () => {
       if(! --attacksLeft) {
         callback();
       }
@@ -132,7 +132,7 @@ class Game {
     const pi = ps.indexOf(player);
     let i = (pi + 1) % ps.length;
 
-    const attackDone = function() {
+    const attackDone = () => {
       i = (i + 1) % ps.length;
 
       if (i == pi) {
