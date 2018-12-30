@@ -817,20 +817,20 @@ describe("cards", () => {
             return;
           }
 
-          const expected = testOther.interactions[oP.InteractionIndex++];
+          const expected = testOther.interactions[oP["InteractionIndex"]++];
 
           if (o.message) {
             expect(o.message).toEqual(expected);
           } else if (o.choices) {
             expect(o.choices).toEqual(expected);
 
-            oP.onChoice(testOther.interactions[oP.InteractionIndex++]);
+            oP.onChoice(testOther.interactions[oP["InteractionIndex"]++]);
           } else {
             fail(Error("Not implemented: " + message));
           }
         }}, game);
-        oP.TestIndex = otherCount - 1;
-        oP.InteractionIndex = 0;
+        oP["TestIndex"] = otherCount - 1;
+        oP["InteractionIndex"] = 0;
         oP.drawPile = testOther.draw.map(n => cards[n]);
         oP.discardPile = testOther.discard.map(n => cards[n]);
         oP.hand = testOther.hand.map(n => cards[n]);
@@ -871,7 +871,7 @@ describe("cards", () => {
           expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
           game.otherPlayers(p).forEach(o => {
-            const otherTest = test.others[o.TestIndex];
+            const otherTest = test.others[o["TestIndex"]];
 
             expect(o.drawPile.map(c => c.name))
               .toEqual(otherTest.drawAfter, o.name + " drawAfter");
@@ -880,7 +880,7 @@ describe("cards", () => {
             expect(o.hand.map(c => c.name))
               .toEqual(otherTest.handAfter, o.name + " handAfter");
 
-            expect(o.InteractionIndex).toEqual(otherTest.interactions.length, o.name + " all interactions used");
+            expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
           });
 
           expect(called).toBeFalsy("called twice");
