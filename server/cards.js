@@ -668,14 +668,12 @@ for(const name in cards) {
   card.toString = toString;
 
   if (card.kind) {
-    if (typeof card.kind == "string") {
-      card.ofKind = (function(k) {
-        return function(other) { return other == k; };
-      })(card.kind);
-    } else if (Array.isArray(card.kind)) {
-      card.ofKind = (function(ks) {
-        return function(other) { return ks.indexOf(other) != -1; };
-      })(card.kind);
+    let kind = card.kind;
+    if (typeof kind == "string") {
+      kind = [kind];
+    }
+    if (Array.isArray(kind)) {
+      card.ofKind = other => kind.includes(other);
     } else {
       console.error("Card " + name + " kind type not defined");
     }
