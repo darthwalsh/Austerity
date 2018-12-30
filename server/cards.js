@@ -66,7 +66,7 @@ const Adventurer = new Action(6, (player, game) => {
   }
 
   player.sendHand();
-  Array.prototype.push.apply(player.discardPile, drawn); //TODO just discardPile.push
+  Array.prototype.push.apply(player.discardPile, drawn); // TODO just discardPile.push
 });
 
 class Bureaucrat {

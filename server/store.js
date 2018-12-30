@@ -3,7 +3,7 @@ const cards = require("./cards");
 class Store {
   constructor() {
     const DEFAULT_TREASURE_COUNT = 30;
-    const DEFAULT_PROPERTY_COUNT = 8; //TODO make correct
+    const DEFAULT_PROPERTY_COUNT = 8; // TODO make correct
     this.default = [
       cards.Copper, cards.Silver, cards.Gold,
       cards.Estate, cards.Duchy, cards.Province,

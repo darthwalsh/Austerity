@@ -33,10 +33,6 @@ module.exports = {
         ],
 
         /* //TODO(lint) fix these */
-        "padded-blocks": "off",
-        "prefer-rest-params": "off",
-        "semi-spacing": "off",
-        "spaced-comment": "off",
         "keyword-spacing": "off",
         "key-spacing": "off",
         "no-invalid-this": "off",

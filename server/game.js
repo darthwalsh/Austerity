@@ -7,12 +7,12 @@ class Game {
     this.log = log;
     this.store = new Store();
     this.players = {}; // name -> Player
-    this.playersChanged = () => { }; //TODO(NODE-TURNS)
+    this.playersChanged = () => { }; // TODO(NODE-TURNS)
     this.trash = [];
   }
 
   canStart() {
-    //TODO Game of 1 is only fun when debugging
+    // TODO Game of 1 is only fun when debugging
     return Object.keys(this.players).length >= 1;
   }
 
@@ -31,7 +31,7 @@ class Game {
       if (t.store.gameOver()) {
         let result = "GAME OVER!!!\r\n";
         result += ps
-          .sort((a, b) => b.getPoints() - a.getPoints()) //descending
+          .sort((a, b) => b.getPoints() - a.getPoints()) // descending
           .map(p => p.name + ": " + p.getPoints() + "\n    " +
             p.allCards()
               .filter(c => c.ofKind("property")||c.ofKind("curse"))
@@ -58,7 +58,7 @@ class Game {
       data = data[type];
       switch(type) {
       case "connect":
-        //TODO what if name already signed in?
+        // TODO what if name already signed in?
         me = new Player(data, ws, this);
         this.players[data] = me;
         this.log(data + " connected");
