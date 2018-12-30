@@ -42,8 +42,9 @@ function addManage(options, ws) {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
-    while (manageDiv.firstChild !== manageLog)
+    while (manageDiv.firstChild !== manageLog) {
       manageDiv.removeChild(manageDiv.firstChild);
+    }
 
     ws.send(JSON.stringify({gameStart: {included, debugMode}}));
   };
@@ -99,8 +100,9 @@ window.onload = () => {
     const choicesDiv = $("choices");
     const choiceOnClick = event => {
       ws.send(JSON.stringify({choice: event.target.innerHTML}));
-      while (choicesDiv.firstChild)
+      while (choicesDiv.firstChild) {
         choicesDiv.removeChild(choicesDiv.firstChild);
+      }
     };
 
     switch (type) {
@@ -133,7 +135,7 @@ window.onload = () => {
       addManage(data, ws);
       break;
     default:
-      console.error("Not implemented: " + type);
+      throw Error("Not implemented: " + type);
     }
   });
   input.addEventListener("keydown", e => {

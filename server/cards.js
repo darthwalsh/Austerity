@@ -55,8 +55,9 @@ const Adventurer = new Action(6, (player, game) => {
   const drawn = [];
   while (treasures < 2) {
     const card = player.fromDraw();
-    if (!card)
+    if (!card) {
       break;
+    }
     if (card.ofKind("treasure")) {
       player.hand.push(card);
       ++treasures;
@@ -454,11 +455,13 @@ class Thief {
     game.sequentialAttack(player, (p, attackDone) => {
       const drawn = [];
       let card = p.fromDraw();
-      if (card)
+      if (card) {
         drawn.push(card);
+      }
       card = p.fromDraw();
-      if (card)
+      if (card) {
         drawn.push(card);
+      }
       let treasures = drawn
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);

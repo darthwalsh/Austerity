@@ -7,10 +7,12 @@ class Player {
     this.game = game;
     this.drawPile = [];
     this.discardPile = [];
-    for (let i = 0; i < 7; ++i)
+    for (let i = 0; i < 7; ++i) {
       this.discardPile.push(cards.Copper);
-    for (let i = 0; i < 3; ++i)
+    }
+    for (let i = 0; i < 3; ++i) {
       this.discardPile.push(cards.Estate);
+    }
     this.hand = [];
     this.draw(5);
     this.actions = null;
@@ -135,8 +137,9 @@ class Player {
 
   fromHand(name) {
     const hi = this.hand.map(c => c.name).indexOf(name);
-    if (hi == -1)
+    if (hi == -1) {
       return null;
+    }
     const card = this.hand.splice(hi, 1)[0];
     this.sendHand();
     return card;
@@ -145,8 +148,9 @@ class Player {
   fromDraw() {
     if (!this.drawPile.length) {
       this.shuffle();
-      if (!this.drawPile.length)
+      if (!this.drawPile.length) {
         return null;
+      }
     }
     return this.drawPile.pop();
   }
@@ -189,15 +193,17 @@ class Player {
 
     for (let i = 0; i < n; ++i) {
       const card = this.fromDraw();
-      if (card)
+      if (card) {
         this.hand.push(card);
+      }
     }
     this.sendHand();
   }
 
   shuffle() {
-    if (this.drawPile.length)
+    if (this.drawPile.length) {
       console.error("drawPile isn't empty!");
+    }
 
     const array = this.discardPile;
 
@@ -237,8 +243,9 @@ class Player {
 
   allCards() {
     const all = this.drawPile.concat(this.discardPile).concat(this.hand);
-    if (this.played)
+    if (this.played) {
       return all.concat(this.played);
+    }
     return all;
   }
 
@@ -260,8 +267,9 @@ class Player {
     }
 
     const t = this;
-    if (this.onChoice)
+    if (this.onChoice) {
       console.error("onChoice wasn't empty!!!");
+    }
     this.onChoice = choice => {
       t.onChoice = null;
       handleChoice.call(t, choice);
