@@ -14,7 +14,7 @@ function log(text) {
 function addManage(options, ws) {
   const manageDiv = $("manage");
 
-  for(let i = 0; i < options.length; ++i) {
+  for (let i = 0; i < options.length; ++i) {
     const id = "optional" + options[i];
 
     const box = document.createElement("input");
@@ -99,17 +99,17 @@ window.onload = () => {
     const choicesDiv = $("choices");
     const choiceOnClick = function() {
       ws.send(JSON.stringify({choice: this.innerHTML}));
-      while(choicesDiv.firstChild)
+      while (choicesDiv.firstChild)
         choicesDiv.removeChild(choicesDiv.firstChild);
     };
 
-    switch(type) {
+    switch (type) {
     case "message":
       log(data);
       break;
     case "choices":
-      for(let i = 0; i < data.length; ++i) {
-        if(data[i] === "\n") {
+      for (let i = 0; i < data.length; ++i) {
+        if (data[i] === "\n") {
           choicesDiv.appendChild(document.createElement("br"));
         }
         else {
@@ -120,7 +120,7 @@ window.onload = () => {
         }
       }
       $("log").scrollTop = $("log").scrollHeight;
-      if(document.hasFocus && !document.hasFocus()) {
+      if (document.hasFocus && !document.hasFocus()) {
         if (!turnAlert) {
           turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
         }

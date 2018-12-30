@@ -33,7 +33,6 @@ module.exports = {
         ],
 
         /* //TODO(lint) fix these */
-        "keyword-spacing": "off",
         "key-spacing": "off",
         "no-invalid-this": "off",
         "brace-style": "off",

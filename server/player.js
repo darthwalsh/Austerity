@@ -32,7 +32,7 @@ class Player {
   }
 
   promptAction() {
-    if(!this.actions) {
+    if (!this.actions) {
       this.sendMessage("No Action points remaining, starting Buy phase");
       this.promptBuys();
       return;
@@ -54,7 +54,7 @@ class Player {
   }
 
   receiveAction(choice) {
-    if(choice == "Done With Actions") {
+    if (choice == "Done With Actions") {
       this.promptBuys();
       return;
     }
@@ -70,7 +70,7 @@ class Player {
   }
 
   promptBuys() {
-    if(!this.buys) {
+    if (!this.buys) {
       this.turnDone();
       return;
     }
@@ -143,9 +143,9 @@ class Player {
   }
 
   fromDraw() {
-    if(!this.drawPile.length) {
+    if (!this.drawPile.length) {
       this.shuffle();
-      if(!this.drawPile.length)
+      if (!this.drawPile.length)
         return null;
     }
     return this.drawPile.pop();
@@ -187,7 +187,7 @@ class Player {
       n = 1;
     }
 
-    for(let i = 0; i < n; ++i) {
+    for (let i = 0; i < n; ++i) {
       const card = this.fromDraw();
       if (card)
         this.hand.push(card);
@@ -196,7 +196,7 @@ class Player {
   }
 
   shuffle() {
-    if(this.drawPile.length)
+    if (this.drawPile.length)
       console.error("drawPile isn't empty!");
 
     const array = this.discardPile;
@@ -216,9 +216,9 @@ class Player {
   }
 
   attacked(attackThenCallBack, callback) {
-    if(this.hand.filter(c => c.name=="Moat").length) {
+    if (this.hand.filter(c => c.name=="Moat").length) {
       this.sendChoice(["Moat", "Get Attacked"], choice => {
-        if(choice == "Get Attacked") {
+        if (choice == "Get Attacked") {
           attackThenCallBack();
         } else {
           callback();
@@ -255,7 +255,7 @@ class Player {
   }
 
   sendChoice(choices, handleChoice) {
-    if(!choices.length) {
+    if (!choices.length) {
       console.error("EMPTY CHOICE!!!");
     }
 

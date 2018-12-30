@@ -20,7 +20,7 @@ class Game {
     const t = this;
     const ps = this.allPlayers();
 
-    if(debugMode) {
+    if (debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
       ps[0].sendHand();
       this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
@@ -56,7 +56,7 @@ class Game {
       data = JSON.parse(data);
       const type = Object.keys(data)[0];
       data = data[type];
-      switch(type) {
+      switch (type) {
       case "connect":
         // TODO what if name already signed in?
         me = new Player(data, ws, this);
@@ -105,12 +105,12 @@ class Game {
   parallelAttack(player, attackThenCallBack, callback) {
     const others = this.otherPlayers(player);
     let attacksLeft = others.length;
-    if(!attacksLeft) {
+    if (!attacksLeft) {
       callback();
       return;
     }
     const attackDone = () => {
-      if(! --attacksLeft) {
+      if (! --attacksLeft) {
         callback();
       }
     };
@@ -124,7 +124,7 @@ class Game {
   sequentialAttack(player, attackThenCallBack, callback) {
     const ps = this.allPlayers();
 
-    if(ps.length == 1) {
+    if (ps.length == 1) {
       callback();
       return;
     }
@@ -151,7 +151,7 @@ class Game {
   }
 
   allLog(text) {
-    for(const id in this.players) {
+    for (const id in this.players) {
       this.players[id].sendMessage(text);
     }
   }

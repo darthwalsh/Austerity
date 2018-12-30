@@ -35,13 +35,13 @@ class Store {
   }
 
   bought(card) {
-    if(--this.counts[card] < 0)
+    if (--this.counts[card] < 0)
       console.error("Already out of card!");
   }
 
   gameOver() {
     const t = this;
-    if(!this.counts[cards.Province])
+    if (!this.counts[cards.Province])
       return true;
     return this.default.concat(this.included)
       .filter(c => t.counts[c] === 0).length >= 3;

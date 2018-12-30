@@ -661,7 +661,7 @@ const cards = {
 
 const toString = function() {return this.name;};
 
-for(const name in cards) {
+for (const name in cards) {
   const card = cards[name];
 
   card.name = name;
