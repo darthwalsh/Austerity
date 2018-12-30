@@ -36,8 +36,6 @@ module.exports = {
         "padded-blocks": "off",
         "prefer-rest-params": "off",
         "semi-spacing": "off",
-        "space-before-blocks": "off",
-        "space-before-function-paren": "off",
         "spaced-comment": "off",
         "keyword-spacing": "off",
         "key-spacing": "off",

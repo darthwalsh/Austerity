@@ -107,11 +107,11 @@ class Cellar {
   play(player, callback, game) {
     player.actions += 1;
     let discarded = 0;
-    const end = function () {
+    const end = () => {
       player.draw(discarded);
       callback();
     };
-    const promptDiscard = function () {
+    const promptDiscard = () => {
       const choices = player.hand.map(c => c.name);
       if (!choices.length) {
         end();
@@ -160,7 +160,7 @@ class Chapel {
 
   play(player, callback, game) {
     let canTrash = 4;
-    const promptTrash = function () {
+    const promptTrash = () => {
       const trashChoices = player.hand.map(c => c.name);
       if (!trashChoices.length) {
         callback();
@@ -253,12 +253,12 @@ class Library {
 
   play(player, callback, game) {
     const aside = [];
-    const end = function () {
+    const end = () => {
       Array.prototype.push.apply(player.discardPile, aside);
       player.sendHand();
       callback();
     };
-    const promptTake = function () {
+    const promptTake = () => {
       if (player.hand.length >= 7) {
         end();
         return;
@@ -304,7 +304,7 @@ class Militia {
 
   play(player, callback, game) {
     player.money += 2;
-    const attack = function (p, attackDone) {
+    const attack = (p, attackDone) => {
       if (p.hand.length > 3) {
         const discardChoices = p.hand.map(c => c.name);
         p.sendMessage("Discard down to three cards:");
@@ -426,7 +426,7 @@ class Spy {
   play(player, callback, game) {
     player.actions += 1;
     player.draw();
-    const attack = function (p, attackDone) {
+    const attack = (p, attackDone) => {
       const card = p.fromDraw();
       if (!card) {
         attackDone();
