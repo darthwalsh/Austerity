@@ -654,15 +654,10 @@ const cards = {
   Platinum: new Treasure(9, 5),
 };
 
-const toString = function() {
-  return this.name;
-};
-
 for (const name in cards) {
   const card = cards[name];
 
   card.name = name;
-  card.toString = toString;
 
   if (card.kind) {
     let kind = card.kind;

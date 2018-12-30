@@ -6,9 +6,12 @@ class Game {
   constructor(log) {
     this.log = log;
     this.store = new Store();
-    this.players = {}; // name -> Player
-    this.playersChanged = () => { }; // TODO(NODE-TURNS)
+    /**
+     * @type {Object.<string, Player>}
+     */
+    this.players = {};
     this.trash = [];
+    this.playersChanged = () => { }; // TODO(NODE-TURNS)
   }
 
   canStart() {

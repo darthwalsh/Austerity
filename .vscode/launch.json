@@ -14,7 +14,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Tests",
-      "program": "${workspaceRoot}\\node_modules\\jasmine-node\\bin\\jasmine-node", 
+      "program": "${workspaceRoot}\\node_modules\\jasmine\\bin\\jasmine", 
       "args": [ 
           "cardspec.js" 
       ], 

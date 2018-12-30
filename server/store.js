@@ -20,9 +20,9 @@ class Store {
     return Object.keys(cards).filter(n => t.default.indexOf(cards[n]) == -1);
   }
 
-  setIncluded(cards) {
-    this.included = cards;
-    this.counts = cards.reduce((o, c) => {
+  setIncluded(included) {
+    this.included = included;
+    this.counts = included.reduce((o, c) => {
       o[c.name] = 10;
       return o;
     }, this.counts);
@@ -35,18 +35,18 @@ class Store {
   }
 
   bought(card) {
-    if (--this.counts[card] < 0) {
+    if (--this.counts[card.name] < 0) {
       console.error("Already out of card!");
     }
   }
 
   gameOver() {
     const t = this;
-    if (!this.counts[cards.Province]) {
+    if (!this.counts.Province) {
       return true;
     }
     return this.default.concat(this.included)
-      .filter(c => t.counts[c] === 0).length >= 3;
+      .filter(c => t.counts[c.name] === 0).length >= 3;
   }
 }
 
