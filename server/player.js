@@ -33,6 +33,7 @@ class Player {
 
   promptAction() {
     if(!this.actions) {
+      this.sendMessage("No Action points remaining, starting Buy phase");
       this.promptBuys();
       return;
     }
@@ -41,15 +42,14 @@ class Player {
     const choices = actionCards.map(c => c.name);
 
     if (!choices.length) {
-      this.sendMessage("No Actions to play");
+      this.sendMessage("No Action cards to play, starting Buy phase");
       this.promptBuys();
       return;
     }
 
     choices.push("Done With Actions");
 
-    const message = "Actions: " + this.actions + " Money: " + this.money + " Buys: " + this.buys;
-    this.sendMessage(message);
+    this.sendPoints();
     this.sendChoice(choices, this.receiveAction);
   }
 
@@ -63,6 +63,10 @@ class Player {
 
     this.game.allLog(this.name + " played " + choice);
     this.playCard(choice, this.promptAction.bind(this));
+  }
+
+  sendPoints() {
+    this.sendMessage(`Actions: ${this.actions} Money: ${this.money} Buys: ${this.buys}`);
   }
 
   promptBuys() {
@@ -91,7 +95,7 @@ class Player {
 
     choices.push("Done With Buys");
 
-    this.sendMessage("Money: " + this.money + " Buys: " + this.buys);
+    this.sendPoints();
     this.sendChoice(choices, this.receiveBuys);
   }
 

@@ -241,7 +241,7 @@ const tests = {
   ThroneRoom_Feast_OneTrash: {
     hand: ["Feast"],
     interactions: [
-      "Pick an Action to double:",
+      "Pick an Action card to double:",
       ["Feast"],
       "Feast",
       "ALL: Bot played Feast doubled!",
@@ -290,7 +290,7 @@ const tests = {
     draw: ["Village", "Gold", "Smithy"],
     hand: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver"],
     interactions: [
-      "Gain Action or set aside:",
+      "Gain Action card or set aside:",
       ["Smithy", "Set Aside"],
       "Set Aside",
     ],
@@ -304,7 +304,7 @@ const tests = {
     discard: ["Village"],
     hand: [],
     interactions: [
-      "Gain Action or set aside:",
+      "Gain Action card or set aside:",
       ["Village", "Set Aside"],
       "Village",
     ],
@@ -579,7 +579,7 @@ const tests = {
     hand: ["Thief"],
 
     interactions: [
-      "Pick an Action to double:",
+      "Pick an Action card to double:",
       ["Thief"],
       "Thief",
       "ALL: Bot played Thief doubled!",
@@ -634,7 +634,7 @@ const tests = {
   ThroneRoom: {
     hand: ["Copper", "Mine"],
     interactions: [
-      "Pick an Action to double:",
+      "Pick an Action card to double:",
       ["Mine"],
       "Mine",
       "ALL: Bot played Mine doubled!",
@@ -659,7 +659,7 @@ const tests = {
   ThroneRoom_None: {
     hand: ["Copper", "Silver"],
     interactions: [
-      "No Actions to play",
+      "No Action cards to play",
     ],
     handAfter: ["Copper", "Silver"],
   },
@@ -739,7 +739,7 @@ const tests = {
     dBuys: 3,
     dMoney: 6,
     interactions: [
-      "Pick an Action to triple:",
+      "Pick an Action card to triple:",
       ["Woodcutter", "Woodcutter"],
       "Woodcutter",
       "ALL: Bot played Woodcutter tripled!!",
@@ -901,3 +901,5 @@ describe("cards", () => {
     }
   });
 });
+
+//TODO(CRASH) add a test for player turn, streaming in shuffle, asserting all output

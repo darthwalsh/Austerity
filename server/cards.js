@@ -269,7 +269,7 @@ class Library {
         return;
       }
       if (card.ofKind("action")) {
-        player.sendMessage("Gain Action or set aside:");
+        player.sendMessage("Gain Action card or set aside:");
         player.sendChoice([card.name, "Set Aside"], choice => {
           if (choice == "Set Aside") {
             aside.push(card);
@@ -517,11 +517,11 @@ class ThroneRoom {
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
     if (!actions.length) {
-      player.sendMessage("No Actions to play");
+      player.sendMessage("No Action cards to play");
       callback();
       return;
     }
-    player.sendMessage("Pick an Action to double:");
+    player.sendMessage("Pick an Action card to double:");
     player.sendChoice(actions, actionName => {
       game.allLog(player.name + " played " + actionName + " doubled!");
       const action = player.fromHand(actionName);
@@ -597,11 +597,11 @@ class KingsCourt {
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
     if (!actions.length) {
-      player.sendMessage("No Actions to play");
+      player.sendMessage("No Action cards to play");
       callback();
       return;
     }
-    player.sendMessage("Pick an Action to triple:");
+    player.sendMessage("Pick an Action card to triple:");
     player.sendChoice(actions, actionName => {
       game.allLog(player.name + " played " + actionName + " tripled!!");
       const action = player.fromHand(actionName);
