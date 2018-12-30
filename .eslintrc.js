@@ -34,7 +34,6 @@ module.exports = {
 
         /* //TODO(lint) fix these */
         "no-invalid-this": "off",
-        "brace-style": "off",
         "no-console": "off",
         "curly": "off"
     }

@@ -90,8 +90,7 @@ class Bureaucrat {
           p.drawPile.push(p.fromHand(choice));
           attackDone();
         });
-      }
-      else {
+      } else {
         attackDone();
       }
     }, callback);
@@ -178,8 +177,7 @@ class Chapel {
         --canTrash;
         if (canTrash) {
           promptTrash();
-        }
-        else {
+        } else {
           callback();
         }
       });
@@ -273,14 +271,12 @@ class Library {
         player.sendChoice([card.name, "Set Aside"], choice => {
           if (choice == "Set Aside") {
             aside.push(card);
-          }
-          else {
+          } else {
             player.hand.push(card);
           }
           promptTake();
         });
-      }
-      else {
+      } else {
         player.hand.push(card);
         promptTake();
       }
@@ -312,8 +308,7 @@ class Militia {
           p.discardPile.push(p.fromHand(choice));
           attack(p, attackDone);
         });
-      }
-      else {
+      } else {
         attackDone();
       }
     };
@@ -437,8 +432,7 @@ class Spy {
       player.sendChoice(["Put back", "Discard"], choice => {
         if (choice == "Put back") {
           p.drawPile.push(card);
-        }
-        else {
+        } else {
           p.discardPile.push(card);
         }
         attackDone();
@@ -485,15 +479,13 @@ class Thief {
         let chosen;
         if (choice == treasures[0]) {
           chosen = treasures.splice(0, 1)[0];
-        }
-        else {
+        } else {
           chosen = treasures.splice(1, 1)[0];
         }
         chosen = cards[chosen];
         if (steal) {
           player.discardPile.push(chosen);
-        }
-        else {
+        } else {
           game.trash.push(chosen);
         }
         treasures = treasures.map(n => cards[n]);
@@ -659,7 +651,9 @@ const cards = {
   Platinum: new Treasure(9, 5),
 };
 
-const toString = function() {return this.name;};
+const toString = function() {
+  return this.name;
+};
 
 for (const name in cards) {
   const card = cards[name];

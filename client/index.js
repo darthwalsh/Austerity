@@ -111,8 +111,7 @@ window.onload = () => {
       for (let i = 0; i < data.length; ++i) {
         if (data[i] === "\n") {
           choicesDiv.appendChild(document.createElement("br"));
-        }
-        else {
+        } else {
           const button = document.createElement("button");
           button.innerHTML = data[i];
           button.onclick = choiceOnClick;
