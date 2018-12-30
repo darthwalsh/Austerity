@@ -10,7 +10,7 @@ const server = app.listen(port, () => console.log(`Example HTTP app listening on
 const game = new Game(console.log);
 //TODO(NODE-TURNS) game.playersChanged = function() { $("startButton").disabled = !game.canStart(); };
 
-const wss = new ws.Server({ server });
+const wss = new ws.Server({server});
 wss.on("connection", ws => {
   game.addConnection(ws);
 });
