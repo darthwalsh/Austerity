@@ -156,14 +156,13 @@ class Player {
   }
 
   playCard(name, callback) {
-    const t = this;
     const card = this.fromHand(name);
     if (card === null) {
       console.error("Card doesn't exist: " + name);
       return;
     }
     card.play(this, () => {
-      t.afterPlay(card);
+      this.afterPlay(card);
       callback();
     }, this.game);
   }
@@ -236,9 +235,7 @@ class Player {
   }
 
   getPoints() {
-    const t = this;
-    return this.allCards().reduce(
-      (a, c) => a + (c.getPoints ? c.getPoints(t) : 0), 0);
+    return this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0);
   }
 
   allCards() {
@@ -266,13 +263,12 @@ class Player {
       console.error("EMPTY CHOICE!!!");
     }
 
-    const t = this;
     if (this.onChoice) {
       console.error("onChoice wasn't empty!!!");
     }
     this.onChoice = choice => {
-      t.onChoice = null;
-      handleChoice.call(t, choice);
+      this.onChoice = null;
+      handleChoice.call(this, choice);
     };
     this.send({choices: choices});
   }

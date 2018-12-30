@@ -20,7 +20,6 @@ class Game {
   }
 
   start(debugMode) {
-    const t = this;
     const ps = this.allPlayers();
 
     if (debugMode) {
@@ -31,7 +30,7 @@ class Game {
 
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {
-      if (t.store.gameOver()) {
+      if (this.store.gameOver()) {
         let result = "GAME OVER!!!\r\n";
         result += ps
           .sort((a, b) => b.getPoints() - a.getPoints()) // descending
@@ -42,7 +41,7 @@ class Game {
               .sort()
               .toString())
           .join("\r\n");
-        t.allLog(result);
+        this.allLog(result);
         return;
       }
 
@@ -96,9 +95,7 @@ class Game {
   }
 
   allPlayers() {
-    const t = this;
-    return Object.keys(this.players)
-      .map(n => t.players[n]);
+    return Object.keys(this.players).map(n => this.players[n]);
   }
 
   otherPlayers(player) {

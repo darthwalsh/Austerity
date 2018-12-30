@@ -9,6 +9,7 @@ class Store {
       cards.Estate, cards.Duchy, cards.Province,
     ];
     this.counts = this.default.reduce((o, c) => {
+      // @ts-ignore
       o[c.name] = c.ofKind("treasure") ? DEFAULT_TREASURE_COUNT : DEFAULT_PROPERTY_COUNT;
       return o;
     }, {});
@@ -16,8 +17,7 @@ class Store {
   }
 
   optional() {
-    const t = this;
-    return Object.keys(cards).filter(n => t.default.indexOf(cards[n]) == -1);
+    return Object.keys(cards).filter(n => this.default.indexOf(cards[n]) == -1);
   }
 
   setIncluded(included) {
@@ -29,9 +29,8 @@ class Store {
   }
 
   getAvailable(price) {
-    const t = this;
-    return this.default.concat(this.included)
-      .filter(c => c.cost <= price && t.counts[c.name]);
+    // @ts-ignore
+    return this.default.concat(this.included).filter(c => c.cost <= price && this.counts[c.name]);
   }
 
   bought(card) {
@@ -41,12 +40,12 @@ class Store {
   }
 
   gameOver() {
-    const t = this;
     if (!this.counts.Province) {
       return true;
     }
     return this.default.concat(this.included)
-      .filter(c => t.counts[c.name] === 0).length >= 3;
+      // @ts-ignore
+      .filter(c => this.counts[c.name] === 0).length >= 3;
   }
 }
 
