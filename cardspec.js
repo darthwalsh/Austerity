@@ -1,4 +1,4 @@
-/* global describe it expect */
+/* global describe it expect fail */
 
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
@@ -752,7 +752,6 @@ const tests = {
 describe("cards", () => {
   for(let tName in tests) {
     it("plays " + tName, () => {
-      const that = this;
       const test = tests[tName];
 
       if (tName.indexOf("_") != -1) {
@@ -798,7 +797,7 @@ describe("cards", () => {
           expect(o.choices).toEqual(expected);
           p.onChoice(test.interactions[interactionIndex++]);
         } else {
-          that.fail(Error("Not implemented: " + message));
+          fail(Error("Not implemented: " + message));
         }
       }}, game);
 
@@ -825,7 +824,7 @@ describe("cards", () => {
 
             oP.onChoice(testOther.interactions[oP.InteractionIndex++]);
           } else {
-            that.fail(Error("Not implemented: " + message));
+            fail(Error("Not implemented: " + message));
           }
         }}, game);
         oP.TestIndex = otherCount - 1;
@@ -890,8 +889,10 @@ describe("cards", () => {
       } else if(card.ofKind("property") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
       } else {
-        this.fail(Error("Not implemented kind: " + card.name));
+        fail(Error("Not implemented kind: " + card.name));
       }
+
+      expect(fail).toBeTruthy();
     });
   }
 
