@@ -786,7 +786,7 @@ describe("cards", () => {
 
       const p = new Player("Bot", {send: message => {
         const o = JSON.parse(message);
-        if (o.message && o.message.startsWith("Your hand")) {
+        if (isHandMessage(o.message)) {
           return;
         }
 
@@ -813,7 +813,7 @@ describe("cards", () => {
       test.others.forEach(testOther => {
         const oP = new Player("Other#" + otherCount++, {send: message => {
           const o = JSON.parse(message);
-          if (o.message && o.message.startsWith("Your hand")) {
+          if (isHandMessage(o.message)) {
             return;
           }
 
@@ -906,3 +906,10 @@ describe("cards", () => {
 });
 
 // TODO(CRASH) add a test for player turn, streaming in shuffle, asserting all output
+
+function isHandMessage(message) {
+  if (!message) {
+    return false;
+  }
+  return message.startsWith("Your hand") || message.startsWith("Your upcoming hand");
+}

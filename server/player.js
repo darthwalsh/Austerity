@@ -1,6 +1,13 @@
 const cards = require("./cards");
+// eslint-disable-next-line no-unused-vars
+const Game = require("./game").Game; // Useful for VS Code type info
 
 class Player {
+  /**
+   * @param {string} name
+   * @param {any} socket
+   * @param {Game} game
+   */
   constructor(name, socket, game) {
     this.name = name;
     this.socket = socket;
@@ -14,7 +21,7 @@ class Player {
       this.discardPile.push(cards.Estate);
     }
     this.hand = [];
-    this.draw(5);
+    this.redrawHand();
     this.actions = null;
     this.money = null;
     this.buys = null;
@@ -30,6 +37,10 @@ class Player {
     this.buys = 1;
     this.played = [];
 
+    this.game.otherPlayers(this).forEach(p => p.sendMessage(`${this.name}'s turn`));
+    this.sendMessage("");
+    this.sendMessage("Your turn!");
+    this.sendHand();
     this.promptAction();
   }
 
@@ -87,6 +98,7 @@ class Player {
     }
 
     Array.prototype.push.apply(choices,
+      // @ts-ignore
       this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
 
     if (!choices.length) {
@@ -180,23 +192,23 @@ class Player {
     Array.prototype.push.apply(this.discardPile, this.played.splice(0));
 
     this.sendMessage("");
-    this.draw(5);
+    this.redrawHand();
 
     this.afterTurn();
   }
 
-  draw(n) {
-    if (typeof n === "undefined") {
-      n = 1;
-    }
-
+  draw(n = 1, prefix) {
     for (let i = 0; i < n; ++i) {
       const card = this.fromDraw();
       if (card) {
         this.hand.push(card);
       }
     }
-    this.sendHand();
+    this.sendHand(prefix);
+  }
+
+  redrawHand() {
+    this.draw(5, "Your upcoming hand");
   }
 
   shuffle() {
@@ -254,8 +266,8 @@ class Player {
     this.send({message: msg});
   }
 
-  sendHand() {
-    this.sendMessage("Your hand: " + this.hand.map(c => c.name).join(", "));
+  sendHand(prefix = "Your hand") {
+    this.sendMessage(prefix + ": " + this.hand.map(c => c.name).join(", "));
   }
 
   sendChoice(choices, handleChoice) {
