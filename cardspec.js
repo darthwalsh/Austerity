@@ -1,5 +1,6 @@
 /* global describe it expect fail */
 
+const fs = require("fs");
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
@@ -901,6 +902,13 @@ describe("cards", () => {
   it("tests all", () => {
     for (const cardName in cards) {
       expect(tests[cardName]).toBeDefined("tests " + cardName);
+    }
+  });
+
+  it("has images for all", () => {
+    const jpg = fs.readdirSync("client\\cards");
+    for (const cardName in cards) {
+      expect(jpg).toContain(cardName + ".jpg");
     }
   });
 });

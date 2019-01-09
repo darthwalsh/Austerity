@@ -84,6 +84,10 @@ window.onload = () => {
   });
   connectButton.onclick = connect;
 
+  const helpOverlay = $("helpOverlay");
+  $("closeOverlay").onclick = () => helpOverlay.style.display = "none";
+  $("help").onclick = () => helpOverlay.style.display = "";
+
   let turnAlert;
   const input = $input("input");
   const ws = new WebSocket(address);
@@ -133,6 +137,18 @@ window.onload = () => {
       break;
     case "isLeader":
       addManage(data, ws);
+      break;
+    case "included":
+      while (helpOverlay.firstElementChild.nextElementSibling) {
+        helpOverlay.removeChild(helpOverlay.firstElementChild.nextElementSibling);
+      }
+      for (const cardName of data) {
+        const jpg = document.createElement("img");
+        jpg.width = 200;
+        jpg.height = 320;
+        jpg.src = `/cards/${cardName}.jpg`;
+        helpOverlay.appendChild(jpg);
+      }
       break;
     default:
       throw Error("Not implemented: " + type);

@@ -28,6 +28,9 @@ class Game {
       this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
 
+    const included = this.store.included.map(c => c.name);
+    ps.forEach(p => p.send({included}));
+
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {
       if (this.store.gameOver()) {
