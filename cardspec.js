@@ -911,6 +911,12 @@ describe("cards", () => {
       expect(jpg).toContain(cardName + ".jpg");
     }
   });
+
+  it("has colors for all", () => {
+    for (const cardName in cards) {
+      expect(cards[cardName].color).toBeTruthy();
+    }
+  });
 });
 
 // TODO(CRASH) add a test for player turn, streaming in shuffle, asserting all output

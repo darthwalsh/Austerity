@@ -7,7 +7,23 @@ function $input(id) {
 }
 
 function log(text) {
-  $("log").textContent += text + "\n";
+  text = [text];
+  for (const splitter of colorBreaks) {
+    text = text.flatMap(t => t.split(splitter));
+  }
+  text = text.map(t => {
+    const color = colors[t];
+    if (!color) {
+      return t;
+    }
+    const span = document.createElement("span");
+    span.textContent = t;
+    span.style.color = color;
+    span.style.fontWeight = "bold";
+    return span;
+  });
+
+  $("log").append(...text, document.createElement("br"));
   $("log").scrollTop = $("log").scrollHeight;
 }
 
@@ -66,6 +82,8 @@ function addManage(options, ws) {
   manageDiv.appendChild(manageLog);
 }
 
+let colors = {};
+let colorBreaks = [];
 window.onload = () => {
   const address = window.location.href.replace("http", "ws");
   const name = $input("name");
@@ -114,12 +132,17 @@ window.onload = () => {
       log(data);
       break;
     case "choices":
-      for (let i = 0; i < data.length; ++i) {
-        if (data[i] === "\n") {
+      for (const choice of data) {
+        if (choice === "\n") {
           choicesDiv.appendChild(document.createElement("br"));
         } else {
           const button = document.createElement("button");
-          button.innerHTML = data[i];
+          button.innerHTML = choice;
+          const color = colors[choice];
+          if (color) {
+            button.style.color = color;
+          }
+          button.style.fontWeight = "bold";
           button.onclick = choiceOnClick;
           choicesDiv.appendChild(button);
         }
@@ -137,6 +160,11 @@ window.onload = () => {
       break;
     case "isLeader":
       addManage(data, ws);
+      break;
+    case "colors":
+      colors = data;
+      colorBreaks = Object.keys(colors).map(s =>
+        new RegExp(`(?=\\b${s}\\b)|(?<=\\b${s}\\b)`)); // Lookahead or lookbehind for whole world s
       break;
     case "included":
       while (helpOverlay.firstElementChild.nextElementSibling) {

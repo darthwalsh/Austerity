@@ -654,6 +654,13 @@ const cards = {
   Platinum: new Treasure(9, 5),
 };
 
+const colorMap = {
+  treasure: "darkorange",
+  property: "green",
+  action: "blue",
+  curse: "purple",
+};
+
 for (const name in cards) {
   const card = cards[name];
 
@@ -669,6 +676,7 @@ for (const name in cards) {
     } else {
       console.error("Card " + name + " kind type not defined");
     }
+    card.color = colorMap[kind[0]];
     delete card.kind;
   } else {
     console.error("Card " + name + " kind not defined");

@@ -98,7 +98,6 @@ class Player {
     }
 
     Array.prototype.push.apply(choices,
-      // @ts-ignore
       this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
 
     if (!choices.length) {

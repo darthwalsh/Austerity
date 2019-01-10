@@ -31,6 +31,13 @@ class Game {
     const included = this.store.included.map(c => c.name);
     ps.forEach(p => p.send({included}));
 
+    const colors = this.store.getAllCards().reduce((o, c) => {
+      o[c.name] = c.color;
+      o["Buy: " + c.name] = c.color;
+      return o;
+    }, {});
+    ps.forEach(p => p.send({colors}));
+
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {
       if (this.store.gameOver()) {
