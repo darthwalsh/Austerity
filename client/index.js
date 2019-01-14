@@ -87,6 +87,8 @@ let colorBreaks = [];
 window.onload = () => {
   const address = window.location.href.replace("http", "ws");
   const name = $input("name");
+  name.value = localStorage.getItem("name") || "";
+  name.addEventListener("input", () => localStorage.setItem("name", name.value));
   const connectButton = $input("connectButton");
   const connect = () => {
     ws.send(JSON.stringify({connect: name.value}));
