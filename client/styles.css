@@ -9,6 +9,7 @@ body {
 body {
   -webkit-box-orient: vertical;
   display: -webkit-box;
+  overflow: hidden;
 }
 
 button {
@@ -28,6 +29,7 @@ button {
 
 #log {
   -webkit-box-flex: 1;
+  overflow: auto;
 }
 
 #log,
