@@ -36,12 +36,11 @@ function addManage(options, ws) {
     const box = document.createElement("input");
     box.setAttribute("type", "checkbox");
     box.setAttribute("id", id);
-    manageDiv.appendChild(box);
 
     const label = document.createElement("label");
-    label.innerText = options[i];
-    label.htmlFor = id;
-    manageDiv.appendChild(label);
+    label.style.whiteSpace = "nowrap";
+    label.append(box, options[i]);
+    manageDiv.append(label, " ");
   }
 
   manageDiv.appendChild(document.createElement("br"));
