@@ -49,10 +49,22 @@ function addManage(options, ws) {
   manageLog.readOnly = true;
   manageLog.id = "manageLog";
 
+  const randomButton = document.createElement("button");
+  randomButton.innerText = "Randomize";
+  randomButton.onclick = () => {
+    const randomOptions = options.slice();
+    while (randomOptions.length > 10) {
+      randomOptions.splice(Math.floor(Math.random() * randomOptions.length), 1);
+    }
+    options.forEach(n => {
+      $input("optional" + n).checked = Boolean(randomOptions.includes(n));
+    });
+  };
+  manageDiv.appendChild(randomButton);
+
   const startButton = document.createElement("button");
   startButton.innerHTML = "Start";
   // startButton.disabled = true; //TODO(NODE) figure out players / game.playersChanged
-  startButton.id = "startButton";
   startButton.onclick = () => {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
