@@ -650,8 +650,9 @@ const cards = {
   Workshop: new Workshop(),
 
   // Prosperity
-  KingsCourt: new KingsCourt(),
   Platinum: new Treasure(9, 5),
+  Colony: new Property(11, 10),
+  KingsCourt: new KingsCourt(),
 };
 
 const colorMap = {

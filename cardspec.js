@@ -45,9 +45,6 @@ const tests = {
   Gold: {
     dMoney: 3,
   },
-  Platinum: {
-    dMoney: 5,
-  },
 
   Estate: {
     points: 1,
@@ -733,6 +730,14 @@ const tests = {
       "Estate",
     ],
     discardAfter: ["Estate"],
+  },
+
+  Platinum: {
+    dMoney: 5,
+  },
+
+  Colony: {
+    points: 10,
   },
 
   KingsCourt: {
