@@ -266,6 +266,7 @@ class Player {
   }
 
   sendHand(prefix = "Your hand") {
+    this.hand.sort((a, b) => a.compareTo(b));
     this.sendMessage(prefix + ": " + this.hand.map(c => c.name).join(", "));
   }
 
