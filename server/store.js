@@ -17,7 +17,9 @@ class Store {
   }
 
   optional() {
-    return Object.keys(cards).filter(n => this.default.indexOf(cards[n]) == -1);
+    return Object.keys(cards).filter(n => !this.default.includes(cards[n]))
+      // @ts-ignore
+      .sort((a, b) => cards[a].compareTo(cards[b]));
   }
 
   setIncluded(included) {
@@ -32,7 +34,8 @@ class Store {
    * @return {any[]} widen type to avoid ts type complaints
    */
   getAllCards() {
-    return this.default.concat(this.included);
+    // @ts-ignore
+    return this.default.concat(this.included).sort((a, b) => a.compareTo(b));
   }
 
   getAvailable(price) {

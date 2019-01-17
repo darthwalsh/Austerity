@@ -661,28 +661,40 @@ const colorMap = {
   curse: "purple",
 };
 
+const kindOrder = {
+  treasure: 0,
+  property: 1,
+  curse: 2,
+  action: 3,
+};
+
+function compareTo(other) {
+  return kindOrder[this.kind[0]] - kindOrder[other.kind[0]]
+    || this.cost - other.cost
+    || this.name.localeCompare(other.name);
+}
+
 for (const name in cards) {
   const card = cards[name];
 
   card.name = name;
+  card.compareTo = compareTo;
 
   if (card.kind) {
-    let kind = card.kind;
-    if (typeof kind == "string") {
-      kind = [kind];
+    if (typeof card.kind === "string") {
+      card.kind = [card.kind];
     }
-    if (Array.isArray(kind)) {
-      card.ofKind = other => kind.includes(other);
+    if (Array.isArray(card.kind)) {
+      card.ofKind = other => card.kind.includes(other);
     } else {
       console.error("Card " + name + " kind type not defined");
     }
-    card.color = colorMap[kind[0]];
-    delete card.kind;
+    card.color = colorMap[card.kind[0]];
   } else {
     console.error("Card " + name + " kind not defined");
   }
 
-  if (typeof card.cost == "undefined") {
+  if (typeof card.cost === "undefined") {
     console.error("Card " + name + " cost not defined");
   }
 }

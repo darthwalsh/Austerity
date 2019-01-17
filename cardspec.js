@@ -755,7 +755,7 @@ describe("cards", () => {
     it("plays " + tName, () => {
       const test = tests[tName];
 
-      if (tName.indexOf("_") != -1) {
+      if (tName.includes("_")) {
         tName = tName.substring(0, tName.indexOf("_"));
       }
       const card = cards[tName];
@@ -910,6 +910,13 @@ describe("cards", () => {
     for (const cardName in cards) {
       expect(jpg).toContain(cardName + ".jpg");
     }
+  });
+
+  it("sorts correctly", () => {
+    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Cellar];
+    // @ts-ignore
+    const sorted = arr.sort((a, b) => a.compareTo(b)).map(c => c.name);
+    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Village"]);
   });
 
   it("has colors for all", () => {
