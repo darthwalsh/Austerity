@@ -64,7 +64,7 @@ const tests = {
     draw: ["Copper", "Village", "Silver"],
     hand: [],
     discardAfter: ["Village"],
-    handAfter: ["Silver", "Copper"],
+    handAfter: ["Copper", "Silver"],
   },
 
   Adventurer_None: {
@@ -87,7 +87,7 @@ const tests = {
     hand: [],
     drawAfter: ["Estate"],
     discardAfter: ["Village"],
-    handAfter: ["Silver", "Copper"],
+    handAfter: ["Copper", "Silver"],
   },
 
   Bureaucrat: {
@@ -129,7 +129,7 @@ const tests = {
     ],
     drawAfter: [],
     discardAfter: ["Copper", "Gold"],
-    handAfter: ["Village", "Silver"],
+    handAfter: ["Silver", "Village"],
   },
 
   Cellar_Done: {
@@ -171,16 +171,16 @@ const tests = {
   },
 
   Chapel: {
-    hand: ["Copper", "Silver", "Gold", "Village", "Chapel"],
+    hand: ["Copper", "Silver", "Gold", "Chapel", "Village"],
     interactions: [
       "Trash up to 4 cards:",
-      ["Copper", "Silver", "Gold", "Village", "Chapel", "Done Trashing"],
+      ["Copper", "Silver", "Gold", "Chapel", "Village", "Done Trashing"],
       "Copper",
       "Trash up to 3 cards:",
-      ["Silver", "Gold", "Village", "Chapel", "Done Trashing"],
+      ["Silver", "Gold", "Chapel", "Village", "Done Trashing"],
       "Gold",
       "Trash up to 2 cards:",
-      ["Silver", "Village", "Chapel", "Done Trashing"],
+      ["Silver", "Chapel", "Village", "Done Trashing"],
       "Village",
       "Trash up to 1 cards:",
       ["Silver", "Chapel", "Done Trashing"],
@@ -206,7 +206,7 @@ const tests = {
     draw: ["Village", "Estate", "Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Village"],
-    handAfter: ["Gold", "Silver", "Copper", "Estate"],
+    handAfter: ["Copper", "Silver", "Gold", "Estate"],
 
     others: [{
       draw: ["Copper", "Silver"],
@@ -221,7 +221,7 @@ const tests = {
     draw: ["Village", "Estate", "Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Village"],
-    handAfter: ["Gold", "Silver", "Copper", "Estate"],
+    handAfter: ["Copper", "Silver", "Gold", "Estate"],
 
     others: [],
   },
@@ -281,7 +281,7 @@ const tests = {
     dActions: 1,
     draw: ["Copper", "Silver"],
     hand: [],
-    handAfter: ["Silver", "Copper"],
+    handAfter: ["Copper", "Silver"],
   },
 
   Library: {
@@ -293,7 +293,7 @@ const tests = {
       "Set Aside",
     ],
     drawAfter: ["Village"],
-    handAfter: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver", "Gold"],
+    handAfter: ["Copper", "Copper", "Copper", "Silver", "Silver", "Silver", "Gold"],
     discardAfter: ["Smithy"],
   },
 
@@ -372,7 +372,7 @@ const tests = {
     draw: ["Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Copper"],
-    handAfter: ["Gold", "Silver"],
+    handAfter: ["Silver", "Gold"],
   },
 
   Witch_Moat: {
@@ -470,7 +470,7 @@ const tests = {
     draw: ["Village", "Copper", "Silver", "Gold"],
     hand: [],
     drawAfter: ["Village"],
-    handAfter: ["Gold", "Silver", "Copper"],
+    handAfter: ["Copper", "Silver", "Gold"],
   },
 
   Smithy_DoneDraw: {
