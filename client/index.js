@@ -105,7 +105,7 @@ window.onload = () => {
     ws.send(JSON.stringify({connect: name.value}));
     name.disabled = true;
     connectButton.disabled = true;
-    input.disabled = false;
+    chat.disabled = false;
   };
 
   name.addEventListener("keydown", e => {
@@ -120,12 +120,12 @@ window.onload = () => {
   $("help").onclick = () => helpOverlay.style.display = "";
 
   let turnAlert;
-  const input = $input("input");
+  const chat = $input("chat");
   const ws = new WebSocket(address);
   ws.addEventListener("open", () => log("Connected to Server"));
   ws.addEventListener("close", () => {
     log("Connection to Server lost");
-    input.disabled = true;
+    chat.disabled = true;
   });
   ws.addEventListener("message", e => {
     let data = JSON.parse(e.data);
@@ -195,10 +195,10 @@ window.onload = () => {
       throw Error("Not implemented: " + type);
     }
   });
-  input.addEventListener("keydown", e => {
+  chat.addEventListener("keydown", e => {
     if (ws && ws.readyState == 1 && e.keyCode == 13) {
-      ws.send(JSON.stringify({chat: input.value}));
-      input.value = "";
+      ws.send(JSON.stringify({chat: chat.value}));
+      chat.value = "";
     }
   });
 };

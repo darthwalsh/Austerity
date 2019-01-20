@@ -28,6 +28,10 @@ button {
   overflow: auto;
 }
 
+#chat {
+  width: 100%;
+}
+
 #log {
   -webkit-box-flex: 1;
   overflow: auto;
