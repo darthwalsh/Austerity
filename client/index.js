@@ -45,6 +45,7 @@ function addManage(options, ws) {
 
   manageDiv.appendChild(document.createElement("br"));
 
+  // TODO delete unused manageLog
   const manageLog = document.createElement("textarea");
   manageLog.readOnly = true;
   manageLog.id = "manageLog";
@@ -64,7 +65,6 @@ function addManage(options, ws) {
 
   const startButton = document.createElement("button");
   startButton.innerHTML = "Start";
-  // startButton.disabled = true; //TODO(NODE) figure out players / game.playersChanged
   startButton.onclick = () => {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
@@ -99,21 +99,10 @@ window.onload = () => {
   const address = window.location.href.replace("http", "ws");
   const name = $input("name");
   name.value = localStorage.getItem("name") || "";
-  name.addEventListener("input", () => localStorage.setItem("name", name.value));
-  const connectButton = $input("connectButton");
-  const connect = () => {
-    ws.send(JSON.stringify({connect: name.value}));
-    name.disabled = true;
-    connectButton.disabled = true;
-    chat.disabled = false;
-  };
-
-  name.addEventListener("keydown", e => {
-    if (e.keyCode == 13) {
-      connect();
-    }
+  name.addEventListener("input", () => {
+    localStorage.setItem("name", name.value);
+    ws.send(JSON.stringify({name: name.value}));
   });
-  connectButton.onclick = connect;
 
   const helpOverlay = $("helpOverlay");
   $("closeOverlay").onclick = () => helpOverlay.style.display = "none";
@@ -122,7 +111,10 @@ window.onload = () => {
   let turnAlert;
   const chat = $input("chat");
   const ws = new WebSocket(address);
-  ws.addEventListener("open", () => log("Connected to Server"));
+  ws.addEventListener("open", () => {
+    log("Connected to Server");
+    ws.send(JSON.stringify({name: name.value}));
+  });
   ws.addEventListener("close", () => {
     log("Connection to Server lost");
     chat.disabled = true;

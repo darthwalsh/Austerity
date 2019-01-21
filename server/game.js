@@ -11,7 +11,6 @@ class Game {
      */
     this.players = {};
     this.trash = [];
-    this.playersChanged = () => { }; // TODO(NODE-TURNS)
   }
 
   canStart() {
@@ -62,28 +61,28 @@ class Game {
     ps[turn].takeTurn(nextTurn);
   }
 
-  addConnection(ws) {
-    let me;
-    ws.on("message", data => {
-      data = JSON.parse(data);
+  addPlayer(name, ws) {
+    this.log(name + " joined");
+
+    const player = new Player(name, ws, this);
+
+    if (Object.keys(this.players).length == 0) {
+      player.send({isLeader: this.store.optional()});
+    } else {
+      this.allLog(player.name + " joined");
+    }
+    this.players[name] = player;
+
+    ws.addEventListener("message", data => {
+      data = JSON.parse(data.data);
       const type = Object.keys(data)[0];
       data = data[type];
       switch (type) {
-      case "connect":
-        // TODO what if name already signed in?
-        me = new Player(data, ws, this);
-        this.players[data] = me;
-        this.log(data + " connected");
-        this.playersChanged();
-        if (Object.keys(this.players).length == 1) {
-          me.send({isLeader: this.store.optional()});
-        }
-        break;
       case "choice":
-        me.onChoice(data);
+        player.onChoice(data);
         break;
       case "chat":
-        this.allLog(me.name + ": " + data);
+        this.allLog(player.name + ": " + data);
         break;
       case "gameStart":
         this.store.setIncluded(data.included.map(n => cards[n]));
@@ -95,12 +94,8 @@ class Game {
     });
 
     ws.on("close", () => {
-      const player = this.players[me.name];
-      if (player) {
-        this.log(player.name + " disconnected");
-        delete this.players[me.name];
-        this.playersChanged();
-      }
+      this.log(player.name + " disconnected");
+      delete this.players[player.name];
     });
   }
 
