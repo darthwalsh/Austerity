@@ -34,11 +34,10 @@ button {
 
 #log {
   -webkit-box-flex: 1;
+  display: block;
   overflow: auto;
 }
 
-#log,
-#manageLog,
 #input {
   display: block;
 }

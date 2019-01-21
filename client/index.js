@@ -45,11 +45,6 @@ function addManage(options, ws) {
 
   manageDiv.appendChild(document.createElement("br"));
 
-  // TODO delete unused manageLog
-  const manageLog = document.createElement("textarea");
-  manageLog.readOnly = true;
-  manageLog.id = "manageLog";
-
   const randomButton = document.createElement("button");
   randomButton.innerText = "Randomize";
   randomButton.onclick = () => {
@@ -69,7 +64,7 @@ function addManage(options, ws) {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
-    while (manageDiv.firstChild !== manageLog) {
+    while (manageDiv.firstChild) {
       manageDiv.removeChild(manageDiv.firstChild);
     }
 
@@ -87,10 +82,6 @@ function addManage(options, ws) {
   debugLabel.innerText = "Debug";
   debugLabel.htmlFor = "debugMode";
   manageDiv.appendChild(debugLabel);
-
-  manageDiv.appendChild(document.createElement("br"));
-
-  manageDiv.appendChild(manageLog);
 }
 
 let colors = {};
