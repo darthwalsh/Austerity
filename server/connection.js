@@ -2,6 +2,11 @@ class Connection {
   constructor(ws) {
     this.ws = ws;
     this.name = "NoName";
+    this.listeners = {};
+    this.initListener();
+  }
+
+  initListener() {
     const socketHandler = data => {
       data = JSON.parse(data.data);
       const type = Object.keys(data)[0];
@@ -15,8 +20,23 @@ class Connection {
         return;
       }
     };
-    this.ws.addEventListener("message", socketHandler);
-    this.close = () => this.ws.removeEventListener("message", socketHandler);
+    this.addEventListener("message", socketHandler);
+    this.close = () => this.removeEventListener("message", socketHandler);
+  }
+
+  addEventListener(method, listener) {
+    if (this.listeners[method]) {
+      throw new Error(`${method} already in listeners`);
+    }
+    this.listeners[method] = listener;
+    this.ws.addEventListener(method, listener);
+  }
+
+  removeEventListener(method, listener) {
+    if (!this.listeners[method]) {
+      throw new Error(`${method} doesn't exist in listeners`);
+    }
+    this.ws.removeEventListener(method, listener);
   }
 
   // TODO maybe merge into Player's implementation of sendChoice?
