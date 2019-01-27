@@ -1,4 +1,6 @@
+const Connection = require("./connection").Connection;
 const Game = require("./game").Game;
+
 
 class Lobby {
   constructor() {
@@ -7,66 +9,26 @@ class Lobby {
   }
 
   addConnection(ws) {
-    const player = new LobbyPlayer(ws);
-    this.sendLobby(player, ws);
+    this.sendLobby(new Connection(ws));
   }
 
-  sendLobby(player, ws) {
+  sendLobby(connection) {
     const choices = ["Refresh", "New Game", ...Object.keys(this.games)];
-    player.sendChoice(choices, choice => {
+    connection.sendChoice(choices, choice => {
       let game;
       switch (choice) {
       case "Refresh":
-        this.sendLobby(player, ws);
+        this.sendLobby(connection);
         return;
       case "New Game":
         game = new Game(console.log);
-        this.games[`${player.name}'s game`] = game;
+        this.games[`${connection.name}'s game`] = game;
         break;
       }
       game = game || this.games[choice];
-      player.close();
-      game.addPlayer(player.name, ws);
+      connection.close();
+      game.addPlayer(connection.name, connection.ws);
     });
-  }
-}
-
-class LobbyPlayer {
-  constructor(ws) {
-    this.ws = ws;
-    this.name = "NoName";
-
-    const socketHandler = data => {
-      data = JSON.parse(data.data);
-      const type = Object.keys(data)[0];
-      data = data[type];
-      switch (type) {
-      case "name":
-        this.name = data;
-        return;
-      case "choice":
-        this.onChoice(data);
-        return;
-      }
-    };
-    this.ws.addEventListener("message", socketHandler);
-    this.close = () => this.ws.removeEventListener("message", socketHandler);
-  }
-
-  // TODO maybe merge into Player's implementation of sendChoice?
-  sendChoice(choices, handleChoice) {
-    if (!choices.length) {
-      console.error("EMPTY CHOICE!!!");
-    }
-
-    if (this.onChoice) {
-      console.error("onChoice wasn't empty!!!");
-    }
-    this.onChoice = choice => {
-      this.onChoice = null;
-      handleChoice.call(this, choice);
-    };
-    this.ws.send(JSON.stringify({choices: choices}));
   }
 }
 
