@@ -5,12 +5,12 @@ const Game = require("./game").Game; // Useful for VS Code type info
 class Player {
   /**
    * @param {string} name
-   * @param {any} socket
+   * @param {any} ws
    * @param {Game} game
    */
-  constructor(name, socket, game) {
+  constructor(name, ws, game) {
     this.name = name;
-    this.socket = socket;
+    this.ws = ws;
     this.game = game;
     this.drawPile = [];
     this.discardPile = [];
@@ -258,7 +258,7 @@ class Player {
   }
 
   send(o) {
-    this.socket.send(JSON.stringify(o));
+    this.ws.send(JSON.stringify(o));
   }
 
   sendMessage(msg) {

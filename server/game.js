@@ -93,7 +93,7 @@ class Game {
       }
     });
 
-    ws.on("close", () => {
+    ws.addEventListener("close", () => {
       this.log(player.name + " disconnected");
       delete this.players[player.name];
     });

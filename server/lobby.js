@@ -32,8 +32,8 @@ class Lobby {
 }
 
 class LobbyPlayer {
-  constructor(socket) {
-    this.socket = socket;
+  constructor(ws) {
+    this.ws = ws;
     this.name = "NoName";
 
     const socketHandler = data => {
@@ -49,8 +49,8 @@ class LobbyPlayer {
         return;
       }
     };
-    this.socket.addEventListener("message", socketHandler);
-    this.close = () => this.socket.removeEventListener("message", socketHandler);
+    this.ws.addEventListener("message", socketHandler);
+    this.close = () => this.ws.removeEventListener("message", socketHandler);
   }
 
   // TODO maybe merge into Player's implementation of sendChoice?
@@ -66,7 +66,7 @@ class LobbyPlayer {
       this.onChoice = null;
       handleChoice.call(this, choice);
     };
-    this.socket.send(JSON.stringify({choices: choices}));
+    this.ws.send(JSON.stringify({choices: choices}));
   }
 }
 
