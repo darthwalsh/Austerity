@@ -790,23 +790,26 @@ describe("cards", () => {
 
       const game = new Game(console.error);
 
-      const p = new Player("Bot", {send: message => {
-        const o = JSON.parse(message);
-        if (isHandMessage(o.message)) {
-          return;
-        }
+      // @ts-ignore create a mock connection
+      const p = new Player({
+        name: "Bot",
+        send: o => {
+          if (isHandMessage(o.message)) {
+            return;
+          }
 
-        const expected = test.interactions[interactionIndex++];
-
-        if (o.message) {
-          expect(o.message).toEqual(expected);
-        } else if (o.choices) {
-          expect(o.choices).toEqual(expected);
-          p.onChoice(test.interactions[interactionIndex++]);
-        } else {
-          fail(Error("Not implemented: " + message));
-        }
-      }}, game);
+          const expected = test.interactions[interactionIndex++];
+          if (o.message) {
+            expect(o.message).toEqual(expected);
+          } else {
+            fail(Error("Not implemented: " + o));
+          }
+        },
+        sendChoice: (choices, handleChoice) => {
+          const expected = test.interactions[interactionIndex++];
+          expect(choices).toEqual(expected);
+          handleChoice(test.interactions[interactionIndex++]);
+        }}, game);
 
       game.players[0] = p;
       game.store.setIncluded(test.store.map(n => cards[n]));
@@ -817,24 +820,26 @@ describe("cards", () => {
 
       let otherCount = 0;
       test.others.forEach(testOther => {
-        const oP = new Player("Other#" + otherCount++, {send: message => {
-          const o = JSON.parse(message);
-          if (isHandMessage(o.message)) {
-            return;
-          }
+        // @ts-ignore create a mock connection
+        const oP = new Player({
+          name: "Other#" + otherCount++,
+          send: o => {
+            if (isHandMessage(o.message)) {
+              return;
+            }
 
-          const expected = testOther.interactions[oP["InteractionIndex"]++];
-
-          if (o.message) {
-            expect(o.message).toEqual(expected);
-          } else if (o.choices) {
-            expect(o.choices).toEqual(expected);
-
-            oP.onChoice(testOther.interactions[oP["InteractionIndex"]++]);
-          } else {
-            fail(Error("Not implemented: " + message));
-          }
-        }}, game);
+            const expected = testOther.interactions[oP["InteractionIndex"]++];
+            if (o.message) {
+              expect(o.message).toEqual(expected);
+            } else {
+              fail(Error("Not implemented: " + o));
+            }
+          },
+          sendChoice: (choices, handleChoice) => {
+            const expected = testOther.interactions[oP["InteractionIndex"]++];
+            expect(choices).toEqual(expected);
+            handleChoice(testOther.interactions[oP["InteractionIndex"]++]);
+          }}, game);
         oP["TestIndex"] = otherCount - 1;
         oP["InteractionIndex"] = 0;
         oP.drawPile = testOther.draw.map(n => cards[n]);

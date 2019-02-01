@@ -1,6 +1,8 @@
 const Store = require("./store").Store;
 const cards = require("./cards");
 const Player = require("./player").Player;
+// eslint-disable-next-line no-unused-vars
+const Connection = require("./connection").Connection; // Useful for VS Code type info
 
 class Game {
   constructor(log) {
@@ -61,10 +63,14 @@ class Game {
     ps[turn].takeTurn(nextTurn);
   }
 
-  addPlayer(name, ws) {
+  /**
+   * @param {Connection} connection
+   */
+  addPlayer(connection) {
+    const name = connection.name;
     this.log(name + " joined");
 
-    const player = new Player(name, ws, this);
+    const player = new Player(connection, this);
 
     if (Object.keys(this.players).length == 0) {
       player.send({isLeader: this.store.optional()});
@@ -73,27 +79,16 @@ class Game {
     }
     this.players[name] = player;
 
-    ws.addEventListener("message", data => {
-      data = JSON.parse(data.data);
-      const type = Object.keys(data)[0];
-      data = data[type];
-      switch (type) {
-      case "choice":
-        player.onChoice(data);
-        break;
-      case "chat":
-        this.allLog(player.name + ": " + data);
-        break;
-      case "gameStart":
-        this.store.setIncluded(data.included.map(n => cards[n]));
-        this.start(data.debugMode);
-        break;
-      default:
-        console.error("Not implemented: " + type);
-      }
-    });
+    connection.messageHandlers.chat = data => {
+      this.allLog(player.name + ": " + data);
+    };
 
-    ws.addEventListener("close", () => {
+    connection.messageHandlers.gameStart = data => {
+      this.store.setIncluded(data.included.map(n => cards[n]));
+      this.start(data.debugMode);
+    };
+
+    connection.ws.addEventListener("close", () => { // TODO(NODE) move to Connection.js
       this.log(player.name + " disconnected");
       delete this.players[player.name];
     });

@@ -12,6 +12,9 @@ class Lobby {
     this.sendLobby(new Connection(ws));
   }
 
+  /**
+   *  @param {Connection} connection
+   */
   sendLobby(connection) {
     const choices = ["Refresh", "New Game", ...Object.keys(this.games)];
     connection.sendChoice(choices, choice => {
@@ -26,8 +29,8 @@ class Lobby {
         break;
       }
       game = game || this.games[choice];
-      connection.close();
-      game.addPlayer(connection.name, connection.ws);
+      delete connection.messageHandlers.name;
+      game.addPlayer(connection);
     });
   }
 }

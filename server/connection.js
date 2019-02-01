@@ -2,44 +2,33 @@ class Connection {
   constructor(ws) {
     this.ws = ws;
     this.name = "NoName";
-    this.listeners = {};
-    this.initListener();
-  }
 
-  initListener() {
-    const socketHandler = data => {
-      data = JSON.parse(data.data);
-      const type = Object.keys(data)[0];
-      data = data[type];
-      switch (type) {
-      case "name":
-        this.name = data;
-        return;
-      case "choice":
-        this.onChoice(data);
-        return;
+    this.messageHandlers = {};
+    this.messageHandlers.choice = data => this.onChoice(data);
+    this.messageHandlers.name = data => this.name = data;
+
+    this.ws.addEventListener("message", data => {
+      const o = JSON.parse(data.data);
+      const type = Object.keys(o)[0];
+      const content = o[type];
+      const handler = this.messageHandlers[type];
+      if (!handler) {
+        throw new Error(`missing handler ${type}`);
       }
-    };
-    this.addEventListener("message", socketHandler);
-    this.close = () => this.removeEventListener("message", socketHandler);
+      handler(content);
+    });
   }
 
-  addEventListener(method, listener) {
-    if (this.listeners[method]) {
-      throw new Error(`${method} already in listeners`);
+  /**
+   * @param {object} data
+   */
+  send(data) {
+    if (data.choices) {
+      throw new Error("Use sendChoices instead!");
     }
-    this.listeners[method] = listener;
-    this.ws.addEventListener(method, listener);
+    this.ws.send(JSON.stringify(data));
   }
 
-  removeEventListener(method, listener) {
-    if (!this.listeners[method]) {
-      throw new Error(`${method} doesn't exist in listeners`);
-    }
-    this.ws.removeEventListener(method, listener);
-  }
-
-  // TODO maybe merge into Player's implementation of sendChoice?
   /**
    * @param {string[]} choices
    * @param {function} handleChoice
@@ -53,7 +42,7 @@ class Connection {
     }
     this.onChoice = choice => {
       this.onChoice = null;
-      handleChoice.call(this, choice);
+      handleChoice(choice);
     };
     this.ws.send(JSON.stringify({choices: choices}));
   }

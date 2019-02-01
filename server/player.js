@@ -1,16 +1,17 @@
 const cards = require("./cards");
 // eslint-disable-next-line no-unused-vars
+const Connection = require("./connection").Connection; // Useful for VS Code type info
+// eslint-disable-next-line no-unused-vars
 const Game = require("./game").Game; // Useful for VS Code type info
 
 class Player {
   /**
-   * @param {string} name
-   * @param {any} ws
+   * @param {Connection} connection
    * @param {Game} game
    */
-  constructor(name, ws, game) {
-    this.name = name;
-    this.ws = ws;
+  constructor(connection, game) {
+    this.name = connection.name;
+    this.connection = connection;
     this.game = game;
     this.drawPile = [];
     this.discardPile = [];
@@ -26,7 +27,6 @@ class Player {
     this.money = null;
     this.buys = null;
     this.played = null;
-    this.onChoice = null;
     this.afterTurn = null;
   }
 
@@ -63,7 +63,7 @@ class Player {
     choices.push("Done With Actions");
 
     this.sendPoints();
-    this.sendChoice(choices, this.receiveAction);
+    this.sendChoice(choices, choice => this.receiveAction(choice));
   }
 
   receiveAction(choice) {
@@ -109,7 +109,7 @@ class Player {
     choices.push("Done With Buys");
 
     this.sendPoints();
-    this.sendChoice(choices, this.receiveBuys);
+    this.sendChoice(choices, choice => this.receiveBuys(choice));
   }
 
   receiveBuys(choice) {
@@ -258,11 +258,11 @@ class Player {
   }
 
   send(o) {
-    this.ws.send(JSON.stringify(o));
+    this.connection.send(o);
   }
 
   sendMessage(msg) {
-    this.send({message: msg});
+    this.connection.send({message: msg});
   }
 
   sendHand(prefix = "Your hand") {
@@ -271,18 +271,7 @@ class Player {
   }
 
   sendChoice(choices, handleChoice) {
-    if (!choices.length) {
-      console.error("EMPTY CHOICE!!!");
-    }
-
-    if (this.onChoice) {
-      console.error("onChoice wasn't empty!!!");
-    }
-    this.onChoice = choice => {
-      this.onChoice = null;
-      handleChoice.call(this, choice);
-    };
-    this.send({choices: choices});
+    this.connection.sendChoice(choices, handleChoice);
   }
 }
 
