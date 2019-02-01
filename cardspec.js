@@ -788,7 +788,7 @@ describe("cards", () => {
 
       let interactionIndex = 0;
 
-      const game = new Game(console.error);
+      const game = new Game();
 
       // @ts-ignore create a mock connection
       const p = new Player({

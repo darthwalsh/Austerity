@@ -5,30 +5,20 @@ const Player = require("./player").Player;
 const Connection = require("./connection").Connection; // Useful for VS Code type info
 
 class Game {
-  constructor(log) {
-    this.log = log;
+  constructor() {
     this.store = new Store();
     /**
      * @type {Object.<string, Player>}
      */
     this.players = {};
     this.trash = [];
+    this.started = false;
   }
 
-  canStart() {
-    // TODO Game of 1 is only fun when debugging
-    return Object.keys(this.players).length >= 1;
-  }
-
-  start(debugMode) {
-    const ps = this.allPlayers();
-
-    if (debugMode) {
-      Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
-      ps[0].sendHand();
-      this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
-    }
-
+  /**
+   * @param {Player[]} ps
+   */
+  initClients(ps) {
     const included = this.store.included.map(c => c.name);
     ps.forEach(p => p.send({included}));
 
@@ -38,6 +28,19 @@ class Game {
       return o;
     }, {});
     ps.forEach(p => p.send({colors}));
+  }
+
+  start(debugMode) {
+    this.started = true;
+    const ps = this.allPlayers();
+
+    if (debugMode) {
+      Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
+      ps[0].sendHand();
+      this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
+    }
+
+    this.initClients(ps);
 
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {
@@ -68,7 +71,6 @@ class Game {
    */
   addPlayer(connection) {
     const name = connection.name;
-    this.log(name + " joined");
 
     const player = new Player(connection, this);
 
@@ -88,9 +90,8 @@ class Game {
       this.start(data.debugMode);
     };
 
-    connection.ws.addEventListener("close", () => { // TODO(NODE) move to Connection.js
-      this.log(player.name + " disconnected");
-      delete this.players[player.name];
+    connection.ws.addEventListener("close", () => {
+      this.allLog(player.name + " disconnected");
     });
   }
 
