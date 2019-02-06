@@ -1,9 +1,17 @@
-/* global describe it expect fail */
+/* global describe it expect fail jasmine */
 
 const fs = require("fs");
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
+
+const reporters = require("jasmine-reporters");
+const junitReporter = new reporters.JUnitXmlReporter({
+  savePath: __dirname,
+  consolidateAll: false,
+});
+jasmine.getEnv().addReporter(junitReporter);
+
 
 const defaultTest = {
   dMoney: 0,
