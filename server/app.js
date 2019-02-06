@@ -6,7 +6,7 @@ const Lobby = require("./lobby").Lobby;
 
 const port = process.env.PORT || 8080;
 const app = express();
-const client = path.join(__dirname, "../client");
+const client = path.join(__dirname, "..", "client");
 app.use(express.static(client));
 const server = app.listen(port, () => console.log(`Example HTTP app on ${client} listening on port ${port}!`));
 

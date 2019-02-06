@@ -1,6 +1,7 @@
 /* global describe it expect fail jasmine */
 
 const fs = require("fs");
+const path = require("path");
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
@@ -924,7 +925,7 @@ describe("cards", () => {
   });
 
   it("has images for all", () => {
-    const jpg = fs.readdirSync("client\\cards");
+    const jpg = fs.readdirSync(path.join(__dirname, "client", "cards"));
     for (const cardName in cards) {
       expect(jpg).toContain(cardName + ".jpg");
     }
