@@ -2,6 +2,7 @@ Austerity
 =========
 
 [![Build status](https://dev.azure.com/darthwalsh/austerity/_apis/build/status/austerity-npm)](https://dev.azure.com/darthwalsh/austerity/_build/latest?definitionId=4)
+[![Deployment status](https://vsrm.dev.azure.com/darthwalsh/_apis/public/Release/badge/3f7b9cb9-a9ce-4a58-ba31-e808d7667cc4/1/1)](https://dev.azure.com/darthwalsh/austerity/_release?definitionId=1)
 
 A nodejs web server for a popular deck-building board game.
 
