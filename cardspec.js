@@ -449,8 +449,23 @@ const tests = {
   Moneylender: {
     dMoney: 3,
     hand: ["Copper", "Copper"],
+    interactions: [
+      ["Trash a Copper", "Do Nothing"],
+      "Trash a Copper",
+    ],
     handAfter: ["Copper"],
     trashAfter: ["Copper"],
+  },
+
+  Moneylender_DoNothing: {
+    dMoney: 0,
+    hand: ["Copper", "Copper"],
+    interactions: [
+      ["Trash a Copper", "Do Nothing"],
+      "Do Nothing",
+    ],
+    handAfter: ["Copper", "Copper"],
+    trashAfter: [],
   },
 
   Moneylender_NoCopper: {

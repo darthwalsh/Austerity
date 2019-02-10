@@ -366,13 +366,26 @@ class Moat {
   }
 }
 
-const Moneylender = new Action(4, (player, game) => {
-  const copper = player.fromHand("Copper");
-  if (copper) {
-    player.money += 3;
-    game.trash.push(copper);
+class Moneylender {
+  constructor() {
+    this.kind = "action";
+    this.cost = 4;
   }
-});
+
+  play(player, callback, game) {
+    if (player.hand.some(c => c.name === "Copper")) {
+      player.sendChoice(["Trash a Copper", "Do Nothing"], choice => {
+        if (choice === "Trash a Copper") {
+          player.money += 3;
+          game.trash.push(player.fromHand("Copper"));
+        }
+        callback();
+      });
+    } else {
+      callback();
+    }
+  }
+}
 
 class Remodel {
   constructor() {
@@ -638,7 +651,7 @@ const cards = {
   Mine: new Mine(),
   Militia: new Militia(),
   Moat: new Moat(),
-  Moneylender: Moneylender,
+  Moneylender: new Moneylender(),
   Remodel: new Remodel(),
   Smithy: Smithy,
   Spy: new Spy(),
