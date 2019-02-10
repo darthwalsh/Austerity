@@ -157,6 +157,11 @@ class Game {
       this.players[id].sendMessage(text);
     }
   }
+
+  trashPush(player, card) {
+    this.allLog(`${player.name} trashed a ${card.name}`);
+    this.trash.push(card);
+  }
 }
 
 module.exports.Game = Game;

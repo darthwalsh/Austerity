@@ -180,7 +180,7 @@ class Player {
 
   afterPlay(card) {
     if (card.afterPlay) {
-      card.afterPlay(this.game);
+      card.afterPlay(this, this.game);
     } else {
       this.played.push(card);
     }

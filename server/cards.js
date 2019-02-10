@@ -174,7 +174,7 @@ class Chapel {
           return;
         }
         const trash = player.fromHand(choice);
-        game.trash.push(trash);
+        game.trashPush(player, trash);
         --canTrash;
         if (canTrash) {
           promptTrash();
@@ -217,8 +217,8 @@ class Feast {
     });
   }
 
-  afterPlay(game) {
-    game.trash.push(this);
+  afterPlay(player, game) {
+    game.trashPush(player, this);
   }
 }
 
@@ -335,7 +335,7 @@ class Mine {
     player.sendMessage("Trash a Treasure:");
     player.sendChoice(trashChoices, trashChoice => {
       const trash = player.fromHand(trashChoice);
-      game.trash.push(trash);
+      game.trashPush(player, trash);
       const gainChoices = game.store
         .getAvailable(trash.cost + 3)
         .filter(c => c.ofKind("treasure"))
@@ -377,7 +377,7 @@ class Moneylender {
       player.sendChoice(["Trash a Copper", "Do Nothing"], choice => {
         if (choice === "Trash a Copper") {
           player.money += 3;
-          game.trash.push(player.fromHand("Copper"));
+          game.trashPush(player, player.fromHand("Copper"));
         }
         callback();
       });
@@ -404,7 +404,7 @@ class Remodel {
     player.sendMessage("Trash a card:");
     player.sendChoice(trashChoices, trashChoice => {
       const trash = player.fromHand(trashChoice);
-      game.trash.push(trash);
+      game.trashPush(player, trash);
       const gainChoices = game.store
         .getAvailable(trash.cost + 2)
         .map(c => c.name);
@@ -502,7 +502,7 @@ class Thief {
         if (steal) {
           player.discardPile.push(chosen);
         } else {
-          game.trash.push(chosen);
+          game.trashPush(player, chosen);
         }
         treasures = treasures.map(n => cards[n]);
         Array.prototype.push.apply(p.discardPile, treasures);
