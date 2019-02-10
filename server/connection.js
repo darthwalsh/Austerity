@@ -80,6 +80,17 @@ class Connection {
     this.sentChoices = JSON.stringify({choices: choices});
     this.ws.send(this.sentChoices);
   }
+
+  // TODO(NODE) switch to using async Promise instead of choice callback everywhere
+  /**
+   * @param {string[]} choices
+   * @return {Promise<string>}
+   */
+  choose(choices) {
+    return new Promise(resolve => {
+      this.sendChoice(choices, resolve);
+    });
+  }
 }
 
 exports.Connection = Connection;

@@ -15,7 +15,7 @@ class Lobby {
   /**
    *  @param {Connection} connection
    */
-  sendLobby(connection) {
+  async sendLobby(connection) {
     const choices = [
       "Refresh",
       "New Game",
@@ -24,30 +24,29 @@ class Lobby {
         const player = game.players[connection.name];
         return (player && !player.connection.ws) || !game.started;
       })];
-    connection.sendChoice(choices, choice => {
-      let game;
-      switch (choice) {
-      case "Refresh":
-        this.sendLobby(connection);
-        return;
-      case "New Game":
-        game = new Game();
-        this.games[`${connection.name}'s game`] = game;
-        break;
-      }
-      game = game || this.games[choice];
-      delete connection.messageHandlers.name;
+    const choice = await connection.choose(choices);
+    let game;
+    switch (choice) {
+    case "Refresh":
+      this.sendLobby(connection);
+      return;
+    case "New Game":
+      game = new Game();
+      this.games[`${connection.name}'s game`] = game;
+      break;
+    }
+    game = game || this.games[choice];
+    delete connection.messageHandlers.name;
 
-      const existingPlayer = game.players[connection.name];
-      if (existingPlayer) {
-        existingPlayer.connection.newConnection(connection.ws);
-        game.initClients([existingPlayer]);
-        existingPlayer.connection.resendChoices();
-        game.allLog(`${connection.name} rejoined`);
-      } else {
-        game.addPlayer(connection);
-      }
-    });
+    const existingPlayer = game.players[connection.name];
+    if (existingPlayer) {
+      existingPlayer.connection.newConnection(connection.ws);
+      game.initClients([existingPlayer]);
+      existingPlayer.connection.resendChoices();
+      game.allLog(`${connection.name} rejoined`);
+    } else {
+      game.addPlayer(connection);
+    }
   }
 }
 
