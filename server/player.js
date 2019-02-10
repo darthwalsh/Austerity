@@ -169,8 +169,7 @@ class Player {
   playCard(name, callback) {
     const card = this.fromHand(name);
     if (card === null) {
-      console.error("Card doesn't exist: " + name);
-      return;
+      throw new Error("Card doesn't exist: " + name);
     }
     card.play(this, () => {
       this.afterPlay(card);
@@ -212,7 +211,7 @@ class Player {
 
   shuffle() {
     if (this.drawPile.length) {
-      console.error("drawPile isn't empty!");
+      throw new Error("drawPile isn't empty!");
     }
 
     const array = this.discardPile;

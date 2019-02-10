@@ -701,15 +701,15 @@ for (const name in cards) {
     if (Array.isArray(card.kind)) {
       card.ofKind = other => card.kind.includes(other);
     } else {
-      console.error("Card " + name + " kind type not defined");
+      throw new Error("Card " + name + " kind type not defined");
     }
     card.color = colorMap[card.kind[0]];
   } else {
-    console.error("Card " + name + " kind not defined");
+    throw new Error("Card " + name + " kind not defined");
   }
 
   if (typeof card.cost === "undefined") {
-    console.error("Card " + name + " cost not defined");
+    throw new Error("Card " + name + " cost not defined");
   }
 }
 

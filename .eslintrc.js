@@ -14,7 +14,6 @@ module.exports = {
         "max-len": "off",
         "one-var": "off",
         "guard-for-in": "off",
-        "no-console": "off",
 
         "quotes": ["error", "double"],
         "arrow-parens": ["error", "as-needed"],

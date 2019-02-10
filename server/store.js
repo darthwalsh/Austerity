@@ -44,7 +44,7 @@ class Store {
 
   bought(card) {
     if (--this.counts[card.name] < 0) {
-      console.error("Already out of card!");
+      throw new Error("Already out of card!");
     }
   }
 
