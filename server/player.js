@@ -44,7 +44,7 @@ class Player {
     this.promptAction();
   }
 
-  promptAction() {
+  async promptAction() {
     if (!this.actions) {
       this.sendMessage("No Action points remaining, starting Buy phase");
       this.promptBuys();
@@ -63,7 +63,7 @@ class Player {
     choices.push("Done With Actions");
 
     this.sendPoints();
-    this.sendChoice(choices, choice => this.receiveAction(choice));
+    this.receiveAction(await this.choose(choices));
   }
 
   receiveAction(choice) {
@@ -82,7 +82,7 @@ class Player {
     this.sendMessage(`Actions: ${this.actions} Money: ${this.money} Buys: ${this.buys}`);
   }
 
-  promptBuys() {
+  async promptBuys() {
     if (!this.buys) {
       this.turnDone();
       return;
@@ -109,7 +109,7 @@ class Player {
     choices.push("Done With Buys");
 
     this.sendPoints();
-    this.sendChoice(choices, choice => this.receiveBuys(choice));
+    this.receiveBuys(await this.choose(choices));
   }
 
   receiveBuys(choice) {
@@ -230,15 +230,14 @@ class Player {
     this.discardPile = [];
   }
 
-  attacked(attackThenCallBack, callback) {
+  async attacked(attackThenCallBack, callback) {
     if (this.hand.filter(c => c.name=="Moat").length) {
-      this.sendChoice(["Moat", "Get Attacked"], choice => {
-        if (choice == "Get Attacked") {
-          attackThenCallBack();
-        } else {
-          callback();
-        }
-      });
+      const choice = await this.choose(["Moat", "Get Attacked"]);
+      if (choice === "Get Attacked") {
+        attackThenCallBack();
+      } else {
+        callback();
+      }
     } else {
       attackThenCallBack();
     }
@@ -271,6 +270,10 @@ class Player {
 
   sendChoice(choices, handleChoice) {
     this.connection.sendChoice(choices, handleChoice);
+  }
+
+  choose(choices) {
+    return this.connection.choose(choices);
   }
 }
 

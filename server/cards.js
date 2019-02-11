@@ -44,7 +44,7 @@ class Action {
     this.toPlay = toPlay;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     this.toPlay(player, game);
     callback();
   }
@@ -76,21 +76,20 @@ class Bureaucrat {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     if (game.store.counts["Silver"]) {
       player.discardPile.push(cards.Silver);
       game.store.bought(cards.Silver);
     }
-    game.parallelAttack(player, (p, attackDone) => {
+    game.parallelAttack(player, async (p, attackDone) => {
       const discardChoices = p.hand
         .filter(c => c.ofKind("property"))
         .map(c => c.name);
       if (discardChoices.length) {
         p.sendMessage("Put a Victory card onto your deck:");
-        p.sendChoice(discardChoices, choice => {
-          p.drawPile.push(p.fromHand(choice));
-          attackDone();
-        });
+        const choice = await p.choose(discardChoices);
+        p.drawPile.push(p.fromHand(choice));
+        attackDone();
       } else {
         attackDone();
       }
@@ -104,7 +103,7 @@ class Cellar {
     this.cost = 2;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.actions += 1;
     let discarded = 0;
     const end = () => {
@@ -140,7 +139,7 @@ class Chancellor {
     this.cost = 3;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
     player.sendChoice(["No", "Discard"], choice => {
@@ -158,7 +157,7 @@ class Chapel {
     this.cost = 2;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     let canTrash = 4;
     const promptTrash = () => {
       const trashChoices = player.hand.map(c => c.name);
@@ -201,7 +200,7 @@ class Feast {
     this.cost = 5;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(5)
       .map(c => c.name);
@@ -250,7 +249,7 @@ class Library {
     this.cost = 5;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const aside = [];
     const end = () => {
       Array.prototype.push.apply(player.discardPile, aside);
@@ -299,7 +298,7 @@ class Militia {
     this.cost = 5;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.money += 2;
     const attack = (p, attackDone) => {
       if (p.hand.length > 3) {
@@ -323,7 +322,7 @@ class Mine {
     this.cost = 5;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const trashChoices = player.hand
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
@@ -360,7 +359,7 @@ class Moat {
     this.cost = 2;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.draw(2);
     callback();
   }
@@ -372,7 +371,7 @@ class Moneylender {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     if (player.hand.some(c => c.name === "Copper")) {
       player.sendChoice(["Trash a Copper", "Do Nothing"], choice => {
         if (choice === "Trash a Copper") {
@@ -393,7 +392,7 @@ class Remodel {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const trashChoices = player.hand
       .map(c => c.name);
     if (!trashChoices.length) {
@@ -432,7 +431,7 @@ class Spy {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.actions += 1;
     player.draw();
     const attack = (p, attackDone) => {
@@ -464,7 +463,7 @@ class Thief {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     game.sequentialAttack(player, (p, attackDone) => {
       const drawn = [];
       let card = p.fromDraw();
@@ -520,7 +519,7 @@ class ThroneRoom {
     this.cost = 4;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
@@ -554,7 +553,7 @@ class Witch {
     this.cost = 5;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     player.draw(2);
     game.parallelAttack(player, (p, attackDone) => {
       if (game.store.counts["Curse"]) {
@@ -577,7 +576,7 @@ class Workshop {
     this.cost = 3;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(4)
       .map(c => c.name);
@@ -600,7 +599,7 @@ class KingsCourt {
     this.cost = 7;
   }
 
-  play(player, callback, game) {
+  async play(player, callback, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);

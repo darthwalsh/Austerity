@@ -13,6 +13,7 @@ const junitReporter = new reporters.JUnitXmlReporter({
 });
 jasmine.getEnv().addReporter(junitReporter);
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
 
 const defaultTest = {
   dMoney: 0,
@@ -791,14 +792,15 @@ const tests = {
 };
 
 describe("cards", () => {
-  for (let tName in tests) {
-    it("plays " + tName, () => {
+  for (const tName in tests) {
+    it("plays " + tName, done => {
       const test = tests[tName];
 
+      let cardName = tName;
       if (tName.includes("_")) {
-        tName = tName.substring(0, tName.indexOf("_"));
+        cardName = tName.substring(0, tName.indexOf("_"));
       }
-      const card = cards[tName];
+      const card = cards[cardName];
 
       for (const testKey in test) {
         expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultKeys: " + testKey);
@@ -840,6 +842,9 @@ describe("cards", () => {
             fail(Error("Not implemented: " + o));
           }
         },
+        choose: choices => new Promise(resolve => {
+          p.sendChoice(choices, resolve);
+        }),
         sendChoice: (choices, handleChoice) => {
           const expected = test.interactions[interactionIndex++];
           expect(choices).toEqual(expected);
@@ -870,6 +875,9 @@ describe("cards", () => {
               fail(Error("Not implemented: " + o));
             }
           },
+          choose: choices => new Promise(resolve => {
+            oP.sendChoice(choices, resolve);
+          }),
           sendChoice: (choices, handleChoice) => {
             const expected = testOther.interactions[oP["InteractionIndex"]++];
             expect(choices).toEqual(expected);
@@ -931,16 +939,14 @@ describe("cards", () => {
 
           expect(called).toBeFalsy("called twice");
           called = true;
+          done();
         }, game);
-
-        expect(called).toBeTruthy("wasn't called");
       } else if (card.ofKind("property") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
+        done();
       } else {
         fail(Error("Not implemented kind: " + card.name));
       }
-
-      expect(fail).toBeTruthy();
     });
   }
 
