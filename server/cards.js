@@ -137,12 +137,11 @@ class Chancellor {
   async play(player, callback, game) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
-    player.sendChoice(["No", "Discard"], choice => {
-      if (choice == "Discard") {
-        Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
-      }
-      callback();
-    });
+    const choice = await player.choose(["No", "Discard"]);
+    if (choice == "Discard") {
+      Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
+    }
+    callback();
   }
 }
 
@@ -153,31 +152,23 @@ class Chapel {
   }
 
   async play(player, callback, game) {
-    let canTrash = 4;
-    const promptTrash = () => {
+    for (let canTrash = 4; canTrash; --canTrash) {
       const trashChoices = player.hand.map(c => c.name);
       if (!trashChoices.length) {
         callback();
         return;
       }
       trashChoices.push("Done Trashing");
-      player.sendMessage("Trash up to " + canTrash + " cards:");
-      player.sendChoice(trashChoices, choice => {
-        if (choice == "Done Trashing") {
-          callback();
-          return;
-        }
-        const trash = player.fromHand(choice);
-        game.trashPush(player, trash);
-        --canTrash;
-        if (canTrash) {
-          promptTrash();
-        } else {
-          callback();
-        }
-      });
-    };
-    promptTrash();
+      player.sendMessage(`Trash up to ${canTrash} cards:`);
+      const choice = await player.choose(trashChoices);
+      if (choice == "Done Trashing") {
+        callback();
+        return;
+      }
+      const trash = player.fromHand(choice);
+      game.trashPush(player, trash);
+    }
+    callback();
   }
 }
 
@@ -204,10 +195,9 @@ class Feast {
       return;
     }
     player.sendMessage("Gain a card:");
-    player.sendChoice(gainChoices, gainChoice => {
-      game.gainCard(player, gainChoice);
-      callback();
-    });
+    const gainChoice = await player.choose(gainChoices);
+    game.gainCard(player, gainChoice);
+    callback();
   }
 
   afterPlay(player, game) {
@@ -245,37 +235,24 @@ class Library {
 
   async play(player, callback, game) {
     const aside = [];
-    const end = () => {
-      Array.prototype.push.apply(player.discardPile, aside);
-      player.sendHand();
-      callback();
-    };
-    const promptTake = () => {
-      if (player.hand.length >= 7) {
-        end();
-        return;
-      }
+    while (player.hand.length < 7) {
       const card = player.fromDraw();
       if (!card) {
-        end();
-        return;
+        break;
       }
       if (card.ofKind("action")) {
-        player.sendMessage("Gain Action card or set aside:");
-        player.sendChoice([card.name, "Set Aside"], choice => {
-          if (choice == "Set Aside") {
-            aside.push(card);
-          } else {
-            player.hand.push(card);
-          }
-          promptTake();
-        });
-      } else {
-        player.hand.push(card);
-        promptTake();
+        player.sendMessage("Add card to hand or set aside:");
+        const choice = await player.choose([card.name, "Set Aside"]);
+        if (choice === "Set Aside") {
+          aside.push(card);
+          continue;
+        }
       }
-    };
-    promptTake();
+      player.hand.push(card);
+    }
+    Array.prototype.push.apply(player.discardPile, aside);
+    player.sendHand();
+    callback();
   }
 }
 
@@ -298,7 +275,7 @@ class Militia {
       if (p.hand.length > 3) {
         const discardChoices = p.hand.map(c => c.name);
         p.sendMessage("Discard down to three cards:");
-        p.sendChoice(discardChoices, choice => {
+        p.sendChoice(discardChoices, choice => { // TODO p.choose() in loop skipping attack recursion
           p.discardPile.push(p.fromHand(choice));
           attack(p, attackDone);
         });
@@ -326,23 +303,21 @@ class Mine {
       return;
     }
     player.sendMessage("Trash a Treasure:");
-    player.sendChoice(trashChoices, trashChoice => {
-      const trash = player.fromHand(trashChoice);
-      game.trashPush(player, trash);
-      const gainChoices = game.store
-        .getAvailable(trash.cost + 3)
-        .filter(c => c.ofKind("treasure"))
-        .map(c => c.name);
-      if (!gainChoices.length) {
-        callback();
-        return;
-      }
-      player.sendMessage("Gain a Treasure:");
-      player.sendChoice(gainChoices, gainChoice => {
-        game.gainCard(player, gainChoice, {toHand: true});
-        callback();
-      });
-    });
+    const trashChoice = await player.choose(trashChoices);
+    const trash = player.fromHand(trashChoice);
+    game.trashPush(player, trash);
+    const gainChoices = game.store
+      .getAvailable(trash.cost + 3)
+      .filter(c => c.ofKind("treasure"))
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
+    player.sendMessage("Gain a Treasure:");
+    const gainChoice = await player.choose(gainChoices);
+    game.gainCard(player, gainChoice, {toHand: true});
+    callback();
   }
 }
 
@@ -393,22 +368,20 @@ class Remodel {
       return;
     }
     player.sendMessage("Trash a card:");
-    player.sendChoice(trashChoices, trashChoice => {
-      const trash = player.fromHand(trashChoice);
-      game.trashPush(player, trash);
-      const gainChoices = game.store
-        .getAvailable(trash.cost + 2)
-        .map(c => c.name);
-      if (!gainChoices.length) {
-        callback();
-        return;
-      }
-      player.sendMessage("Gain a card:");
-      player.sendChoice(gainChoices, gainChoice => {
-        game.gainCard(player, gainChoice);
-        callback();
-      });
-    });
+    const trashChoice = await player.choose(trashChoices);
+    const trash = player.fromHand(trashChoice);
+    game.trashPush(player, trash);
+    const gainChoices = game.store
+      .getAvailable(trash.cost + 2)
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      callback();
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    const gainChoice = await player.choose(gainChoices);
+    game.gainCard(player, gainChoice);
+    callback();
   }
 }
 
@@ -520,16 +493,15 @@ class ThroneRoom {
       return;
     }
     player.sendMessage("Pick an Action card to double:");
-    player.sendChoice(actions, actionName => {
-      game.allLog(player.name + " played " + actionName + " doubled!");
-      const action = player.fromHand(actionName);
+    const actionName = await player.choose(actions);
+    game.allLog(player.name + " played " + actionName + " doubled!");
+    const action = player.fromHand(actionName);
+    action.play(player, () => {
       action.play(player, () => {
-        action.play(player, () => {
-          player.afterPlay(action);
-          callback();
-        }, game);
+        player.afterPlay(action);
+        callback();
       }, game);
-    });
+    }, game);
   }
 }
 
@@ -573,10 +545,9 @@ class Workshop {
       return;
     }
     player.sendMessage("Gain a card:");
-    player.sendChoice(gainChoices, gainChoice => {
-      game.gainCard(player, gainChoice);
-      callback();
-    });
+    const gainChoice = await player.choose(gainChoices);
+    game.gainCard(player, gainChoice);
+    callback();
   }
 }
 
@@ -596,18 +567,17 @@ class KingsCourt {
       return;
     }
     player.sendMessage("Pick an Action card to triple:");
-    player.sendChoice(actions, actionName => {
-      game.allLog(player.name + " played " + actionName + " tripled!!");
-      const action = player.fromHand(actionName);
+    const actionName = await player.choose(actions);
+    game.allLog(player.name + " played " + actionName + " tripled!!");
+    const action = player.fromHand(actionName);
+    action.play(player, () => {
       action.play(player, () => {
         action.play(player, () => {
-          action.play(player, () => {
-            player.afterPlay(action);
-            callback();
-          }, game);
+          player.afterPlay(action);
+          callback();
         }, game);
       }, game);
-    });
+    }, game);
   }
 }
 

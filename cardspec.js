@@ -314,7 +314,7 @@ const tests = {
     draw: ["Village", "Gold", "Smithy"],
     hand: ["Copper", "Silver", "Copper", "Silver", "Copper", "Silver"],
     interactions: [
-      "Gain Action card or set aside:",
+      "Add card to hand or set aside:",
       ["Smithy", "Set Aside"],
       "Set Aside",
     ],
@@ -328,7 +328,7 @@ const tests = {
     discard: ["Village"],
     hand: [],
     interactions: [
-      "Gain Action card or set aside:",
+      "Add card to hand or set aside:",
       ["Village", "Set Aside"],
       "Village",
     ],
