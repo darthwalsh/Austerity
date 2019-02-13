@@ -36,7 +36,7 @@ class Lobby {
       break;
     }
     game = game || this.games[choice];
-    delete connection.messageHandlers.name;
+    connection.messageHandlers.name = () => {};
 
     const existingPlayer = game.players[connection.name];
     if (existingPlayer) {
