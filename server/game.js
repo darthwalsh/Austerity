@@ -33,7 +33,7 @@ class Game {
   start(debugMode) {
     this.started = true;
     const ps = this.allPlayers();
-    
+
     this.initClients(ps);
 
     ps.forEach(p => p.redrawHand());

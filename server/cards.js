@@ -103,30 +103,28 @@ class Cellar {
   async play(player, callback, game) {
     player.actions += 1;
     let discarded = 0;
-    const end = () => {
-      player.draw(discarded);
-      callback();
-    };
-    const promptDiscard = () => {
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) { // TODO this shouldn't be an eslint error, are the rules wrong?
       const choices = player.hand.map(c => c.name);
       if (!choices.length) {
-        end();
-        return;
+        break;
       }
+
       choices.push("Done Discarding");
       player.sendMessage("Discard cards:");
-      player.sendChoice(choices, choice => {
-        if (choice == "Done Discarding") {
-          end();
-          return;
-        }
-        const discard = player.fromHand(choice);
-        ++discarded;
-        player.discardPile.push(discard);
-        promptDiscard();
-      });
-    };
-    promptDiscard();
+      const choice = await player.choose(choices);
+      if (choice == "Done Discarding") {
+        break;
+      }
+
+      const discard = player.fromHand(choice);
+      ++discarded;
+      player.discardPile.push(discard);
+    }
+
+    player.draw(discarded);
+    callback();
   }
 }
 
@@ -368,13 +366,12 @@ class Moneylender {
 
   async play(player, callback, game) {
     if (player.hand.some(c => c.name === "Copper")) {
-      player.sendChoice(["Trash a Copper", "Do Nothing"], choice => {
-        if (choice === "Trash a Copper") {
-          player.money += 3;
-          game.trashPush(player, player.fromHand("Copper"));
-        }
-        callback();
-      });
+      const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
+      if (choice === "Trash a Copper") {
+        player.money += 3;
+        game.trashPush(player, player.fromHand("Copper"));
+      }
+      callback();
     } else {
       callback();
     }
