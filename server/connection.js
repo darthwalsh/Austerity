@@ -7,6 +7,7 @@ class Connection {
     this.messageHandlers = {
       choice: data => this.onChoice(data),
       name: data => this.name = data,
+      chat: data => {},
     };
 
     this.initListeners();

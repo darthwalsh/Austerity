@@ -104,6 +104,7 @@ window.onload = () => {
   const ws = new WebSocket(address);
   ws.addEventListener("open", () => {
     log("Connected to Server");
+    chat.disabled = false;
     ws.send(JSON.stringify({name: name.value}));
   });
   ws.addEventListener("close", () => {
