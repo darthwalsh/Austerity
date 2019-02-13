@@ -197,7 +197,7 @@ const CouncilRoom = new Action(5, (player, game) => {
 class Feast {
   constructor() {
     this.kind = "action";
-    this.cost = 5;
+    this.cost = 4;
   }
 
   async play(player, callback, game) {
@@ -295,7 +295,7 @@ const Market = new Action(5, (player, game) => {
 class Militia {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 5;
+    this.cost = 4;
   }
 
   async play(player, callback, game) {
