@@ -103,6 +103,10 @@ const tests = {
   Bureaucrat: {
     discardAfter: ["Silver"],
 
+    interactions: [
+      "ALL: Bot gained Silver",
+    ],
+
     others: [{
       hand: ["Copper", "Silver", "Gold", "Estate", "Duchy"],
       interactions: [
@@ -117,6 +121,10 @@ const tests = {
 
   Bureaucrat_NoVictory: {
     discardAfter: ["Silver"],
+
+    interactions: [
+      "ALL: Bot gained Silver",
+    ],
 
     others: [{
       hand: ["Copper", "Silver", "Gold"],
@@ -245,6 +253,7 @@ const tests = {
       "Gain a card:",
       ["Copper", "Silver", "Estate", "Duchy"],
       "Copper",
+      "ALL: Bot gained Copper",
     ],
     handAfter: [],
     discardAfter: ["Copper"],
@@ -260,9 +269,11 @@ const tests = {
       "Gain a card:",
       ["Copper", "Silver", "Estate", "Duchy"],
       "Copper",
+      "ALL: Bot gained Copper",
       "Gain a card:",
       ["Copper", "Silver", "Estate", "Duchy"],
       "Silver",
+      "ALL: Bot gained Silver",
       "ALL: Bot trashed Feast",
     ],
     handAfter: [],
@@ -371,6 +382,7 @@ const tests = {
       "Gain a Treasure:",
       ["Copper", "Silver", "Gold"],
       "Gold",
+      "ALL: Bot gained Gold",
     ],
     handAfter: ["Copper", "Gold"],
     trashAfter: ["Silver"],
@@ -412,6 +424,10 @@ const tests = {
     store: ["Curse"],
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
+
+    interactions: [
+      "ALL: Other#0 gained Curse",
+    ],
 
     others: [{
       hand: ["Moat"],
@@ -493,6 +509,7 @@ const tests = {
       "Gain a card:",
       ["Copper", "Estate"],
       "Estate",
+      "ALL: Bot gained Estate",
     ],
     handAfter: ["Silver"],
     discardAfter: ["Estate"],
@@ -677,6 +694,7 @@ const tests = {
       "Gain a Treasure:",
       ["Copper", "Silver"],
       "Silver",
+      "ALL: Bot gained Silver",
       "Trash a Treasure:",
       ["Silver"],
       "Silver",
@@ -684,6 +702,7 @@ const tests = {
       "Gain a Treasure:",
       ["Copper", "Silver", "Gold"],
       "Gold",
+      "ALL: Bot gained Gold",
     ],
     handAfter: ["Gold"],
     playedAfter: ["Mine"],
@@ -709,6 +728,11 @@ const tests = {
     store: ["Curse"],
     draw: ["Village", "Estate", "Copper"],
     hand: [],
+
+    interactions: [
+      "ALL: Other#0 gained Curse",
+    ],
+
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
@@ -732,6 +756,7 @@ const tests = {
   Witch_Self: {
     draw: ["Village", "Estate", "Copper"],
     hand: [],
+
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
@@ -742,6 +767,12 @@ const tests = {
     store: ["Curse"],
     draw: ["Village", "Estate", "Copper"],
     hand: [],
+
+    interactions: [
+      "ALL: Other#0 gained Curse",
+      "ALL: Other#1 gained Curse",
+    ],
+
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
@@ -764,6 +795,7 @@ const tests = {
       "Gain a card:",
       ["Copper", "Silver", "Estate"],
       "Estate",
+      "ALL: Bot gained Estate",
     ],
     discardAfter: ["Estate"],
   },

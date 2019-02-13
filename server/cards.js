@@ -77,10 +77,7 @@ class Bureaucrat {
   }
 
   async play(player, callback, game) {
-    if (game.store.counts["Silver"]) {
-      player.discardPile.push(cards.Silver);
-      game.store.bought(cards.Silver);
-    }
+    game.tryGainCard(player, "Silver");
     game.parallelAttack(player, async (p, attackDone) => {
       const discardChoices = p.hand
         .filter(c => c.ofKind("property"))
@@ -210,9 +207,7 @@ class Feast {
     }
     player.sendMessage("Gain a card:");
     player.sendChoice(gainChoices, gainChoice => {
-      const gain = cards[gainChoice];
-      player.discardPile.push(gain);
-      game.store.bought(gain);
+      game.gainCard(player, gainChoice);
       callback();
     });
   }
@@ -346,9 +341,7 @@ class Mine {
       }
       player.sendMessage("Gain a Treasure:");
       player.sendChoice(gainChoices, gainChoice => {
-        const gain = cards[gainChoice];
-        player.hand.push(gain);
-        game.store.bought(gain);
+        game.gainCard(player, gainChoice, {toHand: true});
         callback();
       });
     });
@@ -415,9 +408,7 @@ class Remodel {
       }
       player.sendMessage("Gain a card:");
       player.sendChoice(gainChoices, gainChoice => {
-        const gain = cards[gainChoice];
-        player.discardPile.push(gain);
-        game.store.bought(gain);
+        game.gainCard(player, gainChoice);
         callback();
       });
     });
@@ -559,10 +550,7 @@ class Witch {
   async play(player, callback, game) {
     player.draw(2);
     game.parallelAttack(player, (p, attackDone) => {
-      if (game.store.counts["Curse"]) {
-        p.discardPile.push(cards.Curse);
-        game.store.bought(cards.Curse);
-      }
+      game.tryGainCard(p, "Curse");
       attackDone();
     }, callback);
   }
@@ -589,9 +577,7 @@ class Workshop {
     }
     player.sendMessage("Gain a card:");
     player.sendChoice(gainChoices, gainChoice => {
-      const gain = cards[gainChoice];
-      player.discardPile.push(gain);
-      game.store.bought(gain);
+      game.gainCard(player, gainChoice);
       callback();
     });
   }

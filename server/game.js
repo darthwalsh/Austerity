@@ -158,6 +158,37 @@ class Game {
     }
   }
 
+  /**
+   * @param {Player} player
+   * @param {string} cardName
+   * @param {object} options {toHand: boolean}
+   */
+  gainCard(player, cardName, {toHand = false} = {}) {
+    if (!this.store.counts[cardName]) {
+      throw new Error(`Out of ${cardName}`);
+    }
+
+    const card = cards[cardName];
+
+    if (toHand) {
+      player.hand.push(card);
+    } else {
+      player.discardPile.push(card);
+    }
+    this.store.bought(card);
+    this.allLog(`${player.name} gained ${cardName}`);
+  }
+
+  /**
+   * @param {Player} player
+   * @param {string} cardName
+   */
+  tryGainCard(player, cardName) {
+    if (this.store.counts[cardName]) {
+      this.gainCard(player, cardName);
+    }
+  }
+
   trashPush(player, card) {
     this.allLog(`${player.name} trashed ${card.name}`);
     this.trash.push(card);
