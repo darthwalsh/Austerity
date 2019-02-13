@@ -33,14 +33,16 @@ class Game {
   start(debugMode) {
     this.started = true;
     const ps = this.allPlayers();
+    
+    this.initClients(ps);
+
+    ps.forEach(p => p.redrawHand());
 
     if (debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
       ps[0].sendHand();
       this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
     }
-
-    this.initClients(ps);
 
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {

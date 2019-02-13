@@ -22,7 +22,6 @@ class Player {
       this.discardPile.push(cards.Estate);
     }
     this.hand = [];
-    this.redrawHand();
     this.actions = null;
     this.money = null;
     this.buys = null;
