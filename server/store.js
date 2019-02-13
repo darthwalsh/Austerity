@@ -43,6 +43,9 @@ class Store {
   }
 
   bought(card) {
+    if (typeof(card.name) !== "string") {
+      throw new Error("Invalid argument, not a card");
+    }
     if (--this.counts[card.name] < 0) {
       throw new Error("Already out of card!");
     }

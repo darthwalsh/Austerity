@@ -210,8 +210,9 @@ class Feast {
     }
     player.sendMessage("Gain a card:");
     player.sendChoice(gainChoices, gainChoice => {
-      player.discardPile.push(cards[gainChoice]);
-      game.store.bought(gainChoice);
+      const gain = cards[gainChoice];
+      player.discardPile.push(gain);
+      game.store.bought(gain);
       callback();
     });
   }
@@ -345,8 +346,9 @@ class Mine {
       }
       player.sendMessage("Gain a Treasure:");
       player.sendChoice(gainChoices, gainChoice => {
-        player.hand.push(cards[gainChoice]);
-        game.store.bought(gainChoice);
+        const gain = cards[gainChoice];
+        player.hand.push(gain);
+        game.store.bought(gain);
         callback();
       });
     });
@@ -413,8 +415,9 @@ class Remodel {
       }
       player.sendMessage("Gain a card:");
       player.sendChoice(gainChoices, gainChoice => {
-        player.discardPile.push(cards[gainChoice]);
-        game.store.bought(gainChoice);
+        const gain = cards[gainChoice];
+        player.discardPile.push(gain);
+        game.store.bought(gain);
         callback();
       });
     });
@@ -586,8 +589,9 @@ class Workshop {
     }
     player.sendMessage("Gain a card:");
     player.sendChoice(gainChoices, gainChoice => {
-      player.discardPile.push(cards[gainChoice]);
-      game.store.bought(gainChoice);
+      const gain = cards[gainChoice];
+      player.discardPile.push(gain);
+      game.store.bought(gain);
       callback();
     });
   }
