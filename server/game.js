@@ -41,23 +41,21 @@ class Game {
     if (debugMode) {
       Array.prototype.push.apply(ps[0].hand, this.store.getAvailable(99));
       ps[0].sendHand();
-      this.allLog("!!!!!!\n" + ps[0].name + " IS CHEATING\n!!!!!!");
+      this.allLog("!!!!!! " + ps[0].name + " IS CHEATING!!!!!!");
     }
 
     let turn = Math.floor(Math.random() * ps.length);
     const nextTurn = () => {
       if (this.store.gameOver()) {
-        let result = "GAME OVER!!!\r\n";
-        result += ps
-          .sort((a, b) => b.getPoints() - a.getPoints()) // descending
-          .map(p => p.name + ": " + p.getPoints() + "\n    " +
+        this.allLog("GAME OVER!!!");
+        ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
+          .map(p => `${p.name}: ${p.getPoints()}     ` +
             p.allCards()
-              .filter(c => c.ofKind("property")||c.ofKind("curse"))
+              .filter(c => c.ofKind("property") || c.ofKind("curse"))
               .map(c => c.name)
               .sort()
               .toString())
-          .join("\r\n");
-        this.allLog(result);
+          .forEach(line => this.allLog(line));
         return;
       }
 
