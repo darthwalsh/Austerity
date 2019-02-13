@@ -159,7 +159,7 @@ class Game {
   }
 
   trashPush(player, card) {
-    this.allLog(`${player.name} trashed a ${card.name}`);
+    this.allLog(`${player.name} trashed ${card.name}`);
     this.trash.push(card);
   }
 }
