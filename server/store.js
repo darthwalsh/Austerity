@@ -2,18 +2,10 @@ const cards = require("./cards");
 
 class Store {
   constructor() {
-    const DEFAULT_TREASURE_COUNT = 30;
-    const DEFAULT_PROPERTY_COUNT = 8; // TODO make correct
     this.default = [
       cards.Copper, cards.Silver, cards.Gold,
-      cards.Estate, cards.Duchy, cards.Province,
+      cards.Curse, cards.Estate, cards.Duchy, cards.Province,
     ];
-    this.counts = this.default.reduce((o, c) => {
-      // @ts-ignore
-      o[c.name] = c.ofKind("treasure") ? DEFAULT_TREASURE_COUNT : DEFAULT_PROPERTY_COUNT;
-      return o;
-    }, {});
-    this.included = null;
   }
 
   optional() {
@@ -22,10 +14,22 @@ class Store {
       .sort((a, b) => cards[a].compareTo(cards[b]));
   }
 
-  setIncluded(included) {
+  init(included, playerCount) {
+    const propertyCount = playerCount <= 2 ? 8 : 12;
+    const curseCount = 10 * Math.max(playerCount - 1, 1);
+    const treasureCount = 30;
+    const actionCount = 10;
+
+    this.counts = this.default.reduce((o, c) => {
+      // @ts-ignore
+      o[c.name] = c.ofKind("property") ? propertyCount : (c.ofKind("curse") ? curseCount : treasureCount);
+      return o;
+    }, {});
+
     this.included = included;
-    this.counts = included.reduce((o, c) => {
-      o[c.name] = 10;
+
+    this.counts = this.included.reduce((o, c) => {
+      o[c.name] = c.ofKind("property") ? propertyCount : actionCount;
       return o;
     }, this.counts);
   }

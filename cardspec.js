@@ -5,6 +5,7 @@ const path = require("path");
 const cards = require("./server/cards");
 const Game = require("./server/game").Game;
 const Player = require("./server/player").Player;
+const Store = require("./server/store").Store;
 
 const reporters = require("jasmine-reporters");
 const junitReporter = new reporters.JUnitXmlReporter({
@@ -32,6 +33,7 @@ const defaultTest = {
   others: [],
 
   store: [],
+  storeCounts: {},
   trashAfter: [],
 };
 
@@ -251,7 +253,7 @@ const tests = {
   Feast: {
     interactions: [
       "Gain a card:",
-      ["Copper", "Silver", "Estate", "Duchy"],
+      ["Copper", "Silver", "Estate", "Duchy", "Curse"],
       "Copper",
       "ALL: Bot gained Copper",
     ],
@@ -267,11 +269,11 @@ const tests = {
       "Feast",
       "ALL: Bot played Feast doubled!",
       "Gain a card:",
-      ["Copper", "Silver", "Estate", "Duchy"],
+      ["Copper", "Silver", "Estate", "Duchy", "Curse"],
       "Copper",
       "ALL: Bot gained Copper",
       "Gain a card:",
-      ["Copper", "Silver", "Estate", "Duchy"],
+      ["Copper", "Silver", "Estate", "Duchy", "Curse"],
       "Silver",
       "ALL: Bot gained Silver",
       "ALL: Bot trashed Feast",
@@ -404,7 +406,6 @@ const tests = {
   },
 
   Witch_Moat: {
-    store: ["Curse"],
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
@@ -421,7 +422,6 @@ const tests = {
   },
 
   Witch_MoatAttacked: {
-    store: ["Curse"],
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
@@ -507,7 +507,7 @@ const tests = {
       "Copper",
       "ALL: Bot trashed Copper",
       "Gain a card:",
-      ["Copper", "Estate"],
+      ["Copper", "Estate", "Curse"],
       "Estate",
       "ALL: Bot gained Estate",
     ],
@@ -725,7 +725,6 @@ const tests = {
   },
 
   Witch: {
-    store: ["Curse"],
     draw: ["Village", "Estate", "Copper"],
     hand: [],
 
@@ -743,7 +742,7 @@ const tests = {
   },
 
   Witch_NoCurse: {
-    store: [],
+    storeCounts: {Curse: 0},
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
@@ -764,7 +763,6 @@ const tests = {
   },
 
   Witch_Many: {
-    store: ["Curse"],
     draw: ["Village", "Estate", "Copper"],
     hand: [],
 
@@ -793,7 +791,7 @@ const tests = {
   Workshop: {
     interactions: [
       "Gain a card:",
-      ["Copper", "Silver", "Estate"],
+      ["Copper", "Silver", "Estate", "Curse"],
       "Estate",
       "ALL: Bot gained Estate",
     ],
@@ -884,7 +882,8 @@ describe("cards", () => {
         }}, game);
 
       game.players[0] = p;
-      game.store.setIncluded(test.store.map(n => cards[n]));
+      game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
+      game.store.counts = Object.assign(game.store.counts, test.storeCounts);
       game.allLog = message => {
         const expected = test.interactions[interactionIndex++];
         expect("ALL: " + message).toEqual(expected, "all log");
@@ -1005,6 +1004,25 @@ describe("cards", () => {
   it("has colors for all", () => {
     for (const cardName in cards) {
       expect(cards[cardName].color).toBeTruthy();
+    }
+  });
+});
+
+describe("store", () => {
+  it("initial counts", () => {
+    const tests = [
+      {playerCount: 1, expectedCounts: {Village: 10, Gardens: 8, Curse: 10, Province: 8, Copper: 30}},
+      {playerCount: 2, expectedCounts: {Village: 10, Gardens: 8, Curse: 10, Province: 8, Copper: 30}},
+      {playerCount: 3, expectedCounts: {Village: 10, Gardens: 12, Curse: 20, Province: 12, Copper: 30}},
+      {playerCount: 4, expectedCounts: {Village: 10, Gardens: 12, Curse: 30, Province: 12, Copper: 30}},
+    ];
+
+    for (const test of tests) {
+      const store = new Store();
+      store.init([cards.Village, cards.Gardens], test.playerCount);
+      for (const card in test.expectedCounts) {
+        expect(store.counts[card]).toEqual(test.expectedCounts[card]);
+      }
     }
   });
 });

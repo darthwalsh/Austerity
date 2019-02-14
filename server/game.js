@@ -87,7 +87,7 @@ class Game {
     };
 
     connection.messageHandlers.gameStart = data => {
-      this.store.setIncluded(data.included.map(n => cards[n]));
+      this.store.init(data.included.map(n => cards[n]), this.allPlayers().length);
       this.start(data.debugMode);
     };
 
