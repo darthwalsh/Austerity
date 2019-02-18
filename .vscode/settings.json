@@ -1,3 +1,6 @@
 {
-  "javascript.implicitProjectConfig.checkJs": true
+  "javascript.implicitProjectConfig.checkJs": true,
+  "files.exclude": {
+    "**/node_modules": true, 
+  }
 }

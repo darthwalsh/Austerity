@@ -385,6 +385,49 @@ class Remodel {
   }
 }
 
+class Sentry {
+  constructor() {
+    this.kind = "action";
+    this.cost = 5;
+  }
+
+  async play(player, callback, game) {
+    player.draw();
+    player.actions += 1;
+
+    const toDecide = [];
+    for (let i = 0; i < 2; ++i) {
+      const draw = player.fromDraw();
+      if (!draw) {
+        break;
+      }
+      toDecide.push(draw.name);
+    }
+
+    while (toDecide.length) {
+      const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
+      player.sendMessage("Trash, discard, and/or place on top of deck:");
+      const choice = await player.choose(choices);
+      const [action, cardName] = choice.split(": ");
+      const card = cards[cardName];
+
+      toDecide.splice(toDecide.indexOf(cardName), 1);
+      switch (action) {
+      case "Trash":
+        game.trashPush(player, card);
+        break;
+      case "Discard":
+        player.discardPile.push(card);
+        break;
+      case "To Deck":
+        player.drawPile.push(card);
+      }
+    }
+
+    callback();
+  }
+}
+
 const Smithy = new Action(4, (player, game) => {
   player.draw(3);
 });
@@ -592,6 +635,7 @@ const cards = {
   Province: new Property(8, 6),
   Curse: new Curse(),
 
+  // Base deck
   Adventurer: Adventurer,
   Bureaucrat: new Bureaucrat(),
   Cellar: new Cellar(),
@@ -617,6 +661,9 @@ const cards = {
   Witch: new Witch(),
   Woodcutter: Woodcutter,
   Workshop: new Workshop(),
+
+  // Base.2
+  Sentry: new Sentry,
 
   // Prosperity
   Platinum: new Treasure(9, 5),

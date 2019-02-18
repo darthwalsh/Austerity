@@ -516,6 +516,41 @@ const tests = {
     trashAfter: ["Copper"],
   },
 
+  Sentry: {
+    draw: ["Copper", "Silver", "Gold"],
+    interactions: [
+      "Trash, discard, and/or place on top of deck:",
+      ["Trash: Silver", "Discard: Silver", "To Deck: Silver", "Trash: Copper", "Discard: Copper", "To Deck: Copper"],
+      "Discard: Silver",
+      "Trash, discard, and/or place on top of deck:",
+      ["Trash: Copper", "Discard: Copper", "To Deck: Copper"],
+      "Trash: Copper",
+      "ALL: Bot trashed Copper",
+    ],
+    drawAfter: [],
+    handAfter: ["Gold"],
+    discardAfter: ["Silver"],
+    trashAfter: ["Copper"],
+    dActions: 1,
+  },
+
+  Sentry_Reorder: {
+    draw: ["Copper", "Silver", "Gold"],
+    interactions: [
+      "Trash, discard, and/or place on top of deck:",
+      ["Trash: Silver", "Discard: Silver", "To Deck: Silver", "Trash: Copper", "Discard: Copper", "To Deck: Copper"],
+      "To Deck: Copper",
+      "Trash, discard, and/or place on top of deck:",
+      ["Trash: Silver", "Discard: Silver", "To Deck: Silver"],
+      "To Deck: Silver",
+    ],
+    drawAfter: ["Copper", "Silver"],
+    handAfter: ["Gold"],
+    discardAfter: [],
+    trashAfter: [],
+    dActions: 1,
+  },
+
   Smithy: {
     draw: ["Village", "Copper", "Silver", "Gold"],
     hand: [],
