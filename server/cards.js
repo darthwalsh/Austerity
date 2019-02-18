@@ -77,7 +77,7 @@ const Adventurer = new Action(6, (player, game) => {
   }
 
   player.sendHand();
-  Array.prototype.push.apply(player.discardPile, drawn); // TODO just discardPile.push
+  player.discardPile.push(...drawn);
 });
 
 class Bureaucrat {
@@ -163,7 +163,7 @@ class Chancellor {
     player.sendMessage("Discard your draw pile?");
     const choice = await player.choose(["No", "Discard"]);
     if (choice == "Discard") {
-      Array.prototype.push.apply(player.discardPile, player.drawPile.splice(0));
+      player.discardPile.push(...player.drawPile.splice(0));
     }
     callback();
   }
@@ -289,7 +289,7 @@ class Library {
       }
       player.hand.push(card);
     }
-    Array.prototype.push.apply(player.discardPile, aside);
+    player.discardPile.push(...aside);
     player.sendHand();
     callback();
   }
@@ -564,15 +564,11 @@ class Thief {
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
       if (!treasures.length) {
-        Array.prototype.push.apply(p.discardPile, drawn);
+        p.discardPile.push(...drawn);
         attackDone();
         return;
       }
-      const choices = [];
-      for (let i = 0; i < treasures.length; ++i) {
-        const name = treasures[i];
-        Array.prototype.push.apply(choices, ["Trash: " + name, "Steal: " + name]);
-      }
+      const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
       player.sendMessage("Trash or steal a Treasure:");
       player.sendChoice(choices, choice => {
         const steal = choice.substring(0, 7) == "Steal: ";
@@ -590,9 +586,9 @@ class Thief {
           game.trashPush(player, chosen);
         }
         treasures = treasures.map(n => cards[n]);
-        Array.prototype.push.apply(p.discardPile, treasures);
+        p.discardPile.push(...treasures);
         const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
-        Array.prototype.push.apply(p.discardPile, notTreasures);
+        p.discardPile.push(...notTreasures);
         attackDone();
       });
     }, callback);
