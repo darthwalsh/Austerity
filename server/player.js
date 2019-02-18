@@ -1,8 +1,9 @@
 const cards = require("./cards");
-// eslint-disable-next-line no-unused-vars
-const Connection = require("./connection").Connection; // Useful for VS Code type info
-// eslint-disable-next-line no-unused-vars
-const Game = require("./game").Game; // Useful for VS Code type info
+
+/**
+ * @typedef { import("./connection").Connection } Connection
+ * @typedef { import("./game").Game } Game
+ */
 
 class Player {
   /**

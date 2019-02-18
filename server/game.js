@@ -1,8 +1,10 @@
 const Store = require("./store").Store;
 const cards = require("./cards");
 const Player = require("./player").Player;
-// eslint-disable-next-line no-unused-vars
-const Connection = require("./connection").Connection; // Useful for VS Code type info
+
+/**
+ * @typedef { import("./connection").Connection } Connection
+ */
 
 class Game {
   constructor() {

@@ -1,3 +1,8 @@
+/**
+ * @typedef { import("./game").Game } Game
+ * @typedef { import("./player").Player } Player
+ */
+
 class Treasure {
   constructor(cost, money) {
     this.kind = "treasure";
@@ -44,6 +49,11 @@ class Action {
     this.toPlay = toPlay;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     this.toPlay(player, game);
     callback();
@@ -76,6 +86,11 @@ class Bureaucrat {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     game.tryGainCard(player, "Silver");
     game.parallelAttack(player, async (p, attackDone) => {
@@ -100,12 +115,16 @@ class Cellar {
     this.cost = 2;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.actions += 1;
     let discarded = 0;
 
-    // eslint-disable-next-line no-constant-condition
-    while (true) { // TODO this shouldn't be an eslint error, are the rules wrong?
+    for (;;) {
       const choices = player.hand.map(c => c.name);
       if (!choices.length) {
         break;
@@ -134,6 +153,11 @@ class Chancellor {
     this.cost = 3;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
@@ -151,6 +175,11 @@ class Chapel {
     this.cost = 2;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     for (let canTrash = 4; canTrash; --canTrash) {
       const trashChoices = player.hand.map(c => c.name);
@@ -186,6 +215,11 @@ class Feast {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(5)
@@ -233,6 +267,11 @@ class Library {
     this.cost = 5;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const aside = [];
     while (player.hand.length < 7) {
@@ -269,6 +308,11 @@ class Militia {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.money += 2;
     const attack = (p, attackDone) => {
@@ -293,6 +337,11 @@ class Mine {
     this.cost = 5;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const trashChoices = player.hand
       .filter(c => c.ofKind("treasure"))
@@ -327,6 +376,11 @@ class Moat {
     this.cost = 2;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.draw(2);
     callback();
@@ -339,6 +393,11 @@ class Moneylender {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     if (player.hand.some(c => c.name === "Copper")) {
       const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
@@ -359,6 +418,11 @@ class Remodel {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const trashChoices = player.hand
       .map(c => c.name);
@@ -391,6 +455,11 @@ class Sentry {
     this.cost = 5;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.draw();
     player.actions += 1;
@@ -438,6 +507,11 @@ class Spy {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.actions += 1;
     player.draw();
@@ -470,6 +544,11 @@ class Thief {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     game.sequentialAttack(player, (p, attackDone) => {
       const drawn = [];
@@ -526,6 +605,11 @@ class ThroneRoom {
     this.cost = 4;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
@@ -559,6 +643,11 @@ class Witch {
     this.cost = 5;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     player.draw(2);
     game.parallelAttack(player, (p, attackDone) => {
@@ -579,6 +668,11 @@ class Workshop {
     this.cost = 3;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const gainChoices = game.store
       .getAvailable(4)
@@ -600,6 +694,11 @@ class KingsCourt {
     this.cost = 7;
   }
 
+  /**
+   * @param {Player} player
+   * @param {function} callback
+   * @param {Game} game
+   */
   async play(player, callback, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
