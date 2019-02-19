@@ -87,6 +87,12 @@ class Connection {
       }
 
       this.onChoice = choice => {
+        if (!choices.includes(choice)) {
+          this.send({message: `"${choice}" not a valid choice of "${choices}"!!!`});
+          this.resendChoices();
+          return;
+        }
+
         this.onChoice = null;
         resolve(choice);
       };
