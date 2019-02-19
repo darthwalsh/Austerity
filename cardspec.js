@@ -858,7 +858,7 @@ const tests = {
 
 describe("cards", () => {
   for (const tName in tests) {
-    it("plays " + tName, done => {
+    it("plays " + tName, async done => {
       const test = tests[tName];
 
       let cardName = tName;
@@ -964,43 +964,42 @@ describe("cards", () => {
       let called = false;
 
       if (card.ofKind("action") || card.ofKind("treasure")) {
-        card.play(p, () => {
-          expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
-          expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
-          expect(p.money - init.money).toEqual(test.dMoney, "dMoney");
+        await card.play(p, game);
+        expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
+        expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
+        expect(p.money - init.money).toEqual(test.dMoney, "dMoney");
 
-          expect(p.drawPile.map(c => c.name))
-            .toEqual(test.drawAfter, "drawAfter");
-          expect(p.discardPile.map(c => c.name))
-            .toEqual(test.discardAfter, "discardAfter");
-          expect(p.hand.map(c => c.name))
-            .toEqual(test.handAfter, "handAfter");
+        expect(p.drawPile.map(c => c.name))
+          .toEqual(test.drawAfter, "drawAfter");
+        expect(p.discardPile.map(c => c.name))
+          .toEqual(test.discardAfter, "discardAfter");
+        expect(p.hand.map(c => c.name))
+          .toEqual(test.handAfter, "handAfter");
 
-          expect(p.played.map(c => c.name))
-            .toEqual(test.playedAfter, "playedAfter");
+        expect(p.played.map(c => c.name))
+          .toEqual(test.playedAfter, "playedAfter");
 
-          expect(game.trash.map(c => c.name))
-            .toEqual(test.trashAfter, "trashAfter");
+        expect(game.trash.map(c => c.name))
+          .toEqual(test.trashAfter, "trashAfter");
 
-          expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
+        expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
 
-          game.otherPlayers(p).forEach(o => {
-            const otherTest = test.others[o["TestIndex"]];
+        game.otherPlayers(p).forEach(o => {
+          const otherTest = test.others[o["TestIndex"]];
 
-            expect(o.drawPile.map(c => c.name))
-              .toEqual(otherTest.drawAfter, o.name + " drawAfter");
-            expect(o.discardPile.map(c => c.name))
-              .toEqual(otherTest.discardAfter, o.name + " discardAfter");
-            expect(o.hand.map(c => c.name))
-              .toEqual(otherTest.handAfter, o.name + " handAfter");
+          expect(o.drawPile.map(c => c.name))
+            .toEqual(otherTest.drawAfter, o.name + " drawAfter");
+          expect(o.discardPile.map(c => c.name))
+            .toEqual(otherTest.discardAfter, o.name + " discardAfter");
+          expect(o.hand.map(c => c.name))
+            .toEqual(otherTest.handAfter, o.name + " handAfter");
 
-            expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
-          });
+          expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
+        });
 
-          expect(called).toBeFalsy("called twice");
-          called = true;
-          done();
-        }, game);
+        expect(called).toBeFalsy("called twice");
+        called = true;
+        done();
       } else if (card.ofKind("property") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
         done();

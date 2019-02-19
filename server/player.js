@@ -166,15 +166,14 @@ class Player {
     return this.drawPile.pop();
   }
 
-  playCard(name, callback) {
+  async playCard(name, callback) {
     const card = this.fromHand(name);
     if (card === null) {
       throw new Error("Card doesn't exist: " + name);
     }
-    card.play(this, () => {
-      this.afterPlay(card);
-      callback();
-    }, this.game);
+    await card.play(this, this.game);
+    this.afterPlay(card);
+    callback();
   }
 
   afterPlay(card) {

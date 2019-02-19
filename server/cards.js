@@ -10,9 +10,12 @@ class Treasure {
     this.money = money;
   }
 
-  play(player, callback) {
+  /**
+   * @param {Player} player
+   * @param {Game} game
+   */
+  async play(player, game) {
     player.money += this.money;
-    callback();
   }
 }
 
@@ -51,12 +54,10 @@ class Action {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     this.toPlay(player, game);
-    callback();
   }
 }
 
@@ -88,10 +89,9 @@ class Bureaucrat {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     game.tryGainCard(player, "Silver");
 
     await game.parallelAttack(player, /** @param {Player} other */ async other => {
@@ -104,8 +104,6 @@ class Bureaucrat {
         other.drawPile.push(other.fromHand(choice));
       }
     });
-
-    callback();
   }
 }
 
@@ -117,10 +115,9 @@ class Cellar {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.actions += 1;
     let discarded = 0;
 
@@ -143,7 +140,6 @@ class Cellar {
     }
 
     player.draw(discarded);
-    callback();
   }
 }
 
@@ -155,17 +151,15 @@ class Chancellor {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
     const choice = await player.choose(["No", "Discard"]);
     if (choice == "Discard") {
       player.discardPile.push(...player.drawPile.splice(0));
     }
-    callback();
   }
 }
 
@@ -177,27 +171,23 @@ class Chapel {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     for (let canTrash = 4; canTrash; --canTrash) {
       const trashChoices = player.hand.map(c => c.name);
       if (!trashChoices.length) {
-        callback();
         return;
       }
       trashChoices.push("Done Trashing");
       player.sendMessage(`Trash up to ${canTrash} cards:`);
       const choice = await player.choose(trashChoices);
       if (choice == "Done Trashing") {
-        callback();
         return;
       }
       const trash = player.fromHand(choice);
       game.trashPush(player, trash);
     }
-    callback();
   }
 }
 
@@ -217,21 +207,18 @@ class Feast {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const gainChoices = game.store
       .getAvailable(5)
       .map(c => c.name);
     if (!gainChoices.length) {
-      callback();
       return;
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
     game.gainCard(player, gainChoice);
-    callback();
   }
 
   afterPlay(player, game) {
@@ -269,10 +256,9 @@ class Library {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const aside = [];
     while (player.hand.length < 7) {
       const card = player.fromDraw();
@@ -291,7 +277,6 @@ class Library {
     }
     player.discardPile.push(...aside);
     player.sendHand();
-    callback();
   }
 }
 
@@ -310,10 +295,9 @@ class Militia {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.money += 2;
 
     await game.parallelAttack(player, /** @param {Player} other */ async other => {
@@ -324,8 +308,6 @@ class Militia {
         other.discardPile.push(other.fromHand(choice));
       }
     });
-
-    callback(); // TODO remove all play() callbacks, await on play()
   }
 }
 
@@ -337,16 +319,14 @@ class Mine {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const trashChoices = player.hand
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No Treasures to trash");
-      callback();
       return;
     }
     player.sendMessage("Trash a Treasure:");
@@ -358,13 +338,11 @@ class Mine {
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
     if (!gainChoices.length) {
-      callback();
       return;
     }
     player.sendMessage("Gain a Treasure:");
     const gainChoice = await player.choose(gainChoices);
     game.gainCard(player, gainChoice, {toHand: true});
-    callback();
   }
 }
 
@@ -376,12 +354,10 @@ class Moat {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.draw(2);
-    callback();
   }
 }
 
@@ -393,19 +369,15 @@ class Moneylender {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     if (player.hand.some(c => c.name === "Copper")) {
       const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
       if (choice === "Trash a Copper") {
         player.money += 3;
         game.trashPush(player, player.fromHand("Copper"));
       }
-      callback();
-    } else {
-      callback();
     }
   }
 }
@@ -418,15 +390,13 @@ class Remodel {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const trashChoices = player.hand
       .map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No Cards to trash");
-      callback();
       return;
     }
     player.sendMessage("Trash a card:");
@@ -437,13 +407,11 @@ class Remodel {
       .getAvailable(trash.cost + 2)
       .map(c => c.name);
     if (!gainChoices.length) {
-      callback();
       return;
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
     game.gainCard(player, gainChoice);
-    callback();
   }
 }
 
@@ -455,10 +423,9 @@ class Sentry {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.draw();
     player.actions += 1;
 
@@ -490,8 +457,6 @@ class Sentry {
         player.drawPile.push(card);
       }
     }
-
-    callback();
   }
 }
 
@@ -507,10 +472,9 @@ class Spy {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.actions += 1;
     player.draw();
 
@@ -531,8 +495,6 @@ class Spy {
 
     await game.sequentialAttack(player, attack);
     await attack(player);
-
-    callback();
   }
 }
 
@@ -544,10 +506,9 @@ class Thief {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     await game.sequentialAttack(player, /** @param {Player} other */ async other => {
       const drawn = [];
       let card = other.fromDraw();
@@ -589,8 +550,6 @@ class Thief {
       const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
       other.discardPile.push(...notTreasures);
     });
-
-    callback();
   }
 }
 
@@ -602,28 +561,23 @@ class ThroneRoom {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Action cards to play");
-      callback();
       return;
     }
     player.sendMessage("Pick an Action card to double:");
     const actionName = await player.choose(actions);
     game.allLog(player.name + " played " + actionName + " doubled!");
     const action = player.fromHand(actionName);
-    action.play(player, () => {
-      action.play(player, () => {
-        player.afterPlay(action);
-        callback();
-      }, game);
-    }, game);
+    await action.play(player, game);
+    await action.play(player, game);
+    player.afterPlay(action);
   }
 }
 
@@ -640,17 +594,14 @@ class Witch {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     player.draw(2);
 
     await game.parallelAttack(player, /** @param {Player} other */ async other => {
       game.tryGainCard(other, "Curse");
     });
-
-    callback();
   }
 }
 
@@ -667,21 +618,18 @@ class Workshop {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const gainChoices = game.store
       .getAvailable(4)
       .map(c => c.name);
     if (!gainChoices.length) {
-      callback();
       return;
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
     game.gainCard(player, gainChoice);
-    callback();
   }
 }
 
@@ -693,30 +641,24 @@ class KingsCourt {
 
   /**
    * @param {Player} player
-   * @param {function} callback
    * @param {Game} game
    */
-  async play(player, callback, game) {
+  async play(player, game) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Action cards to play");
-      callback();
       return;
     }
     player.sendMessage("Pick an Action card to triple:");
     const actionName = await player.choose(actions);
     game.allLog(player.name + " played " + actionName + " tripled!!");
     const action = player.fromHand(actionName);
-    action.play(player, () => {
-      action.play(player, () => {
-        action.play(player, () => {
-          player.afterPlay(action);
-          callback();
-        }, game);
-      }, game);
-    }, game);
+    await action.play(player, game);
+    await action.play(player, game);
+    await action.play(player, game);
+    player.afterPlay(action);
   }
 }
 
