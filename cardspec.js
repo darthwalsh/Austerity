@@ -1024,7 +1024,6 @@ describe("cards", () => {
 
   it("sorts correctly", () => {
     const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Cellar];
-    // @ts-ignore
     const sorted = arr.sort((a, b) => a.compareTo(b)).map(c => c.name);
     expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Village"]);
   });

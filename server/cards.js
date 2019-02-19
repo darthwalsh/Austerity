@@ -662,7 +662,7 @@ class KingsCourt {
   }
 }
 
-const cards = {
+const kingdom = {
   // Core game
   Copper: new Treasure(0, 1),
   Silver: new Treasure(3, 2),
@@ -723,14 +723,35 @@ const kindOrder = {
   action: 3,
 };
 
+/**
+ * @this {Card}
+ * @param {Card} other
+ * @return {number}
+ */
 function compareTo(other) {
   return kindOrder[this.kind[0]] - kindOrder[other.kind[0]]
     || this.cost - other.cost
     || this.name.localeCompare(other.name);
 }
 
-for (const name in cards) {
-  const card = cards[name];
+/**
+ * @typedef {object} Card
+ * @property {string} name
+ * @property {number} cost
+ * @property {string[]} kind
+ * @property {string} color
+ *
+ * @property {function(Player, Game): Promise<void>} play
+ * @property {function(string): boolean} ofKind
+ * @property {function(Card): number} compareTo
+ * @property {function(Player): number} [getPoints]
+ */
+
+/**
+ * @type {Object.<string, Card>}
+ */
+const cards = Object.keys(kingdom).reduce((o, name) => {
+  const card = kingdom[name];
 
   card.name = name;
   card.compareTo = compareTo;
@@ -752,6 +773,9 @@ for (const name in cards) {
   if (typeof card.cost === "undefined") {
     throw new Error("Card " + name + " cost not defined");
   }
-}
+
+  o[name] = card;
+  return o;
+}, {});
 
 module.exports = cards;

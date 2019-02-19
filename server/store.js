@@ -10,7 +10,6 @@ class Store {
 
   optional() {
     return Object.keys(cards).filter(n => !this.default.includes(cards[n]))
-      // @ts-ignore
       .sort((a, b) => cards[a].compareTo(cards[b]));
   }
 
@@ -21,7 +20,6 @@ class Store {
     const actionCount = 10;
 
     this.counts = this.default.reduce((o, c) => {
-      // @ts-ignore
       o[c.name] = c.ofKind("property") ? propertyCount : (c.ofKind("curse") ? curseCount : treasureCount);
       return o;
     }, {});
@@ -34,11 +32,7 @@ class Store {
     }, this.counts);
   }
 
-  /**
-   * @return {any[]} widen type to avoid ts type complaints
-   */
   getAllCards() {
-    // @ts-ignore
     return this.default.concat(this.included).sort((a, b) => a.compareTo(b));
   }
 
