@@ -230,16 +230,17 @@ class Player {
     this.discardPile = [];
   }
 
-  async attacked(attackThenCallBack, callback) {
+  /**
+   * @param {function(Player): Promise<void>} attack
+   */
+  async attacked(attack) {
     if (this.hand.filter(c => c.name=="Moat").length) {
       const choice = await this.choose(["Moat", "Get Attacked"]);
       if (choice === "Get Attacked") {
-        attackThenCallBack();
-      } else {
-        callback();
+        return attack(this);
       }
     } else {
-      attackThenCallBack();
+      return attack(this);
     }
   }
 

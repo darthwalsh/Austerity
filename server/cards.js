@@ -93,19 +93,19 @@ class Bureaucrat {
    */
   async play(player, callback, game) {
     game.tryGainCard(player, "Silver");
-    game.parallelAttack(player, async (p, attackDone) => {
-      const discardChoices = p.hand
+
+    await game.parallelAttack(player, /** @param {Player} other */ async other => {
+      const discardChoices = other.hand
         .filter(c => c.ofKind("property"))
         .map(c => c.name);
       if (discardChoices.length) {
-        p.sendMessage("Put a Victory card onto your deck:");
-        const choice = await p.choose(discardChoices);
-        p.drawPile.push(p.fromHand(choice));
-        attackDone();
-      } else {
-        attackDone();
+        other.sendMessage("Put a Victory card onto your deck:");
+        const choice = await other.choose(discardChoices);
+        other.drawPile.push(other.fromHand(choice));
       }
-    }, callback);
+    });
+
+    callback();
   }
 }
 
@@ -315,21 +315,21 @@ class Militia {
    */
   async play(player, callback, game) {
     player.money += 2;
-    const attack = (p, attackDone) => {
-      if (p.hand.length > 3) {
-        const discardChoices = p.hand.map(c => c.name);
-        p.sendMessage("Discard down to three cards:");
-        p.sendChoice(discardChoices, choice => { // TODO p.choose() in loop skipping attack recursion
-          p.discardPile.push(p.fromHand(choice));
-          attack(p, attackDone);
-        });
-      } else {
-        attackDone();
+
+    await game.parallelAttack(player, /** @param {Player} other */ async other => {
+      while (other.hand.length > 3) {
+        const discardChoices = other.hand.map(c => c.name);
+        other.sendMessage("Discard down to three cards:");
+        const choice = await other.choose(discardChoices);
+        other.discardPile.push(other.fromHand(choice));
       }
-    };
-    game.parallelAttack(player, attack, callback);
+    });
+
+    callback(); // TODO remove all play() callbacks, await on play()
   }
 }
+
+// TODO remove all sendChoice()
 
 class Mine {
   constructor() {
@@ -515,26 +515,26 @@ class Spy {
   async play(player, callback, game) {
     player.actions += 1;
     player.draw();
-    const attack = (p, attackDone) => {
-      const card = p.fromDraw();
+
+    const attack = /** @param {Player} other */ async other => {
+      const card = other.fromDraw();
       if (!card) {
-        attackDone();
         return;
       }
-      const name = p.name == player.name ? "Your" : (p.name + "'s");
+      const name = other.name == player.name ? "Your" : (other.name + "'s");
       player.sendMessage("Put back on deck or discard " + name + " " + card.name);
-      player.sendChoice(["Put back", "Discard"], choice => {
-        if (choice == "Put back") {
-          p.drawPile.push(card);
-        } else {
-          p.discardPile.push(card);
-        }
-        attackDone();
-      });
+      const choice = await player.choose(["Put back", "Discard"]);
+      if (choice == "Put back") {
+        other.drawPile.push(card);
+      } else {
+        other.discardPile.push(card);
+      }
     };
-    game.sequentialAttack(player, attack, () => {
-      attack(player, callback);
-    });
+
+    await game.sequentialAttack(player, attack);
+    await attack(player);
+
+    callback();
   }
 }
 
@@ -550,13 +550,13 @@ class Thief {
    * @param {Game} game
    */
   async play(player, callback, game) {
-    game.sequentialAttack(player, (p, attackDone) => {
+    await game.sequentialAttack(player, /** @param {Player} other */ async other => {
       const drawn = [];
-      let card = p.fromDraw();
+      let card = other.fromDraw();
       if (card) {
         drawn.push(card);
       }
-      card = p.fromDraw();
+      card = other.fromDraw();
       if (card) {
         drawn.push(card);
       }
@@ -564,34 +564,35 @@ class Thief {
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
       if (!treasures.length) {
-        p.discardPile.push(...drawn);
-        attackDone();
+        other.discardPile.push(...drawn);
         return;
       }
       const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
       player.sendMessage("Trash or steal a Treasure:");
-      player.sendChoice(choices, choice => {
-        const steal = choice.substring(0, 7) == "Steal: ";
-        choice = choice.substring(7);
-        let chosen;
-        if (choice == treasures[0]) {
-          chosen = treasures.splice(0, 1)[0];
-        } else {
-          chosen = treasures.splice(1, 1)[0];
-        }
-        chosen = cards[chosen];
-        if (steal) {
-          player.discardPile.push(chosen);
-        } else {
-          game.trashPush(player, chosen);
-        }
-        treasures = treasures.map(n => cards[n]);
-        p.discardPile.push(...treasures);
-        const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
-        p.discardPile.push(...notTreasures);
-        attackDone();
-      });
-    }, callback);
+      let choice = await player.choose(choices);
+
+      const isSteal = choice.substring(0, 7) == "Steal: ";
+      choice = choice.substring(7);
+      let chosen;
+      if (choice == treasures[0]) {
+        chosen = treasures.splice(0, 1)[0];
+      } else {
+        chosen = treasures.splice(1, 1)[0];
+      }
+      chosen = cards[chosen];
+
+      if (isSteal) {
+        player.discardPile.push(chosen);
+      } else {
+        game.trashPush(player, chosen);
+      }
+      treasures = treasures.map(n => cards[n]);
+      other.discardPile.push(...treasures);
+      const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
+      other.discardPile.push(...notTreasures);
+    });
+
+    callback();
   }
 }
 
@@ -646,10 +647,12 @@ class Witch {
    */
   async play(player, callback, game) {
     player.draw(2);
-    game.parallelAttack(player, (p, attackDone) => {
-      game.tryGainCard(p, "Curse");
-      attackDone();
-    }, callback);
+
+    await game.parallelAttack(player, /** @param {Player} other */ async other => {
+      game.tryGainCard(other, "Curse");
+    });
+
+    callback();
   }
 }
 

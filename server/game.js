@@ -106,52 +106,26 @@ class Game {
     return this.allPlayers().filter(p => p.name !== player.name);
   }
 
-  parallelAttack(player, attackThenCallBack, callback) {
-    const others = this.otherPlayers(player);
-    let attacksLeft = others.length;
-    if (!attacksLeft) {
-      callback();
-      return;
-    }
-    const attackDone = () => {
-      if (! --attacksLeft) {
-        callback();
-      }
-    };
-    others.forEach(p => {
-      p.attacked(() => {
-        attackThenCallBack(p, attackDone);
-      }, attackDone);
-    });
+  /**
+   * @param {Player} player
+   * @param {function(Player): Promise<void>} attack
+   * @return {Promise<void[]>}
+   */
+  parallelAttack(player, attack) {
+    return Promise.all(this.otherPlayers(player).map(p => p.attacked(attack)));
   }
 
-  sequentialAttack(player, attackThenCallBack, callback) {
+  /**
+   * @param {Player} player
+   * @param {function(Player): Promise<void>} attack
+   */
+  async sequentialAttack(player, attack) {
     const ps = this.allPlayers();
+    ps.push(...ps.splice(0, ps.indexOf(player))); // Rotate around so player is ps[0]
 
-    if (ps.length == 1) {
-      callback();
-      return;
+    for (let i = 1; i < ps.length; ++i) {
+      await ps[i].attacked(attack);
     }
-
-    const pi = ps.indexOf(player);
-    let i = (pi + 1) % ps.length;
-
-    const attackDone = () => {
-      i = (i + 1) % ps.length;
-
-      if (i == pi) {
-        callback();
-        return;
-      }
-
-      ps[i].attacked(() => {
-        attackThenCallBack(ps[i], attackDone);
-      }, attackDone);
-    };
-
-    ps[i].attacked(() => {
-      attackThenCallBack(ps[i], attackDone);
-    }, attackDone);
   }
 
   allLog(text) {
