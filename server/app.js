@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const process = require("process");
 const ws = require("ws");
+
+const Connection = require("./connection").Connection;
 const Lobby = require("./lobby").Lobby;
 
 const port = process.env.PORT || 8080;
@@ -15,5 +17,5 @@ const lobby = new Lobby();
 
 const wss = new ws.Server({server});
 wss.on("connection", ws => {
-  lobby.addConnection(ws);
+  lobby.sendLobby(new Connection(ws));
 });

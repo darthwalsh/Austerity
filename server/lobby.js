@@ -1,15 +1,13 @@
-const Connection = require("./connection").Connection;
 const Game = require("./game").Game;
 
+/**
+ * @typedef { import("./connection").Connection } Connection
+ */
 
 class Lobby {
   constructor() {
     /** @type {Object<string, Game>} */
     this.games = {};
-  }
-
-  addConnection(ws) {
-    this.sendLobby(new Connection(ws));
   }
 
   /**

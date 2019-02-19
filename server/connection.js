@@ -1,4 +1,11 @@
+/**
+ * @typedef { import("ws") } WebSocket
+ */
+
 class Connection {
+  /**
+   * @param {WebSocket} ws
+   */
   constructor(ws) {
     this.ws = ws;
     this.name = "NoName";
@@ -31,6 +38,9 @@ class Connection {
   }
 
   // TODO(E2E) should test disconnecting both during your turn, and during somebody else's turn
+  /**
+   * @param {WebSocket} ws
+   */
   newConnection(ws) {
     ws.onmessage = null;
     ws.onclose = null;
