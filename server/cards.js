@@ -329,8 +329,6 @@ class Militia {
   }
 }
 
-// TODO remove all sendChoice()
-
 class Mine {
   constructor() {
     this.kind = "action";

@@ -907,13 +907,10 @@ describe("cards", () => {
             fail(Error("Not implemented: " + o));
           }
         },
-        choose: choices => new Promise(resolve => {
-          p.sendChoice(choices, resolve);
-        }),
-        sendChoice: (choices, handleChoice) => {
+        choose: choices => {
           const expected = test.interactions[interactionIndex++];
           expect(choices).toEqual(expected);
-          handleChoice(test.interactions[interactionIndex++]);
+          return Promise.resolve(test.interactions[interactionIndex++]);
         }}, game);
 
       game.players[0] = p;
@@ -941,13 +938,10 @@ describe("cards", () => {
               fail(Error("Not implemented: " + o));
             }
           },
-          choose: choices => new Promise(resolve => {
-            oP.sendChoice(choices, resolve);
-          }),
-          sendChoice: (choices, handleChoice) => {
+          choose: choices => {
             const expected = testOther.interactions[oP["InteractionIndex"]++];
             expect(choices).toEqual(expected);
-            handleChoice(testOther.interactions[oP["InteractionIndex"]++]);
+            return Promise.resolve(testOther.interactions[oP["InteractionIndex"]++]);
           }}, game);
         oP["TestIndex"] = otherCount - 1;
         oP["InteractionIndex"] = 0;

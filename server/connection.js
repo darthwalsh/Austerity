@@ -65,41 +65,34 @@ class Connection {
       throw new Error("Player is disconnected");
     }
     if (data.choices) {
-      throw new Error("Use sendChoices instead!");
+      throw new Error("Use choose() instead!");
     }
     this.ws.send(JSON.stringify(data));
   }
 
   /**
    * @param {string[]} choices
-   * @param {function} handleChoice
-   */
-  sendChoice(choices, handleChoice) {
-    if (!this.ws) {
-      throw new Error("Player is disconnected");
-    }
-    if (!choices.length) {
-      throw new Error("EMPTY CHOICE!!!");
-    }
-    if (this.onChoice) {
-      throw new Error("onChoice wasn't empty!!!");
-    }
-    this.onChoice = choice => {
-      this.onChoice = null;
-      handleChoice(choice);
-    };
-    this.sentChoices = JSON.stringify({choices: choices});
-    this.ws.send(this.sentChoices);
-  }
-
-  // TODO(NODE) switch to using async Promise instead of choice callback everywhere
-  /**
-   * @param {string[]} choices
    * @return {Promise<string>}
    */
   choose(choices) {
     return new Promise(resolve => {
-      this.sendChoice(choices, resolve);
+      if (!this.ws) {
+        throw new Error("Player is disconnected");
+      }
+      if (!choices.length) {
+        throw new Error("EMPTY CHOICE!!!");
+      }
+      if (this.onChoice) {
+        throw new Error("onChoice wasn't empty!!!");
+      }
+
+      this.onChoice = choice => {
+        this.onChoice = null;
+        resolve(choice);
+      };
+
+      this.sentChoices = JSON.stringify({choices: choices});
+      this.ws.send(this.sentChoices);
     });
   }
 }

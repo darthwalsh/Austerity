@@ -269,10 +269,6 @@ class Player {
     this.sendMessage(prefix + ": " + this.hand.map(c => c.name).join(", "));
   }
 
-  sendChoice(choices, handleChoice) {
-    this.connection.sendChoice(choices, handleChoice);
-  }
-
   choose(choices) {
     return this.connection.choose(choices);
   }
