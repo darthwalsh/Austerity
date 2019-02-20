@@ -3,6 +3,13 @@
  * @typedef { import("./player").Player } Player
  */
 
+if (!Array.prototype.flatMap) {
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.flatMap = function(selector) {
+    return [].concat(...this.map(selector));
+  };
+}
+
 class Treasure {
   constructor(cost, money) {
     this.kind = "treasure";
