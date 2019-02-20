@@ -28,6 +28,8 @@ function log(text) {
 }
 
 function addManage(options, ws) {
+  const CARD_COUNT = 10;
+
   const manageDiv = $("manage");
 
   for (let i = 0; i < options.length; ++i) {
@@ -49,7 +51,7 @@ function addManage(options, ws) {
   randomButton.innerText = "Randomize";
   randomButton.onclick = () => {
     const randomOptions = options.slice();
-    while (randomOptions.length > 10) {
+    while (randomOptions.length > CARD_COUNT) {
       randomOptions.splice(Math.floor(Math.random() * randomOptions.length), 1);
     }
     options.forEach(n => {
@@ -58,9 +60,33 @@ function addManage(options, ws) {
   };
   manageDiv.appendChild(randomButton);
 
+  const clearButton = document.createElement("button");
+  clearButton.innerText = "Clear";
+  clearButton.onclick = () => {
+    options.forEach(n => $input("optional" + n).checked = false);
+  };
+  manageDiv.appendChild(clearButton);
+
+  const countText = document.createElement("span");
+  countText.innerText = "0 Selected";
+  manageDiv.onclick = () => {
+    const count = options.filter(n => $input("optional" + n).checked).length;
+    countText.innerText = `${count} Selected`;
+
+    if (count === CARD_COUNT) {
+      startButton.style.color = "black";
+      startButton.style.fontWeight = "bold";
+    } else {
+      startButton.style.color = "darkgrey";
+      startButton.style.fontWeight = "";
+      // Button still works if you want to try on nonstandard game, but looks disabled
+    }
+  };
+  manageDiv.appendChild(countText);
+
   const startButton = document.createElement("button");
   startButton.innerHTML = "Start";
-  startButton.onclick = () => {
+  startButton.onclick = e => {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
@@ -69,6 +95,8 @@ function addManage(options, ws) {
     }
 
     ws.send(JSON.stringify({gameStart: {included, debugMode}}));
+
+    e.stopPropagation();
   };
 
   manageDiv.appendChild(startButton);
