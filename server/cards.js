@@ -1,3 +1,8 @@
+const csvParse = /** @type {function(string|Buffer, object): Array} */
+  (require("csv-parse/lib/sync"));
+const fs = require("fs");
+const path = require("path");
+
 /**
  * @typedef { import("./game").Game } Game
  * @typedef { import("./player").Player } Player
@@ -11,9 +16,8 @@ if (!Array.prototype.flatMap) {
 }
 
 class Treasure {
-  constructor(cost, money) {
+  constructor(money) {
     this.kind = "treasure";
-    this.cost = cost;
     this.money = money;
   }
 
@@ -27,9 +31,8 @@ class Treasure {
 }
 
 class Property {
-  constructor(cost, points) {
+  constructor(points) {
     this.kind = "property";
-    this.cost = cost;
     this.points = points;
   }
 
@@ -41,7 +44,6 @@ class Property {
 class Curse {
   constructor() {
     this.kind = "curse";
-    this.cost = 0;
   }
 
   getPoints(player) {
@@ -53,9 +55,8 @@ class Curse {
  * For simple cards, with synchronous play methods
  */
 class Action {
-  constructor(cost, toPlay) {
+  constructor(toPlay) {
     this.kind = "action";
-    this.cost = cost;
     this.toPlay = toPlay;
   }
 
@@ -68,7 +69,7 @@ class Action {
   }
 }
 
-const Adventurer = new Action(6, (player, game) => {
+const Adventurer = new Action((player, game) => {
   let treasures = 0;
   const drawn = [];
   while (treasures < 2) {
@@ -91,7 +92,6 @@ const Adventurer = new Action(6, (player, game) => {
 class Bureaucrat {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 4;
   }
 
   /**
@@ -117,7 +117,6 @@ class Bureaucrat {
 class Cellar {
   constructor() {
     this.kind = "action";
-    this.cost = 2;
   }
 
   /**
@@ -153,7 +152,6 @@ class Cellar {
 class Chancellor {
   constructor() {
     this.kind = "action";
-    this.cost = 3;
   }
 
   /**
@@ -173,7 +171,6 @@ class Chancellor {
 class Chapel {
   constructor() {
     this.kind = "action";
-    this.cost = 2;
   }
 
   /**
@@ -198,7 +195,7 @@ class Chapel {
   }
 }
 
-const CouncilRoom = new Action(5, (player, game) => {
+const CouncilRoom = new Action((player, game) => {
   player.buys += 1;
   player.draw(4);
   game.otherPlayers(player).forEach(p => {
@@ -209,7 +206,6 @@ const CouncilRoom = new Action(5, (player, game) => {
 class Feast {
   constructor() {
     this.kind = "action";
-    this.cost = 4;
   }
 
   /**
@@ -233,7 +229,7 @@ class Feast {
   }
 }
 
-const Festival = new Action(5, (player, game) => {
+const Festival = new Action((player, game) => {
   player.actions += 2;
   player.buys += 1;
   player.money += 2;
@@ -242,7 +238,6 @@ const Festival = new Action(5, (player, game) => {
 class Gardens {
   constructor() {
     this.kind = "property";
-    this.cost = 4;
   }
 
   getPoints(player) {
@@ -250,7 +245,7 @@ class Gardens {
   }
 }
 
-const Laboratory = new Action(5, (player, game) => {
+const Laboratory = new Action((player, game) => {
   player.draw(2);
   player.actions += 1;
 });
@@ -258,7 +253,6 @@ const Laboratory = new Action(5, (player, game) => {
 class Library {
   constructor() {
     this.kind = "action";
-    this.cost = 5;
   }
 
   /**
@@ -287,7 +281,7 @@ class Library {
   }
 }
 
-const Market = new Action(5, (player, game) => {
+const Market = new Action((player, game) => {
   player.draw();
   player.actions += 1;
   player.buys += 1;
@@ -297,7 +291,6 @@ const Market = new Action(5, (player, game) => {
 class Militia {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 4;
   }
 
   /**
@@ -321,7 +314,6 @@ class Militia {
 class Mine {
   constructor() {
     this.kind = "action";
-    this.cost = 5;
   }
 
   /**
@@ -356,7 +348,6 @@ class Mine {
 class Moat {
   constructor() {
     this.kind = ["action", "reaction"];
-    this.cost = 2;
   }
 
   /**
@@ -371,7 +362,6 @@ class Moat {
 class Moneylender {
   constructor() {
     this.kind = "action";
-    this.cost = 4;
   }
 
   /**
@@ -392,7 +382,6 @@ class Moneylender {
 class Remodel {
   constructor() {
     this.kind = "action";
-    this.cost = 4;
   }
 
   /**
@@ -425,7 +414,6 @@ class Remodel {
 class Sentry {
   constructor() {
     this.kind = "action";
-    this.cost = 5;
   }
 
   /**
@@ -467,14 +455,13 @@ class Sentry {
   }
 }
 
-const Smithy = new Action(4, (player, game) => {
+const Smithy = new Action((player, game) => {
   player.draw(3);
 });
 
 class Spy {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 4;
   }
 
   /**
@@ -508,7 +495,6 @@ class Spy {
 class Thief {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 4;
   }
 
   /**
@@ -563,7 +549,6 @@ class Thief {
 class ThroneRoom {
   constructor() {
     this.kind = "action";
-    this.cost = 4;
   }
 
   /**
@@ -588,7 +573,7 @@ class ThroneRoom {
   }
 }
 
-const Village = new Action(3, (player, game) => {
+const Village = new Action((player, game) => {
   player.draw();
   player.actions += 2;
 });
@@ -596,7 +581,6 @@ const Village = new Action(3, (player, game) => {
 class Witch {
   constructor() {
     this.kind = ["action", "attack"];
-    this.cost = 5;
   }
 
   /**
@@ -612,7 +596,7 @@ class Witch {
   }
 }
 
-const Woodcutter = new Action(3, (player, game) => {
+const Woodcutter = new Action((player, game) => {
   player.buys += 1;
   player.money += 2;
 });
@@ -620,7 +604,6 @@ const Woodcutter = new Action(3, (player, game) => {
 class Workshop {
   constructor() {
     this.kind = "action";
-    this.cost = 3;
   }
 
   /**
@@ -643,7 +626,6 @@ class Workshop {
 class KingsCourt {
   constructor() {
     this.kind = "action";
-    this.cost = 7;
   }
 
   /**
@@ -671,13 +653,13 @@ class KingsCourt {
 
 const kingdom = {
   // Core game
-  Copper: new Treasure(0, 1),
-  Silver: new Treasure(3, 2),
-  Gold: new Treasure(6, 3),
+  Copper: new Treasure(1),
+  Silver: new Treasure(2),
+  Gold: new Treasure(3),
 
-  Estate: new Property(2, 1),
-  Duchy: new Property(5, 3),
-  Province: new Property(8, 6),
+  Estate: new Property(1),
+  Duchy: new Property(3),
+  Province: new Property(6),
   Curse: new Curse(),
 
   // Base deck
@@ -711,8 +693,8 @@ const kingdom = {
   Sentry: new Sentry,
 
   // Prosperity
-  Platinum: new Treasure(9, 5),
-  Colony: new Property(11, 10),
+  Platinum: new Treasure(5),
+  Colony: new Property(10),
   KingsCourt: new KingsCourt(),
 };
 
@@ -729,6 +711,33 @@ const kindOrder = {
   curse: 2,
   action: 3,
 };
+
+function getTable() {
+  const csv = fs.readFileSync(path.join(__dirname, "AusterityWiki.csv"));
+  const table = csvParse(csv, {columns: h => h.map(c => c.toLowerCase())});
+  return table.reduce((o, row) => {
+    const name = row.name.replace(/[ ']/g, "");
+    if (o[name]) {
+      throw new Error(`${row.name} overlaps with ${o[row.name].name}`);
+    }
+    o[name] = row;
+    return o;
+  }, {});
+}
+
+const table = getTable();
+
+/**
+ * @param {{cost: string, name: string}} tableRow
+ * @return {number}
+ */
+function getCost(tableRow) {
+  const match = /^\$(\d+)$/.exec(tableRow.cost);
+  if (match) {
+    return +match[1];
+  }
+  throw new Error(`${tableRow.name}: Unknown cost string '${tableRow.cost}'`);
+}
 
 /**
  * @this {Card}
@@ -762,6 +771,12 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
 
   card.name = name;
   card.compareTo = compareTo;
+
+  const tableRow = table[name];
+  if (!tableRow) {
+    throw new Error(`Can't find ${name}`);
+  }
+  card.cost = getCost(tableRow);
 
   if (card.kind) {
     if (typeof card.kind === "string") {
