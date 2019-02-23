@@ -1,12 +1,12 @@
-const csvParse = /** @type {function(string|Buffer, object): Array} */
-  (require("csv-parse/lib/sync"));
-const fs = require("fs");
-const path = require("path");
-
 /**
  * @typedef { import("./game").Game } Game
  * @typedef { import("./player").Player } Player
  */
+
+const csvParse = /** @type {function(string|Buffer, object): Array} */
+  (require("csv-parse/lib/sync"));
+const fs = require("fs");
+const path = require("path");
 
 if (!Array.prototype.flatMap) {
   // eslint-disable-next-line no-extend-native
