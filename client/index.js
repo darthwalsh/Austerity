@@ -180,7 +180,7 @@ window.onload = () => {
         // Audio need to reload sound before each play
         // http://stackoverflow.com/a/8959342/771768
         turnAlert.load();
-        turnAlert.play();
+        turnAlert.play().catch(_ => {/* whatever*/});
       }
       break;
     case "isLeader":
