@@ -512,7 +512,7 @@ class Thief {
       if (card) {
         drawn.push(card);
       }
-      let treasures = drawn
+      const treasures = drawn
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
       if (!treasures.length) {
@@ -538,8 +538,8 @@ class Thief {
       } else {
         game.trashPush(player, chosen);
       }
-      treasures = treasures.map(n => cards[n]);
-      other.discardPile.push(...treasures);
+      const treasureCards = treasures.map(n => cards[n]);
+      other.discardPile.push(...treasureCards);
       const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
       other.discardPile.push(...notTreasures);
     });
@@ -761,6 +761,7 @@ function compareTo(other) {
  * @property {function(string): boolean} ofKind
  * @property {function(Card): number} compareTo
  * @property {function(Player): number} [getPoints]
+ * @property {function(Player, Game): void} [afterPlay]
  */
 
 /**

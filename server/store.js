@@ -1,5 +1,9 @@
 const cards = require("./cards");
 
+/**
+ * @typedef { import("./cards").Card } Card
+ */
+
 class Store {
   constructor() {
     this.default = [
@@ -13,12 +17,17 @@ class Store {
       .sort((a, b) => cards[a].compareTo(cards[b]));
   }
 
+  /**
+   * @param {Card[]} included
+   * @param {number} playerCount
+   */
   init(included, playerCount) {
     const propertyCount = playerCount <= 2 ? 8 : 12;
     const curseCount = 10 * Math.max(playerCount - 1, 1);
     const treasureCount = 30;
     const actionCount = 10;
 
+    /** @type {Object<string, number>} */
     this.counts = this.default.reduce((o, c) => {
       o[c.name] = c.ofKind("property") ? propertyCount : (c.ofKind("curse") ? curseCount : treasureCount);
       return o;

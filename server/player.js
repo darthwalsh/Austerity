@@ -3,6 +3,7 @@ const cards = require("./cards");
 /**
  * @typedef { import("./connection").Connection } Connection
  * @typedef { import("./game").Game } Game
+ * @typedef { import("./cards").Card } Card
  */
 
 class Player {
@@ -14,15 +15,15 @@ class Player {
     this.name = connection.name;
     this.connection = connection;
     this.game = game;
-    this.drawPile = [];
-    this.discardPile = [];
+    this.drawPile = /** @type {Card[]} */ ([]);
+    this.discardPile = /** @type {Card[]} */ ([]);
     for (let i = 0; i < 7; ++i) {
       this.discardPile.push(cards.Copper);
     }
     for (let i = 0; i < 3; ++i) {
       this.discardPile.push(cards.Estate);
     }
-    this.hand = [];
+    this.hand = /** @type {Card[]} */ ([]);
     this.actions = null;
     this.money = null;
     this.buys = null;
@@ -35,7 +36,7 @@ class Player {
     this.actions = 1;
     this.money = 0;
     this.buys = 1;
-    this.played = [];
+    this.played = /** @type {Card[]} */ ([]);
 
     this.game.otherPlayers(this).forEach(p => p.sendMessage(`${this.name}'s turn`));
     this.sendMessage("");
@@ -176,6 +177,9 @@ class Player {
     callback();
   }
 
+  /**
+   * @param {Card} card
+   */
   afterPlay(card) {
     if (card.afterPlay) {
       card.afterPlay(this, this.game);
@@ -268,6 +272,10 @@ class Player {
     this.sendMessage(prefix + ": " + this.hand.map(c => c.name).join(", "));
   }
 
+  /**
+   * @param {string[]} choices
+   * @return {Promise<string>}
+   */
   choose(choices) {
     return this.connection.choose(choices);
   }

@@ -4,6 +4,7 @@ const Player = require("./player").Player;
 
 /**
  * @typedef { import("./connection").Connection } Connection
+ * @typedef { import("./cards").Card } Card
  */
 
 class Game {
@@ -32,6 +33,9 @@ class Game {
     ps.forEach(p => p.send({colors}));
   }
 
+  /**
+   * @param {boolean} debugMode
+   */
   start(debugMode) {
     this.started = true;
     const ps = this.allPlayers();
@@ -102,6 +106,10 @@ class Game {
     return Object.keys(this.players).map(n => this.players[n]);
   }
 
+  /**
+   * @param {Player} player
+   * @return {Player[]}
+   */
   otherPlayers(player) {
     return this.allPlayers().filter(p => p.name !== player.name);
   }
@@ -165,6 +173,10 @@ class Game {
     }
   }
 
+  /**
+   * @param {Player} player
+   * @param {Card} card
+   */
   trashPush(player, card) {
     this.allLog(`${player.name} trashed ${card.name}`);
     this.trash.push(card);
