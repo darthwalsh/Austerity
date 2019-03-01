@@ -204,7 +204,7 @@ window.onload = () => {
       }
       break;
     default:
-      throw Error("Not implemented: " + type);
+      throw new Error("Not implemented: " + type);
     }
   });
   chat.addEventListener("keydown", e => {
