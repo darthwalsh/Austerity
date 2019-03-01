@@ -1034,7 +1034,7 @@ describe("cards", () => {
         expect(called).toBeFalsy("called twice");
         called = true;
         done();
-      } else if (card.ofKind("property") || card.ofKind("curse")) {
+      } else if (card.ofKind("victory") || card.ofKind("curse")) {
         expect(card.getPoints(p)).toEqual(test.points, "points");
         done();
       } else {

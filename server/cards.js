@@ -17,7 +17,6 @@ if (!Array.prototype.flatMap) {
 
 class Treasure {
   constructor(money) {
-    this.kind = "treasure";
     this.money = money;
   }
 
@@ -30,9 +29,8 @@ class Treasure {
   }
 }
 
-class Property {
+class Victory {
   constructor(points) {
-    this.kind = "property";
     this.points = points;
   }
 
@@ -42,10 +40,6 @@ class Property {
 }
 
 class Curse {
-  constructor() {
-    this.kind = "curse";
-  }
-
   getPoints(player) {
     return -1;
   }
@@ -56,7 +50,6 @@ class Curse {
  */
 class Action {
   constructor(toPlay) {
-    this.kind = "action";
     this.toPlay = toPlay;
   }
 
@@ -90,10 +83,6 @@ const Adventurer = new Action((player, game) => {
 });
 
 class Bureaucrat {
-  constructor() {
-    this.kind = ["action", "attack"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -103,7 +92,7 @@ class Bureaucrat {
 
     await game.parallelAttack(player, /** @param {Player} other */ async other => {
       const discardChoices = other.hand
-        .filter(c => c.ofKind("property"))
+        .filter(c => c.ofKind("victory"))
         .map(c => c.name);
       if (discardChoices.length) {
         other.sendMessage("Put a Victory card onto your deck:");
@@ -115,10 +104,6 @@ class Bureaucrat {
 }
 
 class Cellar {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -150,10 +135,6 @@ class Cellar {
 }
 
 class Chancellor {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -169,10 +150,6 @@ class Chancellor {
 }
 
 class Chapel {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -204,10 +181,6 @@ const CouncilRoom = new Action((player, game) => {
 });
 
 class Feast {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -236,20 +209,12 @@ const Festival = new Action((player, game) => {
 });
 
 class Gardens {
-  constructor() {
-    this.kind = "property";
-  }
-
   getPoints(player) {
     return Math.floor(player.allCards().length / 10);
   }
 }
 
 class Harbinger {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -276,10 +241,6 @@ const Laboratory = new Action((player, game) => {
 });
 
 class Library {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -314,10 +275,6 @@ const Market = new Action((player, game) => {
 });
 
 class Militia {
-  constructor() {
-    this.kind = ["action", "attack"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -337,10 +294,6 @@ class Militia {
 }
 
 class Mine {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -371,10 +324,6 @@ class Mine {
 }
 
 class Moat {
-  constructor() {
-    this.kind = ["action", "reaction"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -385,10 +334,6 @@ class Moat {
 }
 
 class Moneylender {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -405,10 +350,6 @@ class Moneylender {
 }
 
 class Remodel {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -437,10 +378,6 @@ class Remodel {
 }
 
 class Sentry {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -485,10 +422,6 @@ const Smithy = new Action((player, game) => {
 });
 
 class Spy {
-  constructor() {
-    this.kind = ["action", "attack"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -518,10 +451,6 @@ class Spy {
 }
 
 class Thief {
-  constructor() {
-    this.kind = ["action", "attack"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -572,10 +501,6 @@ class Thief {
 }
 
 class ThroneRoom {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -604,10 +529,6 @@ const Village = new Action((player, game) => {
 });
 
 class Witch {
-  constructor() {
-    this.kind = ["action", "attack"];
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -627,10 +548,6 @@ const Woodcutter = new Action((player, game) => {
 });
 
 class Workshop {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -649,10 +566,6 @@ class Workshop {
 }
 
 class KingsCourt {
-  constructor() {
-    this.kind = "action";
-  }
-
   /**
    * @param {Player} player
    * @param {Game} game
@@ -682,9 +595,9 @@ const kingdom = {
   Silver: new Treasure(2),
   Gold: new Treasure(3),
 
-  Estate: new Property(1),
-  Duchy: new Property(3),
-  Province: new Property(6),
+  Estate: new Victory(1),
+  Duchy: new Victory(3),
+  Province: new Victory(6),
   Curse: new Curse(),
 
   // Base deck
@@ -720,20 +633,22 @@ const kingdom = {
 
   // Prosperity
   Platinum: new Treasure(5),
-  Colony: new Property(10),
+  Colony: new Victory(10),
   KingsCourt: new KingsCourt(),
 };
 
+const knownKinds = new Set(["action", "attack", "curse", "reaction", "treasure", "victory"]);
+
 const colorMap = {
   treasure: "darkorange",
-  property: "green",
+  victory: "green",
   action: "blue",
   curse: "purple",
 };
 
 const kindOrder = {
   treasure: 0,
-  property: 1,
+  victory: 1,
   curse: 2,
   action: 3,
 };
@@ -763,6 +678,18 @@ function getCost(tableRow) {
     return +match[1];
   }
   throw new Error(`${tableRow.name}: Unknown cost string '${tableRow.cost}'`);
+}
+
+/**
+ * @param {{types: string, name: string}} tableRow
+ * @return {string[]}
+ */
+function getKinds(tableRow) {
+  const kinds = tableRow.types.split(" - ").map(k => k.toLowerCase()).sort();
+  if (!kinds.every(k => knownKinds.has(k))) {
+    throw new Error(`Unknown kind in ${tableRow.types}`);
+  }
+  return kinds;
 }
 
 /**
@@ -803,25 +730,12 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   if (!tableRow) {
     throw new Error(`Can't find ${name}`);
   }
+
   card.cost = getCost(tableRow);
 
-  if (card.kind) {
-    if (typeof card.kind === "string") {
-      card.kind = [card.kind];
-    }
-    if (Array.isArray(card.kind)) {
-      card.ofKind = other => card.kind.includes(other);
-    } else {
-      throw new Error("Card " + name + " kind type not defined");
-    }
-    card.color = colorMap[card.kind[0]];
-  } else {
-    throw new Error("Card " + name + " kind not defined");
-  }
-
-  if (typeof card.cost === "undefined") {
-    throw new Error("Card " + name + " cost not defined");
-  }
+  card.kind = getKinds(tableRow);
+  card.ofKind = k => card.kind.includes(k);
+  card.color = colorMap[card.kind[0]];
 
   o[name] = card;
   return o;

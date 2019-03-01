@@ -57,7 +57,7 @@ class Game {
         ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
           .map(p => `${p.name}: ${p.getPoints()}     ` +
             p.allCards()
-              .filter(c => c.ofKind("property") || c.ofKind("curse"))
+              .filter(c => c.ofKind("victory") || c.ofKind("curse"))
               .map(c => c.name)
               .sort()
               .toString())

@@ -22,21 +22,21 @@ class Store {
    * @param {number} playerCount
    */
   init(included, playerCount) {
-    const propertyCount = playerCount <= 2 ? 8 : 12;
+    const victoryCount = playerCount <= 2 ? 8 : 12;
     const curseCount = 10 * Math.max(playerCount - 1, 1);
     const treasureCount = 30;
     const actionCount = 10;
 
     /** @type {Object<string, number>} */
     this.counts = this.default.reduce((o, c) => {
-      o[c.name] = c.ofKind("property") ? propertyCount : (c.ofKind("curse") ? curseCount : treasureCount);
+      o[c.name] = c.ofKind("victory") ? victoryCount : (c.ofKind("curse") ? curseCount : treasureCount);
       return o;
     }, {});
 
     this.included = included;
 
     this.counts = this.included.reduce((o, c) => {
-      o[c.name] = c.ofKind("property") ? propertyCount : actionCount;
+      o[c.name] = c.ofKind("victory") ? victoryCount : actionCount;
       return o;
     }, this.counts);
   }
