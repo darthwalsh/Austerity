@@ -305,6 +305,40 @@ const tests = {
     ],
   },
 
+  Harbinger: {
+    dActions: 1,
+    hand: [],
+    draw: ["Copper", "Silver"],
+    discard: ["Village", "Gold", "Gold", "Smithy"],
+
+    interactions: [
+      "Choose a card from your discard to put on your deck:",
+      ["Village", "Gold", "Smithy", "None of these"],
+      "Smithy",
+    ],
+
+    handAfter: ["Silver"],
+    drawAfter: ["Copper", "Smithy"],
+    discardAfter: ["Village", "Gold", "Gold"],
+  },
+
+  Harbinger_None: {
+    dActions: 1,
+    hand: [],
+    draw: ["Copper", "Silver"],
+    discard: ["Village", "Gold", "Smithy"],
+
+    interactions: [
+      "Choose a card from your discard to put on your deck:",
+      ["Village", "Gold", "Smithy", "None of these"],
+      "None of these",
+    ],
+
+    handAfter: ["Silver"],
+    drawAfter: ["Copper"],
+    discardAfter: ["Village", "Gold", "Smithy"],
+  },
+
   Laboratory: {
     dActions: 1,
     draw: ["Copper", "Silver"],

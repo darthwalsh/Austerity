@@ -245,6 +245,31 @@ class Gardens {
   }
 }
 
+class Harbinger {
+  constructor() {
+    this.kind = "action";
+  }
+
+  /**
+   * @param {Player} player
+   * @param {Game} game
+   */
+  async play(player, game) {
+    player.draw();
+    player.actions += 1;
+
+    player.sendMessage("Choose a card from your discard to put on your deck:");
+    const choices = player.discardPile.map(c => c.name);
+    choices.push("None of these");
+    const choice = await player.choose([...new Set(choices)]);
+    if (choice === "None of these") {
+      return;
+    }
+    const picked = player.discardPile.splice(choices.indexOf(choice), 1)[0];
+    player.drawPile.push(picked);
+  }
+}
+
 const Laboratory = new Action((player, game) => {
   player.draw(2);
   player.actions += 1;
@@ -672,6 +697,7 @@ const kingdom = {
   Feast: new Feast(),
   Festival: Festival,
   Gardens: new Gardens(),
+  Harbinger: new Harbinger(),
   Laboratory: Laboratory,
   Library: new Library(),
   Market: Market,
