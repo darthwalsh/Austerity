@@ -98,8 +98,7 @@ class Player {
       choices.push("\n");
     }
 
-    Array.prototype.push.apply(choices,
-      this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
+    choices.push(...this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
 
     if (!choices.length) {
       this.sendMessage("Nothing to buy");
@@ -189,8 +188,8 @@ class Player {
   }
 
   turnDone() {
-    Array.prototype.push.apply(this.discardPile, this.hand.splice(0));
-    Array.prototype.push.apply(this.discardPile, this.played.splice(0));
+    this.discardPile.push(...this.hand.splice(0));
+    this.discardPile.push(...this.played.splice(0));
 
     this.sendMessage("");
     this.redrawHand();

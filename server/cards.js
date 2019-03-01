@@ -224,8 +224,7 @@ class Harbinger {
     player.actions += 1;
 
     player.sendMessage("Choose a card from your discard to put on your deck:");
-    const choices = player.discardPile.map(c => c.name);
-    choices.push("None of these");
+    const choices = [...player.discardPile.map(c => c.name), "None of these"];
     const choice = await player.choose([...new Set(choices)]);
     if (choice === "None of these") {
       return;
