@@ -171,7 +171,7 @@ class Player {
     if (card === null) {
       throw new Error("Card doesn't exist: " + name);
     }
-    await card.play(this, this.game);
+    await card.play(this);
     this.afterPlay(card);
     callback();
   }
@@ -181,7 +181,7 @@ class Player {
    */
   afterPlay(card) {
     if (card.afterPlay) {
-      card.afterPlay(this, this.game);
+      card.afterPlay(this);
     } else {
       this.played.push(card);
     }

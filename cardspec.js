@@ -998,7 +998,7 @@ describe("cards", () => {
       let called = false;
 
       if (card.ofKind("action") || card.ofKind("treasure")) {
-        await card.play(p, game);
+        await card.play(p);
         expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
         expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
         expect(p.money - init.money).toEqual(test.dMoney, "dMoney");

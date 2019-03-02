@@ -22,9 +22,8 @@ class Treasure {
 
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.money += this.money;
   }
 }
@@ -55,14 +54,13 @@ class Action {
 
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
-    this.toPlay(player, game);
+  async play(player) {
+    this.toPlay(player);
   }
 }
 
-const Adventurer = new Action((player, game) => {
+const Adventurer = new Action(player => {
   let treasures = 0;
   const drawn = [];
   while (treasures < 2) {
@@ -85,12 +83,11 @@ const Adventurer = new Action((player, game) => {
 class Bureaucrat {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
-    game.tryGainCard(player, "Silver");
+  async play(player) {
+    player.game.tryGainCard(player, "Silver");
 
-    await game.parallelAttack(player, /** @param {Player} other */ async other => {
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
       const discardChoices = other.hand
         .filter(c => c.ofKind("victory"))
         .map(c => c.name);
@@ -106,9 +103,8 @@ class Bureaucrat {
 class Cellar {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.actions += 1;
     let discarded = 0;
 
@@ -137,9 +133,8 @@ class Cellar {
 class Chancellor {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
     const choice = await player.choose(["No", "Discard"]);
@@ -152,9 +147,8 @@ class Chancellor {
 class Chapel {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     for (let canTrash = 4; canTrash; --canTrash) {
       const trashChoices = player.hand.map(c => c.name);
       if (!trashChoices.length) {
@@ -167,15 +161,15 @@ class Chapel {
         return;
       }
       const trash = player.fromHand(choice);
-      game.trashPush(player, trash);
+      player.game.trashPush(player, trash);
     }
   }
 }
 
-const CouncilRoom = new Action((player, game) => {
+const CouncilRoom = new Action(player => {
   player.buys += 1;
   player.draw(4);
-  game.otherPlayers(player).forEach(p => {
+  player.game.otherPlayers(player).forEach(p => {
     p.draw();
   });
 });
@@ -183,10 +177,9 @@ const CouncilRoom = new Action((player, game) => {
 class Feast {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
-    const gainChoices = game.store
+  async play(player) {
+    const gainChoices = player.game.store
       .getAvailable(5)
       .map(c => c.name);
     if (!gainChoices.length) {
@@ -194,15 +187,15 @@ class Feast {
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
-    game.gainCard(player, gainChoice);
+    player.game.gainCard(player, gainChoice);
   }
 
-  afterPlay(player, game) {
-    game.trashPush(player, this);
+  afterPlay(player) {
+    player.game.trashPush(player, this);
   }
 }
 
-const Festival = new Action((player, game) => {
+const Festival = new Action(player => {
   player.actions += 2;
   player.buys += 1;
   player.money += 2;
@@ -217,9 +210,8 @@ class Gardens {
 class Harbinger {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.draw();
     player.actions += 1;
 
@@ -234,7 +226,7 @@ class Harbinger {
   }
 }
 
-const Laboratory = new Action((player, game) => {
+const Laboratory = new Action(player => {
   player.draw(2);
   player.actions += 1;
 });
@@ -242,9 +234,8 @@ const Laboratory = new Action((player, game) => {
 class Library {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     const aside = [];
     while (player.hand.length < 7) {
       const card = player.fromDraw();
@@ -266,7 +257,7 @@ class Library {
   }
 }
 
-const Market = new Action((player, game) => {
+const Market = new Action(player => {
   player.draw();
   player.actions += 1;
   player.buys += 1;
@@ -276,12 +267,11 @@ const Market = new Action((player, game) => {
 class Militia {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.money += 2;
 
-    await game.parallelAttack(player, /** @param {Player} other */ async other => {
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
       while (other.hand.length > 3) {
         const discardChoices = other.hand.map(c => c.name);
         other.sendMessage("Discard down to three cards:");
@@ -295,9 +285,8 @@ class Militia {
 class Mine {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     const trashChoices = player.hand
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
@@ -308,8 +297,8 @@ class Mine {
     player.sendMessage("Trash a Treasure:");
     const trashChoice = await player.choose(trashChoices);
     const trash = player.fromHand(trashChoice);
-    game.trashPush(player, trash);
-    const gainChoices = game.store
+    player.game.trashPush(player, trash);
+    const gainChoices = player.game.store
       .getAvailable(trash.cost + 3)
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
@@ -318,16 +307,15 @@ class Mine {
     }
     player.sendMessage("Gain a Treasure:");
     const gainChoice = await player.choose(gainChoices);
-    game.gainCard(player, gainChoice, {toHand: true});
+    player.game.gainCard(player, gainChoice, {toHand: true});
   }
 }
 
 class Moat {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.draw(2);
   }
 }
@@ -335,14 +323,13 @@ class Moat {
 class Moneylender {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     if (player.hand.some(c => c.name === "Copper")) {
       const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
       if (choice === "Trash a Copper") {
         player.money += 3;
-        game.trashPush(player, player.fromHand("Copper"));
+        player.game.trashPush(player, player.fromHand("Copper"));
       }
     }
   }
@@ -351,9 +338,8 @@ class Moneylender {
 class Remodel {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     const trashChoices = player.hand
       .map(c => c.name);
     if (!trashChoices.length) {
@@ -363,8 +349,8 @@ class Remodel {
     player.sendMessage("Trash a card:");
     const trashChoice = await player.choose(trashChoices);
     const trash = player.fromHand(trashChoice);
-    game.trashPush(player, trash);
-    const gainChoices = game.store
+    player.game.trashPush(player, trash);
+    const gainChoices = player.game.store
       .getAvailable(trash.cost + 2)
       .map(c => c.name);
     if (!gainChoices.length) {
@@ -372,16 +358,15 @@ class Remodel {
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
-    game.gainCard(player, gainChoice);
+    player.game.gainCard(player, gainChoice);
   }
 }
 
 class Sentry {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.draw();
     player.actions += 1;
 
@@ -404,7 +389,7 @@ class Sentry {
       toDecide.splice(toDecide.indexOf(cardName), 1);
       switch (action) {
       case "Trash":
-        game.trashPush(player, card);
+        player.game.trashPush(player, card);
         break;
       case "Discard":
         player.discardPile.push(card);
@@ -416,16 +401,15 @@ class Sentry {
   }
 }
 
-const Smithy = new Action((player, game) => {
+const Smithy = new Action(player => {
   player.draw(3);
 });
 
 class Spy {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.actions += 1;
     player.draw();
 
@@ -444,7 +428,7 @@ class Spy {
       }
     };
 
-    await game.sequentialAttack(player, attack);
+    await player.game.sequentialAttack(player, attack);
     await attack(player);
   }
 }
@@ -452,10 +436,9 @@ class Spy {
 class Thief {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
-    await game.sequentialAttack(player, /** @param {Player} other */ async other => {
+  async play(player) {
+    await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
       const drawn = [];
       let card = other.fromDraw();
       if (card) {
@@ -489,7 +472,7 @@ class Thief {
       if (isSteal) {
         player.discardPile.push(chosen);
       } else {
-        game.trashPush(player, chosen);
+        player.game.trashPush(player, chosen);
       }
       const treasureCards = treasures.map(n => cards[n]);
       other.discardPile.push(...treasureCards);
@@ -502,9 +485,8 @@ class Thief {
 class ThroneRoom {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
@@ -514,15 +496,15 @@ class ThroneRoom {
     }
     player.sendMessage("Pick an Action card to double:");
     const actionName = await player.choose(actions);
-    game.allLog(player.name + " played " + actionName + " doubled!");
+    player.game.allLog(player.name + " played " + actionName + " doubled!");
     const action = player.fromHand(actionName);
-    await action.play(player, game);
-    await action.play(player, game);
+    await action.play(player);
+    await action.play(player);
     player.afterPlay(action);
   }
 }
 
-const Village = new Action((player, game) => {
+const Village = new Action(player => {
   player.draw();
   player.actions += 2;
 });
@@ -530,18 +512,17 @@ const Village = new Action((player, game) => {
 class Witch {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     player.draw(2);
 
-    await game.parallelAttack(player, /** @param {Player} other */ async other => {
-      game.tryGainCard(other, "Curse");
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      player.game.tryGainCard(other, "Curse");
     });
   }
 }
 
-const Woodcutter = new Action((player, game) => {
+const Woodcutter = new Action(player => {
   player.buys += 1;
   player.money += 2;
 });
@@ -549,10 +530,9 @@ const Woodcutter = new Action((player, game) => {
 class Workshop {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
-    const gainChoices = game.store
+  async play(player) {
+    const gainChoices = player.game.store
       .getAvailable(4)
       .map(c => c.name);
     if (!gainChoices.length) {
@@ -560,16 +540,15 @@ class Workshop {
     }
     player.sendMessage("Gain a card:");
     const gainChoice = await player.choose(gainChoices);
-    game.gainCard(player, gainChoice);
+    player.game.gainCard(player, gainChoice);
   }
 }
 
 class KingsCourt {
   /**
    * @param {Player} player
-   * @param {Game} game
    */
-  async play(player, game) {
+  async play(player) {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
       .map(c => c.name);
@@ -579,11 +558,11 @@ class KingsCourt {
     }
     player.sendMessage("Pick an Action card to triple:");
     const actionName = await player.choose(actions);
-    game.allLog(player.name + " played " + actionName + " tripled!!");
+    player.game.allLog(player.name + " played " + actionName + " tripled!!");
     const action = player.fromHand(actionName);
-    await action.play(player, game);
-    await action.play(player, game);
-    await action.play(player, game);
+    await action.play(player);
+    await action.play(player);
+    await action.play(player);
     player.afterPlay(action);
   }
 }
@@ -709,11 +688,11 @@ function compareTo(other) {
  * @property {string[]} kind
  * @property {string} color
  *
- * @property {function(Player, Game): Promise<void>} play
+ * @property {function(Player): Promise<void>} play
  * @property {function(string): boolean} ofKind
  * @property {function(Card): number} compareTo
  * @property {function(Player): number} [getPoints]
- * @property {function(Player, Game): void} [afterPlay]
+ * @property {function(Player): void} [afterPlay]
  */
 
 /**
