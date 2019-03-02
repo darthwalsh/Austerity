@@ -44,23 +44,7 @@ class Curse {
   }
 }
 
-/**
- * For simple cards, with synchronous play methods
- */
-class Action {
-  constructor(toPlay) {
-    this.toPlay = toPlay;
-  }
-
-  /**
-   * @param {Player} player
-   */
-  async play(player) {
-    this.toPlay(player);
-  }
-}
-
-const Adventurer = new Action(player => {
+const Adventurer = async player => {
   let treasures = 0;
   const drawn = [];
   while (treasures < 2) {
@@ -78,7 +62,7 @@ const Adventurer = new Action(player => {
 
   player.sendHand();
   player.discardPile.push(...drawn);
-});
+};
 
 class Bureaucrat {
   /**
@@ -166,13 +150,13 @@ class Chapel {
   }
 }
 
-const CouncilRoom = new Action(player => {
+const CouncilRoom = async player => {
   player.buys += 1;
   player.draw(4);
   player.game.otherPlayers(player).forEach(p => {
     p.draw();
   });
-});
+};
 
 class Feast {
   /**
@@ -195,11 +179,11 @@ class Feast {
   }
 }
 
-const Festival = new Action(player => {
+const Festival = /** @param {Player} player */ async player => {
   player.actions += 2;
   player.buys += 1;
   player.money += 2;
-});
+};
 
 class Gardens {
   getPoints(player) {
@@ -226,10 +210,10 @@ class Harbinger {
   }
 }
 
-const Laboratory = new Action(player => {
+const Laboratory = async player => {
   player.draw(2);
   player.actions += 1;
-});
+};
 
 class Library {
   /**
@@ -257,12 +241,12 @@ class Library {
   }
 }
 
-const Market = new Action(player => {
+const Market = async player => {
   player.draw();
   player.actions += 1;
   player.buys += 1;
   player.money += 1;
-});
+};
 
 class Militia {
   /**
@@ -401,9 +385,9 @@ class Sentry {
   }
 }
 
-const Smithy = new Action(player => {
+const Smithy = async player => {
   player.draw(3);
-});
+};
 
 class Spy {
   /**
@@ -504,10 +488,10 @@ class ThroneRoom {
   }
 }
 
-const Village = new Action(player => {
+const Village = async player => {
   player.draw();
   player.actions += 2;
-});
+};
 
 class Witch {
   /**
@@ -522,10 +506,10 @@ class Witch {
   }
 }
 
-const Woodcutter = new Action(player => {
+const Woodcutter = async player => {
   player.buys += 1;
   player.money += 2;
-});
+};
 
 class Workshop {
   /**
@@ -699,7 +683,8 @@ function compareTo(other) {
  * @type {Object.<string, Card>}
  */
 const cards = Object.keys(kingdom).reduce((o, name) => {
-  const card = kingdom[name];
+  const k = kingdom[name];
+  const card = typeof k === "function" ? {play: k} : k;
 
   card.name = name;
   card.compareTo = compareTo;
