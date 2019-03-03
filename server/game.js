@@ -82,6 +82,7 @@ class Game {
 
     if (Object.keys(this.players).length == 0) {
       player.send({isLeader: this.store.optional()});
+      player.send({included: this.store.optional()});
     } else {
       player.sendMessage("Waiting for the leader to start the game");
       this.allLog(player.name + " joined");
