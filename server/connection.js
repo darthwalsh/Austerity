@@ -97,7 +97,7 @@ class Connection {
         resolve(choice);
       };
 
-      this.sentChoices = JSON.stringify({choices: choices});
+      this.sentChoices = JSON.stringify({choices});
       this.ws.send(this.sentChoices);
     });
   }
