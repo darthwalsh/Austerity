@@ -102,6 +102,17 @@ const tests = {
     handAfter: ["Copper", "Silver"],
   },
 
+  Artisan: {
+    interactions: [
+      "Gain a card:",
+      ["Copper", "Silver", "Estate", "Duchy", "Curse"],
+      "Copper",
+      "ALL: Bot gained Copper",
+    ],
+    handAfter: [],
+    discardAfter: ["Copper"],
+  },
+
   Bureaucrat: {
     discardAfter: ["Silver"],
 

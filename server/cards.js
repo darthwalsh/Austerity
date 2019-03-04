@@ -64,6 +64,18 @@ const Adventurer = /** @param {Player} player */ async player => {
   player.discardPile.push(...drawn);
 };
 
+const Artisan = /** @param {Player} player */ async player => {
+  const gainChoices = player.game.store
+    .getAvailable(5)
+    .map(c => c.name);
+  if (!gainChoices.length) {
+    return;
+  }
+  player.sendMessage("Gain a card:");
+  const gainChoice = await player.choose(gainChoices);
+  player.game.gainCard(player, gainChoice);
+};
+
 const Bureaucrat = /** @param {Player} player */ async player => {
   player.game.tryGainCard(player, "Silver");
 
@@ -476,6 +488,7 @@ const kingdom = {
 
   // Base deck
   Adventurer,
+  Artisan,
   Bureaucrat,
   Cellar,
   Chancellor,
