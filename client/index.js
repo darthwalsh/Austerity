@@ -6,12 +6,25 @@ function $input(id) {
   return /** @type {HTMLInputElement} */ ($(id));
 }
 
+/**
+ * Splits text like "Your hand: Copper, Silver, Gold"
+ * Into text and colored span elements
+ * @param {string} text
+ */
 function log(text) {
-  text = [text];
-  for (const splitter of colorBreaks) {
-    text = text.flatMap(t => t.split(splitter));
+  // Splits text like /
+  const parts = /** @type {string[]} */ ([]);
+  const regex = new RegExp(colorBreak); // Copy to allow exec iteration
+  let match = null;
+  let prevIndex = 0;
+  while ((match = regex.exec(text)) !== null) {
+    parts.push(text.substring(prevIndex, match.index));
+    parts.push(match["0"]);
+    prevIndex = match.index + match["0"].length;
   }
-  text = text.map(t => {
+  parts.push(text.substring(prevIndex, text.length));
+
+  const elems = parts.map(t => {
     const color = colors[t];
     if (!color) {
       return t;
@@ -23,7 +36,7 @@ function log(text) {
     return span;
   });
 
-  $("log").append(...text, document.createElement("br"));
+  $("log").append(...elems, document.createElement("br"));
   $("log").scrollTop = $("log").scrollHeight;
 }
 
@@ -113,7 +126,7 @@ function addManage(options, ws) {
 }
 
 let colors = {};
-let colorBreaks = [];
+let colorBreak = /(?=a)b/; // null regex which won't match anything
 window.onload = () => {
   const address = window.location.href.replace("http", "ws");
   const name = $input("name");
@@ -188,8 +201,8 @@ window.onload = () => {
       break;
     case "colors":
       colors = data;
-      colorBreaks = Object.keys(colors).map(s =>
-        new RegExp(`(?=\\b${s}\\b)|(?<=\\b${s}\\b)`)); // Lookahead or lookbehind for whole world s
+      // Create a regex like \bCopper|Silver|Gold\b
+      colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
       break;
     case "included":
       while (helpOverlay.firstElementChild.nextElementSibling) {
