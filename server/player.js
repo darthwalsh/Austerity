@@ -68,7 +68,7 @@ class Player {
   }
 
   receiveAction(choice) {
-    if (choice == "Done With Actions") {
+    if (choice === "Done With Actions") {
       this.promptBuys();
       return;
     }
@@ -113,17 +113,17 @@ class Player {
   }
 
   receiveBuys(choice) {
-    if (choice == "Done With Buys") {
+    if (choice === "Done With Buys") {
       this.turnDone();
       return;
     }
 
-    if (choice == "Play All Treasures") {
+    if (choice === "Play All Treasures") {
       this.playAllTreasures();
       return;
     }
 
-    if (choice.substring(0, 5) == "Buy: ") {
+    if (choice.substring(0, 5) === "Buy: ") {
       const buying = cards[choice.substring(5)];
       this.discardPile.push(buying);
       this.money -= buying.cost;
@@ -148,7 +148,7 @@ class Player {
 
   fromHand(name) {
     const hi = this.hand.map(c => c.name).indexOf(name);
-    if (hi == -1) {
+    if (hi === -1) {
       return null;
     }
     const card = this.hand.splice(hi, 1)[0];
@@ -248,7 +248,7 @@ class Player {
    * @param {function(Player): Promise<void>} attack
    */
   async attacked(attack) {
-    if (this.hand.filter(c => c.name=="Moat").length) {
+    if (this.hand.filter(c => c.name === "Moat").length) {
       const choice = await this.choose(["Moat", "Get Attacked"]);
       if (choice === "Get Attacked") {
         return attack(this);

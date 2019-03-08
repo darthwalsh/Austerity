@@ -78,7 +78,7 @@ const kingdom = {
       if (goodTreasures.length) {
         let toTrash;
         // TODO refactor this into conditional choose?
-        if (goodTreasures.length == 1) {
+        if (goodTreasures.length === 1) {
           toTrash = goodTreasures[0];
         } else {
           other.sendMessage("Choose a treasure to trash:");
@@ -119,7 +119,7 @@ const kingdom = {
       choices.push("Done Discarding");
       player.sendMessage("Discard cards:");
       const choice = await player.choose(choices);
-      if (choice == "Done Discarding") {
+      if (choice === "Done Discarding") {
         break;
       }
 
@@ -135,7 +135,7 @@ const kingdom = {
     player.money += 2;
     player.sendMessage("Discard your draw pile?");
     const choice = await player.choose(["No", "Discard"]);
-    if (choice == "Discard") {
+    if (choice === "Discard") {
       player.discardPile.push(...player.drawPile.splice(0));
     }
   },
@@ -149,7 +149,7 @@ const kingdom = {
       trashChoices.push("Done Trashing");
       player.sendMessage(`Trash up to ${canTrash} cards:`);
       const choice = await player.choose(trashChoices);
-      if (choice == "Done Trashing") {
+      if (choice === "Done Trashing") {
         return;
       }
       const trash = player.fromHand(choice);
@@ -359,10 +359,10 @@ const kingdom = {
       if (!card) {
         return;
       }
-      const name = other.name == player.name ? "Your" : (other.name + "'s");
+      const name = other.name === player.name ? "Your" : (other.name + "'s");
       player.sendMessage("Put back on deck or discard " + name + " " + card.name);
       const choice = await player.choose(["Put back", "Discard"]);
-      if (choice == "Put back") {
+      if (choice === "Put back") {
         other.drawPile.push(card);
       } else {
         other.discardPile.push(card);
@@ -387,10 +387,10 @@ const kingdom = {
       player.sendMessage("Trash or steal a Treasure:");
       let choice = await player.choose(choices);
 
-      const isSteal = choice.substring(0, 7) == "Steal: ";
+      const isSteal = choice.substring(0, 7) === "Steal: ";
       choice = choice.substring(7);
       let chosen;
-      if (choice == treasures[0]) {
+      if (choice === treasures[0]) {
         chosen = treasures.splice(0, 1)[0];
       } else {
         chosen = treasures.splice(1, 1)[0];

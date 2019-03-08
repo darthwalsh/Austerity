@@ -221,7 +221,7 @@ window.onload = () => {
     }
   });
   chat.addEventListener("keydown", e => {
-    if (ws && ws.readyState == 1 && e.keyCode == 13) {
+    if (ws && ws.readyState === 1 && e.keyCode === 13) {
       ws.send(JSON.stringify({chat: chat.value}));
       chat.value = "";
     }

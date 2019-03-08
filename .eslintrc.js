@@ -15,6 +15,7 @@ module.exports = {
         "one-var": "off",
         "guard-for-in": "off",
 
+        "eqeqeq": "error",
         "operator-assignment": "error",
         "object-shorthand": "error",
         "quotes": ["error", "double"],
