@@ -15,146 +15,49 @@ if (!Array.prototype.flatMap) {
   };
 }
 
-class Treasure {
-  constructor(money) {
-    this.money = money;
-  }
-
-  /**
-   * @param {Player} player
-   */
-  async play(player) {
-    player.money += this.money;
-  }
+function money(provides) {
+  return async /** @param {Player} player */ player =>
+    player.money += provides;
 }
 
-class Victory {
-  constructor(points) {
-    this.points = points;
-  }
-
-  getPoints(player) {
-    return this.points;
-  }
+function points(points) {
+  return {
+    getPoints: /** @param {Player} player */ player => points,
+  };
 }
 
-class Curse {
-  getPoints(player) {
-    return -1;
-  }
-}
+const kingdom = {
+  /* Base Deck */
+  Copper: money(1),
+  Silver: money(2),
+  Gold: money(3),
 
-const Adventurer = /** @param {Player} player */ async player => {
-  let treasures = 0;
-  const drawn = [];
-  while (treasures < 2) {
-    const card = player.fromDraw();
-    if (!card) {
-      break;
-    }
-    if (card.ofKind("treasure")) {
-      player.hand.push(card);
-      ++treasures;
-    } else {
-      drawn.push(card);
-    }
-  }
+  Estate: points(1),
+  Duchy: points(3),
+  Province: points(6),
+  Curse: points(-1),
 
-  player.sendHand();
-  player.discardPile.push(...drawn);
-};
-
-const Artisan = /** @param {Player} player */ async player => {
-  const gainChoices = player.game.store
-    .getAvailable(5)
-    .map(c => c.name);
-  if (!gainChoices.length) {
-    return;
-  }
-  player.sendMessage("Gain a card:");
-  const gainChoice = await player.choose(gainChoices);
-  player.game.gainCard(player, gainChoice);
-};
-
-const Bureaucrat = /** @param {Player} player */ async player => {
-  player.game.tryGainCard(player, "Silver");
-
-  await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-    const discardChoices = other.hand
-      .filter(c => c.ofKind("victory"))
-      .map(c => c.name);
-    if (discardChoices.length) {
-      other.sendMessage("Put a Victory card onto your deck:");
-      const choice = await other.choose(discardChoices);
-      other.drawPile.push(other.fromHand(choice));
-    }
-  });
-};
-
-const Cellar = /** @param {Player} player */ async player => {
-  player.actions += 1;
-  let discarded = 0;
-
-  for (;;) {
-    const choices = player.hand.map(c => c.name);
-    if (!choices.length) {
-      break;
+  Adventurer: /** @param {Player} player */ async player => {
+    let treasures = 0;
+    const drawn = [];
+    while (treasures < 2) {
+      const card = player.fromDraw();
+      if (!card) {
+        break;
+      }
+      if (card.ofKind("treasure")) {
+        player.hand.push(card);
+        ++treasures;
+      } else {
+        drawn.push(card);
+      }
     }
 
-    choices.push("Done Discarding");
-    player.sendMessage("Discard cards:");
-    const choice = await player.choose(choices);
-    if (choice == "Done Discarding") {
-      break;
-    }
+    player.sendHand();
+    player.discardPile.push(...drawn);
+  },
 
-    const discard = player.fromHand(choice);
-    ++discarded;
-    player.discardPile.push(discard);
-  }
-
-  player.draw(discarded);
-};
-
-const Chancellor = /** @param {Player} player */ async player => {
-  player.money += 2;
-  player.sendMessage("Discard your draw pile?");
-  const choice = await player.choose(["No", "Discard"]);
-  if (choice == "Discard") {
-    player.discardPile.push(...player.drawPile.splice(0));
-  }
-};
-
-const Chapel = /** @param {Player} player */ async player => {
-  for (let canTrash = 4; canTrash; --canTrash) {
-    const trashChoices = player.hand.map(c => c.name);
-    if (!trashChoices.length) {
-      return;
-    }
-    trashChoices.push("Done Trashing");
-    player.sendMessage(`Trash up to ${canTrash} cards:`);
-    const choice = await player.choose(trashChoices);
-    if (choice == "Done Trashing") {
-      return;
-    }
-    const trash = player.fromHand(choice);
-    player.game.trashPush(player, trash);
-  }
-};
-
-const CouncilRoom = /** @param {Player} player */ async player => {
-  player.buys += 1;
-  player.draw(4);
-  player.game.otherPlayers(player).forEach(p => {
-    p.draw();
-  });
-};
-
-const Feast = {
-  /**
-   * @param {Player} player
-   */
-  async play(player) {
+  Artisan: /** @param {Player} player */ async player => {
     const gainChoices = player.game.store
       .getAvailable(5)
       .map(c => c.name);
@@ -166,362 +69,409 @@ const Feast = {
     player.game.gainCard(player, gainChoice);
   },
 
-  afterPlay(player) {
-    player.game.trashPush(player, this);
-  },
-};
+  Bureaucrat: /** @param {Player} player */ async player => {
+    player.game.tryGainCard(player, "Silver");
 
-const Festival = /** @param {Player} player */ async player => {
-  player.actions += 2;
-  player.buys += 1;
-  player.money += 2;
-};
-
-const Gardens = {
-  getPoints(player) {
-    return Math.floor(player.allCards().length / 10);
-  },
-};
-
-const Harbinger = /** @param {Player} player */ async player => {
-  player.draw();
-  player.actions += 1;
-
-  player.sendMessage("Choose a card from your discard to put on your deck:");
-  const choices = [...player.discardPile.map(c => c.name), "None of these"];
-  const choice = await player.choose([...new Set(choices)]);
-  if (choice === "None of these") {
-    return;
-  }
-  const picked = player.discardPile.splice(choices.indexOf(choice), 1)[0];
-  player.drawPile.push(picked);
-};
-
-const Laboratory = /** @param {Player} player */ async player => {
-  player.draw(2);
-  player.actions += 1;
-};
-
-const Library = /** @param {Player} player */ async player => {
-  const aside = [];
-  while (player.hand.length < 7) {
-    const card = player.fromDraw();
-    if (!card) {
-      break;
-    }
-    if (card.ofKind("action")) {
-      player.sendMessage("Add card to hand or set aside:");
-      const choice = await player.choose([card.name, "Set Aside"]);
-      if (choice === "Set Aside") {
-        aside.push(card);
-        continue;
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      const discardChoices = other.hand
+        .filter(c => c.ofKind("victory"))
+        .map(c => c.name);
+      if (discardChoices.length) {
+        other.sendMessage("Put a Victory card onto your deck:");
+        const choice = await other.choose(discardChoices);
+        other.drawPile.push(other.fromHand(choice));
       }
+    });
+  },
+
+  Cellar: /** @param {Player} player */ async player => {
+    player.actions += 1;
+    let discarded = 0;
+
+    for (;;) {
+      const choices = player.hand.map(c => c.name);
+      if (!choices.length) {
+        break;
+      }
+
+      choices.push("Done Discarding");
+      player.sendMessage("Discard cards:");
+      const choice = await player.choose(choices);
+      if (choice == "Done Discarding") {
+        break;
+      }
+
+      const discard = player.fromHand(choice);
+      ++discarded;
+      player.discardPile.push(discard);
     }
-    player.hand.push(card);
-  }
-  player.discardPile.push(...aside);
-  player.sendHand();
-};
 
-const Market = /** @param {Player} player */ async player => {
-  player.draw();
-  player.actions += 1;
-  player.buys += 1;
-  player.money += 1;
-};
+    player.draw(discarded);
+  },
 
-const Militia = /** @param {Player} player */ async player => {
-  player.money += 2;
-
-  await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-    while (other.hand.length > 3) {
-      const discardChoices = other.hand.map(c => c.name);
-      other.sendMessage("Discard down to three cards:");
-      const choice = await other.choose(discardChoices);
-      other.discardPile.push(other.fromHand(choice));
+  Chancellor: /** @param {Player} player */ async player => {
+    player.money += 2;
+    player.sendMessage("Discard your draw pile?");
+    const choice = await player.choose(["No", "Discard"]);
+    if (choice == "Discard") {
+      player.discardPile.push(...player.drawPile.splice(0));
     }
-  });
-};
+  },
 
-const Mine = /** @param {Player} player */ async player => {
-  const trashChoices = player.hand
-    .filter(c => c.ofKind("treasure"))
-    .map(c => c.name);
-  if (!trashChoices.length) {
-    player.sendMessage("No Treasures to trash");
-    return;
-  }
-  player.sendMessage("Trash a Treasure:");
-  const trashChoice = await player.choose(trashChoices);
-  const trash = player.fromHand(trashChoice);
-  player.game.trashPush(player, trash);
-  const gainChoices = player.game.store
-    .getAvailable(trash.cost + 3)
-    .filter(c => c.ofKind("treasure"))
-    .map(c => c.name);
-  if (!gainChoices.length) {
-    return;
-  }
-  player.sendMessage("Gain a Treasure:");
-  const gainChoice = await player.choose(gainChoices);
-  player.game.gainCard(player, gainChoice, {toHand: true});
-};
-
-const Moat = /** @param {Player} player */ async player => {
-  player.draw(2);
-};
-
-const Moneylender = /** @param {Player} player */ async player => {
-  if (player.hand.some(c => c.name === "Copper")) {
-    const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
-    if (choice === "Trash a Copper") {
-      player.money += 3;
-      player.game.trashPush(player, player.fromHand("Copper"));
+  Chapel: /** @param {Player} player */ async player => {
+    for (let canTrash = 4; canTrash; --canTrash) {
+      const trashChoices = player.hand.map(c => c.name);
+      if (!trashChoices.length) {
+        return;
+      }
+      trashChoices.push("Done Trashing");
+      player.sendMessage(`Trash up to ${canTrash} cards:`);
+      const choice = await player.choose(trashChoices);
+      if (choice == "Done Trashing") {
+        return;
+      }
+      const trash = player.fromHand(choice);
+      player.game.trashPush(player, trash);
     }
-  }
-};
+  },
 
-const Remodel = /** @param {Player} player */ async player => {
-  const trashChoices = player.hand
-    .map(c => c.name);
-  if (!trashChoices.length) {
-    player.sendMessage("No Cards to trash");
-    return;
-  }
-  player.sendMessage("Trash a card:");
-  const trashChoice = await player.choose(trashChoices);
-  const trash = player.fromHand(trashChoice);
-  player.game.trashPush(player, trash);
-  const gainChoices = player.game.store
-    .getAvailable(trash.cost + 2)
-    .map(c => c.name);
-  if (!gainChoices.length) {
-    return;
-  }
-  player.sendMessage("Gain a card:");
-  const gainChoice = await player.choose(gainChoices);
-  player.game.gainCard(player, gainChoice);
-};
+  CouncilRoom: /** @param {Player} player */ async player => {
+    player.buys += 1;
+    player.draw(4);
+    player.game.otherPlayers(player).forEach(p => {
+      p.draw();
+    });
+  },
 
-const Sentry = /** @param {Player} player */ async player => {
-  player.draw();
-  player.actions += 1;
+  Feast: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      const gainChoices = player.game.store
+        .getAvailable(5)
+        .map(c => c.name);
+      if (!gainChoices.length) {
+        return;
+      }
+      player.sendMessage("Gain a card:");
+      const gainChoice = await player.choose(gainChoices);
+      player.game.gainCard(player, gainChoice);
+    },
 
-  const toDecide = [];
-  for (let i = 0; i < 2; ++i) {
-    const draw = player.fromDraw();
-    if (!draw) {
-      break;
-    }
-    toDecide.push(draw.name);
-  }
+    afterPlay(player) {
+      player.game.trashPush(player, this);
+    },
+  },
 
-  while (toDecide.length) {
-    const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
-    player.sendMessage("Trash, discard, and/or place on top of deck:");
-    const choice = await player.choose(choices);
-    const [action, cardName] = choice.split(": ");
-    const card = cards[cardName];
+  Festival: /** @param {Player} player */ async player => {
+    player.actions += 2;
+    player.buys += 1;
+    player.money += 2;
+  },
 
-    toDecide.splice(toDecide.indexOf(cardName), 1);
-    switch (action) {
-    case "Trash":
-      player.game.trashPush(player, card);
-      break;
-    case "Discard":
-      player.discardPile.push(card);
-      break;
-    case "To Deck":
-      player.drawPile.push(card);
-    }
-  }
-};
+  Gardens: {
+    getPoints(player) {
+      return Math.floor(player.allCards().length / 10);
+    },
+  },
 
-const Smithy = /** @param {Player} player */ async player => {
-  player.draw(3);
-};
+  Harbinger: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 1;
 
-// Actually valid jsdoc https://github.com/eslint/eslint/issues/11468
-// eslint-disable-next-line valid-jsdoc
-const Spy = /** @param {Player} player */ async player => {
-  player.actions += 1;
-  player.draw();
-
-  const attack = /** @param {Player} other */ async other => {
-    const card = other.fromDraw();
-    if (!card) {
+    player.sendMessage("Choose a card from your discard to put on your deck:");
+    const choices = [...player.discardPile.map(c => c.name), "None of these"];
+    const choice = await player.choose([...new Set(choices)]);
+    if (choice === "None of these") {
       return;
     }
-    const name = other.name == player.name ? "Your" : (other.name + "'s");
-    player.sendMessage("Put back on deck or discard " + name + " " + card.name);
-    const choice = await player.choose(["Put back", "Discard"]);
-    if (choice == "Put back") {
-      other.drawPile.push(card);
-    } else {
-      other.discardPile.push(card);
-    }
-  };
+    const picked = player.discardPile.splice(choices.indexOf(choice), 1)[0];
+    player.drawPile.push(picked);
+  },
 
-  await player.game.sequentialAttack(player, attack);
-  await attack(player);
-};
+  Laboratory: /** @param {Player} player */ async player => {
+    player.draw(2);
+    player.actions += 1;
+  },
 
-const Thief = /** @param {Player} player */ async player => {
-  await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
-    const drawn = [];
-    let card = other.fromDraw();
-    if (card) {
-      drawn.push(card);
+  Library: /** @param {Player} player */ async player => {
+    const aside = [];
+    while (player.hand.length < 7) {
+      const card = player.fromDraw();
+      if (!card) {
+        break;
+      }
+      if (card.ofKind("action")) {
+        player.sendMessage("Add card to hand or set aside:");
+        const choice = await player.choose([card.name, "Set Aside"]);
+        if (choice === "Set Aside") {
+          aside.push(card);
+          continue;
+        }
+      }
+      player.hand.push(card);
     }
-    card = other.fromDraw();
-    if (card) {
-      drawn.push(card);
-    }
-    const treasures = drawn
+    player.discardPile.push(...aside);
+    player.sendHand();
+  },
+
+  Market: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 1;
+    player.buys += 1;
+    player.money += 1;
+  },
+
+  Militia: /** @param {Player} player */ async player => {
+    player.money += 2;
+
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      while (other.hand.length > 3) {
+        const discardChoices = other.hand.map(c => c.name);
+        other.sendMessage("Discard down to three cards:");
+        const choice = await other.choose(discardChoices);
+        other.discardPile.push(other.fromHand(choice));
+      }
+    });
+  },
+
+  Mine: /** @param {Player} player */ async player => {
+    const trashChoices = player.hand
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
-    if (!treasures.length) {
-      other.discardPile.push(...drawn);
+    if (!trashChoices.length) {
+      player.sendMessage("No Treasures to trash");
       return;
     }
-    const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
-    player.sendMessage("Trash or steal a Treasure:");
-    let choice = await player.choose(choices);
-
-    const isSteal = choice.substring(0, 7) == "Steal: ";
-    choice = choice.substring(7);
-    let chosen;
-    if (choice == treasures[0]) {
-      chosen = treasures.splice(0, 1)[0];
-    } else {
-      chosen = treasures.splice(1, 1)[0];
+    player.sendMessage("Trash a Treasure:");
+    const trashChoice = await player.choose(trashChoices);
+    const trash = player.fromHand(trashChoice);
+    player.game.trashPush(player, trash);
+    const gainChoices = player.game.store
+      .getAvailable(trash.cost + 3)
+      .filter(c => c.ofKind("treasure"))
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      return;
     }
-    chosen = cards[chosen];
+    player.sendMessage("Gain a Treasure:");
+    const gainChoice = await player.choose(gainChoices);
+    player.game.gainCard(player, gainChoice, {toHand: true});
+  },
 
-    if (isSteal) {
-      player.discardPile.push(chosen);
-    } else {
-      player.game.trashPush(player, chosen);
+  Moat: /** @param {Player} player */ async player => {
+    player.draw(2);
+  },
+
+  Moneylender: /** @param {Player} player */ async player => {
+    if (player.hand.some(c => c.name === "Copper")) {
+      const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
+      if (choice === "Trash a Copper") {
+        player.money += 3;
+        player.game.trashPush(player, player.fromHand("Copper"));
+      }
     }
-    const treasureCards = treasures.map(n => cards[n]);
-    other.discardPile.push(...treasureCards);
-    const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
-    other.discardPile.push(...notTreasures);
-  });
-};
+  },
 
-const ThroneRoom = /** @param {Player} player */ async player => {
-  const actions = player.hand
-    .filter(c => c.ofKind("action"))
-    .map(c => c.name);
-  if (!actions.length) {
-    player.sendMessage("No Action cards to play");
-    return;
-  }
-  player.sendMessage("Pick an Action card to double:");
-  const actionName = await player.choose(actions);
-  player.game.allLog(player.name + " played " + actionName + " doubled!");
-  const action = player.fromHand(actionName);
-  await action.play(player);
-  await action.play(player);
-  player.afterPlay(action);
-};
+  Remodel: /** @param {Player} player */ async player => {
+    const trashChoices = player.hand
+      .map(c => c.name);
+    if (!trashChoices.length) {
+      player.sendMessage("No Cards to trash");
+      return;
+    }
+    player.sendMessage("Trash a card:");
+    const trashChoice = await player.choose(trashChoices);
+    const trash = player.fromHand(trashChoice);
+    player.game.trashPush(player, trash);
+    const gainChoices = player.game.store
+      .getAvailable(trash.cost + 2)
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    const gainChoice = await player.choose(gainChoices);
+    player.game.gainCard(player, gainChoice);
+  },
 
-const Village = /** @param {Player} player */ async player => {
-  player.draw();
-  player.actions += 2;
-};
+  Sentry: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 1;
 
-const Witch = /** @param {Player} player */ async player => {
-  player.draw(2);
+    const toDecide = [];
+    for (let i = 0; i < 2; ++i) {
+      const draw = player.fromDraw();
+      if (!draw) {
+        break;
+      }
+      toDecide.push(draw.name);
+    }
 
-  await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-    player.game.tryGainCard(other, "Curse");
-  });
-};
+    while (toDecide.length) {
+      const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
+      player.sendMessage("Trash, discard, and/or place on top of deck:");
+      const choice = await player.choose(choices);
+      const [action, cardName] = choice.split(": ");
+      const card = cards[cardName];
 
-const Woodcutter = /** @param {Player} player */ async player => {
-  player.buys += 1;
-  player.money += 2;
-};
+      toDecide.splice(toDecide.indexOf(cardName), 1);
+      switch (action) {
+      case "Trash":
+        player.game.trashPush(player, card);
+        break;
+      case "Discard":
+        player.discardPile.push(card);
+        break;
+      case "To Deck":
+        player.drawPile.push(card);
+      }
+    }
+  },
 
-const Workshop = /** @param {Player} player */ async player => {
-  const gainChoices = player.game.store
-    .getAvailable(4)
-    .map(c => c.name);
-  if (!gainChoices.length) {
-    return;
-  }
-  player.sendMessage("Gain a card:");
-  const gainChoice = await player.choose(gainChoices);
-  player.game.gainCard(player, gainChoice);
-};
+  Smithy: /** @param {Player} player */ async player => {
+    player.draw(3);
+  },
 
-const KingsCourt = /** @param {Player} player */ async player => {
-  const actions = player.hand
-    .filter(c => c.ofKind("action"))
-    .map(c => c.name);
-  if (!actions.length) {
-    player.sendMessage("No Action cards to play");
-    return;
-  }
-  player.sendMessage("Pick an Action card to triple:");
-  const actionName = await player.choose(actions);
-  player.game.allLog(player.name + " played " + actionName + " tripled!!");
-  const action = player.fromHand(actionName);
-  await action.play(player);
-  await action.play(player);
-  await action.play(player);
-  player.afterPlay(action);
-};
+  // Actually valid jsdoc https://github.com/eslint/eslint/issues/11468
+  // eslint-disable-next-line valid-jsdoc
+  Spy: /** @param {Player} player */ async player => {
+    player.actions += 1;
+    player.draw();
 
-const kingdom = {
-  // Core game
-  Copper: new Treasure(1),
-  Silver: new Treasure(2),
-  Gold: new Treasure(3),
+    const attack = /** @param {Player} other */ async other => {
+      const card = other.fromDraw();
+      if (!card) {
+        return;
+      }
+      const name = other.name == player.name ? "Your" : (other.name + "'s");
+      player.sendMessage("Put back on deck or discard " + name + " " + card.name);
+      const choice = await player.choose(["Put back", "Discard"]);
+      if (choice == "Put back") {
+        other.drawPile.push(card);
+      } else {
+        other.discardPile.push(card);
+      }
+    };
 
-  Estate: new Victory(1),
-  Duchy: new Victory(3),
-  Province: new Victory(6),
-  Curse: new Curse(),
+    await player.game.sequentialAttack(player, attack);
+    await attack(player);
+  },
 
-  // Base deck
-  Adventurer,
-  Artisan,
-  Bureaucrat,
-  Cellar,
-  Chancellor,
-  Chapel,
-  CouncilRoom,
-  Feast,
-  Festival,
-  Gardens,
-  Harbinger,
-  Laboratory,
-  Library,
-  Market,
-  Mine,
-  Militia,
-  Moat,
-  Moneylender,
-  Remodel,
-  Smithy,
-  Spy,
-  Thief,
-  ThroneRoom,
-  Village,
-  Witch,
-  Woodcutter,
-  Workshop,
+  Thief: /** @param {Player} player */ async player => {
+    await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
+      const drawn = [];
+      let card = other.fromDraw();
+      if (card) {
+        drawn.push(card);
+      }
+      card = other.fromDraw();
+      if (card) {
+        drawn.push(card);
+      }
+      const treasures = drawn
+        .filter(c => c.ofKind("treasure"))
+        .map(c => c.name);
+      if (!treasures.length) {
+        other.discardPile.push(...drawn);
+        return;
+      }
+      const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
+      player.sendMessage("Trash or steal a Treasure:");
+      let choice = await player.choose(choices);
 
-  // Base.2
-  Sentry,
+      const isSteal = choice.substring(0, 7) == "Steal: ";
+      choice = choice.substring(7);
+      let chosen;
+      if (choice == treasures[0]) {
+        chosen = treasures.splice(0, 1)[0];
+      } else {
+        chosen = treasures.splice(1, 1)[0];
+      }
+      chosen = cards[chosen];
 
-  // Prosperity
-  Platinum: new Treasure(5),
-  Colony: new Victory(10),
-  KingsCourt,
+      if (isSteal) {
+        player.discardPile.push(chosen);
+      } else {
+        player.game.trashPush(player, chosen);
+      }
+      const treasureCards = treasures.map(n => cards[n]);
+      other.discardPile.push(...treasureCards);
+      const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
+      other.discardPile.push(...notTreasures);
+    });
+  },
+
+  ThroneRoom: /** @param {Player} player */ async player => {
+    const actions = player.hand
+      .filter(c => c.ofKind("action"))
+      .map(c => c.name);
+    if (!actions.length) {
+      player.sendMessage("No Action cards to play");
+      return;
+    }
+    player.sendMessage("Pick an Action card to double:");
+    const actionName = await player.choose(actions);
+    player.game.allLog(player.name + " played " + actionName + " doubled!");
+    const action = player.fromHand(actionName);
+    await action.play(player);
+    await action.play(player);
+    player.afterPlay(action);
+  },
+
+  Village: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 2;
+  },
+
+  Witch: /** @param {Player} player */ async player => {
+    player.draw(2);
+
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      player.game.tryGainCard(other, "Curse");
+    });
+  },
+
+  Woodcutter: /** @param {Player} player */ async player => {
+    player.buys += 1;
+    player.money += 2;
+  },
+
+  Workshop: /** @param {Player} player */ async player => {
+    const gainChoices = player.game.store
+      .getAvailable(4)
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    const gainChoice = await player.choose(gainChoices);
+    player.game.gainCard(player, gainChoice);
+  },
+
+  /* Prosperity Deck */
+
+  Platinum: money(5),
+  Colony: points(10),
+
+  KingsCourt: /** @param {Player} player */ async player => {
+    const actions = player.hand
+      .filter(c => c.ofKind("action"))
+      .map(c => c.name);
+    if (!actions.length) {
+      player.sendMessage("No Action cards to play");
+      return;
+    }
+    player.sendMessage("Pick an Action card to triple:");
+    const actionName = await player.choose(actions);
+    player.game.allLog(player.name + " played " + actionName + " tripled!!");
+    const action = player.fromHand(actionName);
+    await action.play(player);
+    await action.play(player);
+    await action.play(player);
+    player.afterPlay(action);
+  },
 };
 
 const knownKinds = new Set(["action", "attack", "curse", "reaction", "treasure", "victory"]);
