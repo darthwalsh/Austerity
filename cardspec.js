@@ -138,6 +138,11 @@ const tests = {
     ],
     others: [{
       draw: ["Copper", "Silver"],
+      interactions: [
+        "Choose a treasure to trash:",
+        ["Silver"],
+        "Silver",
+      ],
       discardAfter: ["Copper"],
     }],
     discardAfter: ["Gold"],

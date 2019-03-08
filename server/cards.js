@@ -76,14 +76,8 @@ const kingdom = {
       const drawn = other.multiFromDraw(2);
       const goodTreasures = drawn.filter(c => c.ofKind("treasure") && c.name !== "Copper").map(t => t.name);
       if (goodTreasures.length) {
-        let toTrash;
-        // TODO refactor this into conditional choose?
-        if (goodTreasures.length === 1) {
-          toTrash = goodTreasures[0];
-        } else {
-          other.sendMessage("Choose a treasure to trash:");
-          toTrash = await other.choose(goodTreasures);
-        }
+        other.sendMessage("Choose a treasure to trash:");
+        const toTrash = await other.choose(goodTreasures);
         const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
         player.game.trashPush(other, trashed);
       }

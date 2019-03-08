@@ -80,7 +80,7 @@ class Game {
 
     const player = new Player(connection, this);
 
-    if (Object.keys(this.players).length === 0) {
+    if (!Object.keys(this.players).length) {
       player.send({isLeader: this.store.optional()});
       player.send({included: this.store.optional()});
     } else {
