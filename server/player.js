@@ -166,6 +166,18 @@ class Player {
     return this.drawPile.pop();
   }
 
+  multiFromDraw(count) {
+    const cards = [];
+    for (let i = 0; i < count; ++i) {
+      const draw = this.fromDraw();
+      if (!draw) {
+        break;
+      }
+      cards.push(draw);
+    }
+    return cards;
+  }
+
   async playCard(name, callback) {
     const card = this.fromHand(name);
     if (card === null) {

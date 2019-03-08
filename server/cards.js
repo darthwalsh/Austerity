@@ -73,15 +73,7 @@ const kingdom = {
     player.game.tryGainCard(player, "Gold");
 
     await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const drawn = [];
-      // TODO refactor this player.multiDraw(2);
-      for (let i = 0; i < 2; ++i) {
-        const draw = other.fromDraw();
-        if (!draw) {
-          break;
-        }
-        drawn.push(draw);
-      }
+      const drawn = other.multiFromDraw(2);
       const goodTreasures = drawn.filter(c => c.ofKind("treasure") && c.name !== "Copper").map(t => t.name);
       if (goodTreasures.length) {
         let toTrash;
@@ -330,15 +322,7 @@ const kingdom = {
     player.draw();
     player.actions += 1;
 
-    const toDecide = [];
-    for (let i = 0; i < 2; ++i) {
-      const draw = player.fromDraw();
-      if (!draw) {
-        break;
-      }
-      toDecide.push(draw.name);
-    }
-
+    const toDecide = player.multiFromDraw(2).map(c => c.name);
     while (toDecide.length) {
       const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
       player.sendMessage("Trash, discard, and/or place on top of deck:");
@@ -391,15 +375,7 @@ const kingdom = {
 
   Thief: /** @param {Player} player */ async player => {
     await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
-      const drawn = [];
-      let card = other.fromDraw();
-      if (card) {
-        drawn.push(card);
-      }
-      card = other.fromDraw();
-      if (card) {
-        drawn.push(card);
-      }
+      const drawn = other.multiFromDraw(2);
       const treasures = drawn
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
