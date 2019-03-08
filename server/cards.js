@@ -290,6 +290,19 @@ const kingdom = {
     }
   },
 
+  Poacher: /** @param {Player} player */ async player => {
+    player.money += 1;
+    player.actions += 1;
+    player.draw();
+
+    const emptyCount = Object.values(player.game.store.counts).filter(n => !n).length;
+    for (let i = emptyCount; i > 0; --i) {
+      player.sendMessage(`Discard ${i}:`);
+      const choice = await player.choose(player.hand.map(c => c.name));
+      player.discardPile.push(player.fromHand(choice));
+    }
+  },
+
   Remodel: /** @param {Player} player */ async player => {
     const trashChoices = player.hand
       .map(c => c.name);

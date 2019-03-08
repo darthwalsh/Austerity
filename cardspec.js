@@ -591,6 +591,26 @@ const tests = {
     trashAfter: [],
   },
 
+  Poacher: {
+    storeCounts: {Village: 0, Smithy: 0},
+    dMoney: 1,
+    dActions: 1,
+
+    draw: ["Silver", "Mine"],
+    hand: ["Village", "Smithy"],
+    interactions: [
+      "Discard 2:",
+      ["Village", "Smithy", "Mine"],
+      "Mine",
+      "Discard 1:",
+      ["Village", "Smithy"],
+      "Smithy",
+    ],
+    drawAfter: ["Silver"],
+    handAfter: ["Village"],
+    discardAfter: ["Mine", "Smithy"],
+  },
+
   Remodel: {
     hand: ["Copper", "Silver"],
     interactions: [
