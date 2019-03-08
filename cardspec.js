@@ -113,6 +113,48 @@ const tests = {
     discardAfter: ["Copper"],
   },
 
+  Bandit: {
+    interactions: [
+      "ALL: Bot gained Gold",
+      "ALL: Other#0 trashed Silver",
+    ],
+    others: [{
+      draw: ["Gold", "Silver"],
+      interactions: [
+        "Choose a treasure to trash:",
+        ["Silver", "Gold"],
+        "Silver",
+      ],
+      discardAfter: ["Gold"],
+    }],
+    discardAfter: ["Gold"],
+    trashAfter: ["Silver"],
+  },
+
+  Bandit_OneTreasure: {
+    interactions: [
+      "ALL: Bot gained Gold",
+      "ALL: Other#0 trashed Silver",
+    ],
+    others: [{
+      draw: ["Copper", "Silver"],
+      discardAfter: ["Copper"],
+    }],
+    discardAfter: ["Gold"],
+    trashAfter: ["Silver"],
+  },
+
+  Bandit_NoTreasure: {
+    interactions: [
+      "ALL: Bot gained Gold",
+    ],
+    others: [{
+      draw: ["Copper"],
+      discardAfter: ["Copper"],
+    }],
+    discardAfter: ["Gold"],
+  },
+
   Bureaucrat: {
     discardAfter: ["Silver"],
 

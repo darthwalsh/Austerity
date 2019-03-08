@@ -69,6 +69,36 @@ const kingdom = {
     player.game.gainCard(player, gainChoice);
   },
 
+  Bandit: /** @param {Player} player */ async player => {
+    player.game.tryGainCard(player, "Gold");
+
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      const drawn = [];
+      // TODO refactor this player.multiDraw(2);
+      for (let i = 0; i < 2; ++i) {
+        const draw = other.fromDraw();
+        if (!draw) {
+          break;
+        }
+        drawn.push(draw);
+      }
+      const goodTreasures = drawn.filter(c => c.ofKind("treasure") && c.name !== "Copper").map(t => t.name);
+      if (goodTreasures.length) {
+        let toTrash;
+        // TODO refactor this into conditional choose?
+        if (goodTreasures.length == 1) {
+          toTrash = goodTreasures[0];
+        } else {
+          other.sendMessage("Choose a treasure to trash:");
+          toTrash = await other.choose(goodTreasures);
+        }
+        const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
+        player.game.trashPush(other, trashed);
+      }
+      other.discardPile.push(...drawn);
+    });
+  },
+
   Bureaucrat: /** @param {Player} player */ async player => {
     player.game.tryGainCard(player, "Silver");
 
