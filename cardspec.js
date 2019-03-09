@@ -945,6 +945,43 @@ const tests = {
     discardAfter: ["Estate"],
   },
 
+  Vassal: {
+    draw: ["ThroneRoom"],
+    hand: ["Woodcutter"],
+    interactions: [
+      "What do you want to do with ThroneRoom?",
+      ["Play", "Discard"],
+      "Play",
+      "ALL: Bot played ThroneRoom",
+      "Pick an Action card to double:",
+      ["Woodcutter"],
+      "Woodcutter",
+      "ALL: Bot played Woodcutter doubled!",
+    ],
+
+    playedAfter: ["Woodcutter", "ThroneRoom"],
+    dBuys: 2,
+    dMoney: 4,
+  },
+
+  Vassal_Discard: {
+    draw: ["ThroneRoom"],
+    interactions: [
+      "What do you want to do with ThroneRoom?",
+      ["Play", "Discard"],
+      "Discard",
+    ],
+    discardAfter: ["ThroneRoom"],
+  },
+
+  Vassal_NoAction: {
+    draw: ["Copper"],
+    interactions: [
+      "Discarded Copper",
+    ],
+    discardAfter: ["Copper"],
+  },
+
   Platinum: {
     dMoney: 5,
   },

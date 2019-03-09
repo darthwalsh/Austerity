@@ -433,6 +433,26 @@ const kingdom = {
     player.afterPlay(action);
   },
 
+  Vassal: /** @param {Player} player */ async player => {
+    const drawn = player.fromDraw();
+    if (!drawn) {
+      return;
+    }
+    if (!drawn.ofKind("action")) {
+      player.sendMessage(`Discarded ${drawn.name}`);
+      player.discardPile.push(drawn);
+      return;
+    }
+    player.sendMessage(`What do you want to do with ${drawn.name}?`);
+    if (await player.choose(["Play", "Discard"]) === "Play") {
+      player.game.allLog(`${player.name} played ${drawn.name}`);
+      await drawn.play(player);
+      player.afterPlay(drawn);
+    } else {
+      player.discardPile.push(drawn);
+    }
+  },
+
   Village: /** @param {Player} player */ async player => {
     player.draw();
     player.actions += 2;
