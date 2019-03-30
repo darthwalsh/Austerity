@@ -35,6 +35,8 @@ const defaultTest = {
   store: [],
   storeCounts: {},
   trashAfter: [],
+
+  alsoPlay: [],
 };
 
 const defaultOthers = {
@@ -314,9 +316,12 @@ const tests = {
       ["Copper", "Silver", "Estate", "Duchy", "Curse"],
       "Copper",
       "ALL: Bot gained Copper",
+      "ALL: Bot trashed Feast",
     ],
     handAfter: [],
     discardAfter: ["Copper"],
+    trashAfter: ["Feast"],
+    playedAfter: [],
   },
 
   ThroneRoom_Feast_OneTrash: {
@@ -338,7 +343,7 @@ const tests = {
     ],
     handAfter: [],
     discardAfter: ["Copper", "Silver"],
-    playedAfter: [],
+    playedAfter: ["ThroneRoom"],
     trashAfter: ["Feast"],
   },
 
@@ -437,6 +442,26 @@ const tests = {
     draw: ["Copper"],
     hand: [],
     handAfter: ["Copper"],
+  },
+
+  Merchant: {
+    dActions: 1,
+    dMoney: 6,
+    draw: ["Copper"],
+    hand: ["Copper", "Silver", "Silver"],
+    handAfter: ["Copper"],
+    playedAfter: ["Merchant", "Copper", "Silver", "Silver"],
+
+    alsoPlay: ["Copper", "Silver", "Silver"],
+  },
+
+  Merchant_NoSilver: {
+    dActions: 1,
+    dMoney: 0,
+    draw: ["Copper"],
+    handAfter: ["Copper"],
+
+    alsoPlay: [],
   },
 
   Militia: {
@@ -789,7 +814,7 @@ const tests = {
 
     handAfter: [],
     discardAfter: ["Silver", "Gold"],
-    playedAfter: ["Thief"],
+    playedAfter: ["Thief", "ThroneRoom"],
 
     others: [{
       draw: ["Village", "Gold", "Silver", "Copper"],
@@ -852,7 +877,7 @@ const tests = {
       "ALL: Bot gained Gold",
     ],
     handAfter: ["Gold"],
-    playedAfter: ["Mine"],
+    playedAfter: ["Mine", "ThroneRoom"],
     trashAfter: ["Copper", "Silver"],
   },
 
@@ -959,7 +984,7 @@ const tests = {
       "ALL: Bot played Woodcutter doubled!",
     ],
 
-    playedAfter: ["Woodcutter", "ThroneRoom"],
+    playedAfter: ["Woodcutter", "ThroneRoom", "Vassal"],
     dBuys: 2,
     dMoney: 4,
   },
@@ -1001,7 +1026,7 @@ const tests = {
       "ALL: Bot played Woodcutter tripled!!",
     ],
     handAfter: ["Woodcutter"],
-    playedAfter: ["Woodcutter"],
+    playedAfter: ["Woodcutter", "KingsCourt"],
   },
 };
 
@@ -1017,14 +1042,17 @@ describe("cards", () => {
       const card = cards[cardName];
 
       for (const testKey in test) {
-        expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultKeys: " + testKey);
+        expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultTest: " + testKey);
       }
       for (const key in defaultTest) {
+        if (key === "playedAfter") {
+          test[key] = test[key] || [card.name];
+        }
         test[key] = test[key] || defaultTest[key];
       }
       for (let i = 0; i < test.others.length; ++i) {
         for (const testOtherKey in test.others[i]) {
-          expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultKeys: " + testOtherKey);
+          expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultTest: " + testOtherKey);
         }
         for (const oKey in defaultOthers) {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
@@ -1105,6 +1133,7 @@ describe("cards", () => {
       p.actions = init.actions;
       p.buys = init.buys;
       p.played = [];
+      p.onPlayed = [];
 
       p.drawPile = test.draw.map(n => cards[n]);
       p.discardPile = test.discard.map(n => cards[n]);
@@ -1113,7 +1142,11 @@ describe("cards", () => {
       let called = false;
 
       if (card.ofKind("action") || card.ofKind("treasure")) {
-        await card.play(p);
+        p.hand.splice(0, 0, card);
+        await p.playCard(card.name, () => {/* nop */});
+        for (const also of test.alsoPlay) {
+          await p.playCard(also, () => {/* nop */});
+        }
         expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
         expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
         expect(p.money - init.money).toEqual(test.dMoney, "dMoney");

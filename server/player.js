@@ -24,11 +24,6 @@ class Player {
       this.discardPile.push(cards.Estate);
     }
     this.hand = /** @type {Card[]} */ ([]);
-    this.actions = null;
-    this.money = null;
-    this.buys = null;
-    this.played = null;
-    this.afterTurn = null;
   }
 
   takeTurn(callback) {
@@ -37,6 +32,7 @@ class Player {
     this.money = 0;
     this.buys = 1;
     this.played = /** @type {Card[]} */ ([]);
+    this.onPlayed = /** @type {(function(Card): void)[]} */ ([]);
 
     this.game.otherPlayers(this).forEach(p => p.sendMessage(`${this.name}'s turn`));
     this.sendMessage("");
@@ -192,6 +188,9 @@ class Player {
    * @param {Card} card
    */
   afterPlay(card) {
+    for (const e of this.onPlayed) {
+      e(card);
+    }
     if (card.afterPlay) {
       card.afterPlay(this);
     } else {

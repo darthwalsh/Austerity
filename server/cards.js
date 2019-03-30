@@ -239,6 +239,19 @@ const kingdom = {
     player.money += 1;
   },
 
+  Merchant: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 1;
+    let used = false;
+    player.onPlayed.push(/** @param {Card} card */ card => {
+      if (used || card !== cards.Silver) {
+        return;
+      }
+      used = true;
+      player.money += 1;
+    });
+  },
+
   Militia: /** @param {Player} player */ async player => {
     player.money += 2;
 
