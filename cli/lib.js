@@ -31,8 +31,6 @@ class lib {
       // TODO handle "isLeader" choice to send gameStart
       switch (type) {
       case "choices":
-        // TODO fix this for all case blocks
-        // eslint-disable-next-line no-case-declarations
         const choice = await readline(data.join(" / ") + ":\n");
         this.send({choice});
         break;

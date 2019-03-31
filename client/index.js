@@ -157,19 +157,18 @@ window.onload = () => {
     const type = Object.keys(data)[0];
     data = data[type];
 
-    const choicesDiv = $("choices");
-    const choiceOnClick = event => {
-      ws.send(JSON.stringify({choice: event.target.innerHTML}));
-      while (choicesDiv.firstChild) {
-        choicesDiv.removeChild(choicesDiv.firstChild);
-      }
-    };
-
     switch (type) {
     case "message":
       log(data);
       break;
     case "choices":
+      const choicesDiv = $("choices");
+      const choiceOnClick = event => {
+        ws.send(JSON.stringify({choice: event.target.innerHTML}));
+        while (choicesDiv.firstChild) {
+          choicesDiv.removeChild(choicesDiv.firstChild);
+        }
+      };
       for (const choice of data) {
         if (choice === "\n") {
           choicesDiv.appendChild(document.createElement("br"));

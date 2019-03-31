@@ -14,6 +14,7 @@ module.exports = {
         "max-len": "off",
         "one-var": "off",
         "guard-for-in": "off",
+        "no-case-declarations": "off",
 
         "eqeqeq": "error",
         "operator-assignment": "error",
