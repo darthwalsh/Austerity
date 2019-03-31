@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const process = require("process");
 const ws = require("ws");
 
 const Connection = require("./connection").Connection;

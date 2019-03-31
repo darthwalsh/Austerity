@@ -26,6 +26,20 @@
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
       ],
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch CLI",
+      "program": "${workspaceFolder}\\cli\\cli.js",
+      "args": [ 
+          "http://localhost:8080",
+          "DebugPlayer" 
+      ],
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ],
     }
   ]
 }
