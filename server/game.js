@@ -8,7 +8,11 @@ const Player = require("./player").Player;
  */
 
 class Game {
-  constructor() {
+  /**
+   * @param {object} options
+   * @param {function(any[]): any[]} [options.shuffle]
+   */
+  constructor({shuffle = null} = {}) {
     this.store = new Store();
     /**
      * @type {Object.<string, Player>}
@@ -16,6 +20,23 @@ class Game {
     this.players = {};
     this.trash = [];
     this.started = false;
+    this.shuffle = shuffle || this.fisherYatesShuffle;
+  }
+
+  /**
+   * @param {any[]} array
+   * @return {any[]}
+   */
+  fisherYatesShuffle(array) {
+    let currentIndex = array.length;
+    while (0 !== currentIndex) {
+      const rIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      const temporaryValue = array[currentIndex];
+      array[currentIndex] = array[rIndex];
+      array[rIndex] = temporaryValue;
+    }
+    return array;
   }
 
   /**
@@ -50,7 +71,7 @@ class Game {
       this.allLog("!!!!!! " + ps[0].name + " IS CHEATING!!!!!!");
     }
 
-    let turn = Math.floor(Math.random() * ps.length);
+    let turn = this.shuffle([...Array(ps.length).keys()])[0];
     const nextTurn = () => {
       if (this.store.gameOver()) {
         this.allLog("GAME OVER!!!");

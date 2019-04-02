@@ -227,17 +227,7 @@ class Player {
       throw new Error("drawPile isn't empty!");
     }
 
-    const array = this.discardPile;
-
-    // Fisher-Yates (aka Knuth) Shuffle.
-    let currentIndex = array.length, temporaryValue, rIndex;
-    while (0 !== currentIndex) {
-      rIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[rIndex];
-      array[rIndex] = temporaryValue;
-    }
+    this.game.shuffle(this.discardPile);
 
     this.drawPile = this.discardPile;
     this.discardPile = [];

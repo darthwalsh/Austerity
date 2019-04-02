@@ -5,9 +5,10 @@ const Game = require("./game").Game;
  */
 
 class Lobby {
-  constructor() {
+  constructor(options) {
     /** @type {Object<string, Game>} */
     this.games = {};
+    this.options = options;
   }
 
   /**
@@ -29,7 +30,7 @@ class Lobby {
       this.sendLobby(connection);
       return;
     case "New Game":
-      game = new Game();
+      game = new Game(this.options);
       this.games[`${connection.name}'s game`] = game;
       break;
     }
