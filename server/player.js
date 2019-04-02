@@ -1,8 +1,8 @@
 const cards = require("./cards");
 
 /**
- * @typedef { import("./connection").Connection } Connection
- * @typedef { import("./game").Game } Game
+ * @typedef { import("./connection") } Connection
+ * @typedef { import("./game") } Game
  * @typedef { import("./cards").Card } Card
  */
 
@@ -281,4 +281,4 @@ class Player {
   }
 }
 
-module.exports.Player = Player;
+module.exports = Player;

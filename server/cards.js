@@ -1,6 +1,6 @@
 /**
- * @typedef { import("./game").Game } Game
- * @typedef { import("./player").Player } Player
+ * @typedef { import("./game") } Game
+ * @typedef { import("./player") } Player
  */
 
 const csvParse = /** @type {function(string|Buffer, object): Array} */

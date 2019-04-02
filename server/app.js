@@ -3,8 +3,8 @@ const express = require("express");
 const path = require("path");
 const ws = require("ws");
 
-const Connection = require("./connection").Connection;
-const Lobby = require("./lobby").Lobby;
+const Connection = require("./connection");
+const Lobby = require("./lobby");
 
 const port = process.env.PORT || 8080;
 const app = express();

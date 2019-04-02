@@ -103,4 +103,4 @@ class Connection {
   }
 }
 
-exports.Connection = Connection;
+module.exports = Connection;

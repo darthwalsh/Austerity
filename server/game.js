@@ -1,9 +1,9 @@
-const Store = require("./store").Store;
+const Store = require("./store");
 const cards = require("./cards");
-const Player = require("./player").Player;
+const Player = require("./player");
 
 /**
- * @typedef { import("./connection").Connection } Connection
+ * @typedef { import("./connection") } Connection
  * @typedef { import("./cards").Card } Card
  */
 
@@ -205,4 +205,4 @@ class Game {
   }
 }
 
-module.exports.Game = Game;
+module.exports = Game;

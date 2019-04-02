@@ -67,4 +67,4 @@ class Store {
   }
 }
 
-module.exports.Store = Store;
+module.exports = Store;

@@ -3,9 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 const cards = require("./server/cards");
-const Game = require("./server/game").Game;
-const Player = require("./server/player").Player;
-const Store = require("./server/store").Store;
+const Game = require("./server/game");
+const Player = require("./server/player");
+const Store = require("./server/store");
 
 const reporters = require("jasmine-reporters");
 const junitReporter = new reporters.JUnitXmlReporter({
