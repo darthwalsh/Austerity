@@ -28,11 +28,15 @@ class lib {
       const type = Object.keys(data)[0];
       data = data[type];
 
-      // TODO handle "isLeader" choice to send gameStart
       switch (type) {
       case "choices":
-        const choice = await readline(data.join(" / ") + ":\n");
+        const choice = await readline(data.join(" / ") + "\n");
         this.send({choice});
+        break;
+      case "isLeader":
+        const included = (await readline(data.join(" / ") + "\n")).split(" ");
+        const debugMode = false;
+        this.send({gameStart: {included, debugMode}});
         break;
       default:
         this.log(`${type}: ${data}`);
