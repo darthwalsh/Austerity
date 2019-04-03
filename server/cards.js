@@ -345,7 +345,7 @@ const kingdom = {
     const toDecide = player.multiFromDraw(2).map(c => c.name);
     while (toDecide.length) {
       const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
-      player.sendMessage("Trash, discard, and/or place on top of deck:");
+      player.sendMessage("Trash, discard, and/or/not place on top of deck:");
       const choice = await player.choose(choices);
       const [action, cardName] = choice.split(": ");
       const card = cards[cardName];
