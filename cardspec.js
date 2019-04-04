@@ -659,7 +659,7 @@ const tests = {
       "Trash, discard, and/or place on top of deck:",
       ["Trash: Silver", "Discard: Silver", "To Deck: Silver", "Trash: Copper", "Discard: Copper", "To Deck: Copper"],
       "Discard: Silver",
-      "Trash, discard, and/or place on top of deck:",
+      "Trash, discard, and/or place on toFAILp of deck:",
       ["Trash: Copper", "Discard: Copper", "To Deck: Copper"],
       "Trash: Copper",
       "ALL: Bot trashed Copper",
