@@ -2,5 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "schedule": ["after 5pm on every day"]
+  "schedule": ["after 5pm on every day"],
+  "automerge": true,
+  "automergeType": "branch"
 }
