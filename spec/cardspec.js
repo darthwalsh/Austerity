@@ -1,20 +1,10 @@
-/* global describe it expect fail jasmine */
+/* global describe it expect fail */
 
 const fs = require("fs");
 const path = require("path");
-const cards = require("./server/cards");
-const Game = require("./server/game");
-const Player = require("./server/player");
-const Store = require("./server/store");
-
-const reporters = require("jasmine-reporters");
-const junitReporter = new reporters.JUnitXmlReporter({
-  savePath: __dirname,
-  consolidateAll: false,
-});
-jasmine.getEnv().addReporter(junitReporter);
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
+const cards = require("../server/cards");
+const Game = require("../server/game");
+const Player = require("../server/player");
 
 const defaultTest = {
   dMoney: 0,
@@ -1198,7 +1188,7 @@ describe("cards", () => {
   });
 
   it("has images for all", () => {
-    const jpg = fs.readdirSync(path.join(__dirname, "client", "cards"));
+    const jpg = fs.readdirSync(path.join(__dirname, "..", "client", "cards"));
     for (const cardName in cards) {
       expect(jpg).toContain(cardName + ".jpg");
     }
@@ -1213,25 +1203,6 @@ describe("cards", () => {
   it("has colors for all", () => {
     for (const cardName in cards) {
       expect(cards[cardName].color).toBeTruthy();
-    }
-  });
-});
-
-describe("store", () => {
-  it("initial counts", () => {
-    const tests = [
-      {playerCount: 1, expectedCounts: {Village: 10, Gardens: 8, Curse: 10, Province: 8, Copper: 30}},
-      {playerCount: 2, expectedCounts: {Village: 10, Gardens: 8, Curse: 10, Province: 8, Copper: 30}},
-      {playerCount: 3, expectedCounts: {Village: 10, Gardens: 12, Curse: 20, Province: 12, Copper: 30}},
-      {playerCount: 4, expectedCounts: {Village: 10, Gardens: 12, Curse: 30, Province: 12, Copper: 30}},
-    ];
-
-    for (const test of tests) {
-      const store = new Store();
-      store.init([cards.Village, cards.Gardens], test.playerCount);
-      for (const card in test.expectedCounts) {
-        expect(store.counts[card]).toEqual(test.expectedCounts[card]);
-      }
     }
   });
 });

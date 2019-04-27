@@ -9,8 +9,8 @@
   "scripts": {
     "cli": "node cli/cli.js",
     "start": "node server/app.js",
-    "pretest": "eslint --fix server client *.js && tsc -p jsconfig.json",
-    "test": "jasmine *spec.js",
+    "pretest": "eslint --fix server client spec && tsc -p jsconfig.json",
+    "test": "jasmine",
     "watch": "supervisor --poll-interval 2000 --quiet --ignore client,.git,node_modules server/app.js"
   },
   "repository": {
