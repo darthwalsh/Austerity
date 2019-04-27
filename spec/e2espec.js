@@ -9,11 +9,13 @@ describe("e2e", () => {
     const playGame = new Promise((res, rej) => {
       const url = "http://localhost:8080";
       const p1 = new Lib(url,
-        line => { // TODO should be array //TODO hardcode to press New Game
-          const x = line.split(" / ")[0];
-          return Promise.resolve(x);
+        async choices => {
+          if (choices.includes("New Game")) {
+            return "New Game";
+          }
+          return choices[0];
         },
-        line => { //TODO should probably include {type, data}
+        line => {
           output += line;
           if (line.includes("GAME OVER!!!")) {
             res();

@@ -3,7 +3,7 @@ const WebSocket = require("ws");
 class lib {
   /**
    * @param {string} url
-   * @param {function(string): Promise<string>} readline
+   * @param {function(string[]): Promise<string>} readline
    * @param {function(string): void} log
    */
   constructor(url, readline, log) {
@@ -30,11 +30,11 @@ class lib {
 
       switch (type) {
       case "choices":
-        const choice = await readline(data.join(" / ") + "\n");
+        const choice = await readline(data);
         this.send({choice});
         break;
       case "isLeader":
-        const included = (await readline(data.join(" / ") + "\n")).split(" ");
+        const included = (await readline(data)).split(" ");
         const debugMode = false;
         this.send({gameStart: {included, debugMode}});
         break;

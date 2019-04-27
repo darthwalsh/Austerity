@@ -12,11 +12,19 @@ if (!url || !name) {
 const wsUrl = url.replace(/^http/, "ws");
 
 const cl = readline.createInterface(process.stdin, process.stdout);
-const question = query => new Promise((res, rej) => {
-  cl.question(query, answer => {
-    res(answer);
+
+/**
+ * @param {string[]} query
+ * @return {Promise<string>}
+ */
+function question(query) {
+  return new Promise((res, rej) => {
+    cl.question(query.join(" / ") + "\n", answer => {
+      res(answer);
+    });
   });
-});
+}
+
 const lib = new Library(wsUrl, question, console.log);
 
 lib.connect(name);
