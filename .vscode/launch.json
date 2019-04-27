@@ -19,9 +19,6 @@
       "request": "launch",
       "name": "Launch Tests",
       "program": "${workspaceRoot}\\node_modules\\jasmine\\bin\\jasmine", 
-      "args": [ 
-          "cardspec.js" 
-      ],
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
