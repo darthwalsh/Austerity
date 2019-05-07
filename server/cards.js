@@ -64,9 +64,13 @@ const kingdom = {
     if (!gainChoices.length) {
       return;
     }
-    player.sendMessage("Gain a card:");
+    player.sendMessage("Gain a card to your hand:");
     const gainChoice = await player.choose(gainChoices);
-    player.game.gainCard(player, gainChoice);
+    player.game.gainCard(player, gainChoice, {toHand: true});
+
+    player.sendMessage("Put a card from your hand back to your deck:");
+    const deckChoice = await player.choose(player.hand.map(c => c.name));
+    player.drawPile.push(player.fromHand(deckChoice));
   },
 
   Bandit: /** @param {Player} player */ async player => {

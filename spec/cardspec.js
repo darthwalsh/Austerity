@@ -95,14 +95,20 @@ const tests = {
   },
 
   Artisan: {
+    draw: [],
+    hand: ["Silver", "Gold"],
     interactions: [
-      "Gain a card:",
+      "Gain a card to your hand:",
       ["Copper", "Silver", "Estate", "Duchy", "Curse"],
       "Copper",
       "ALL: Bot gained Copper",
+      "Put a card from your hand back to your deck:",
+      ["Silver", "Gold", "Copper"],
+      "Silver",
     ],
-    handAfter: [],
-    discardAfter: ["Copper"],
+    drawAfter: ["Silver"],
+    handAfter: ["Copper", "Gold"],
+    discardAfter: [],
   },
 
   Bandit: {
