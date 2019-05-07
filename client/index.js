@@ -226,3 +226,6 @@ window.onload = () => {
     }
   });
 };
+
+// Maybe remove this after winning each game, then restore?
+window.onbeforeunload = e => "Don't leave the game hanging!";
