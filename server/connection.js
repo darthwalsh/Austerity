@@ -8,6 +8,7 @@ class Connection {
    */
   constructor(ws) {
     this.ws = ws;
+    /** @type {string} */
     this.name = "NoName";
     this.sentChoices = null;
 
