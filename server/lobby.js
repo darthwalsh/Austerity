@@ -5,6 +5,9 @@ const Game = require("./game");
  */
 
 class Lobby {
+  /**
+   * @param {{shuffle: function(any[]): any[]}} options
+   */
   constructor(options) {
     /** @type {Object<string, Game>} */
     this.games = {};

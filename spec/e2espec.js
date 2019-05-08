@@ -1,8 +1,10 @@
 /* global describe it expect */
 
-const Lib = require("../cli/lib");
-require("../server/app");
+const fs = require("fs");
+const path = require("path");
 
+const Lib = require("../cli/lib");
+const Server = require("../server/server");
 
 /**
  * @param {string[]} choices
@@ -33,6 +35,8 @@ async function bigMoney(choices) {
 }
 
 describe("e2e", () => {
+  new Server().listen({trivialShuffle: true});
+
   it("plays a game", async done => {
     let output = "";
     const playGame = new Promise((res, rej) => {
@@ -48,7 +52,10 @@ describe("e2e", () => {
 
     await playGame;
 
-    expect(output).toEqual("");
+    const transcript = path.join(__dirname, "SoloBigMoney.txt");
+
+    const expected = await fs.readFileSync(transcript, {encoding: "utf8"});
+    expect(output).toEqual(expected);
 
     done();
   });

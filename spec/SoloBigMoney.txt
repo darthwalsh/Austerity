@@ -1,0 +1,356 @@
+included: Platinum,Gardens,Colony,Cellar,Chapel,Moat,Chancellor,Harbinger,Merchant,Vassal,Village,Woodcutter,Workshop,Bureaucrat,Feast,Militia,Moneylender,Poacher,Remodel,Smithy,Spy,Thief,ThroneRoom,Bandit,CouncilRoom,Festival,Laboratory,Library,Market,Mine,Sentry,Witch,Adventurer,Artisan,KingsCourt
+included: Platinum
+colors: [object Object]
+message: Your upcoming hand: Copper, Copper, Estate, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Estate, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Estate, Estate, Estate
+message: Your hand: Estate, Estate, Estate
+message: Actions: 1 Money: 2 Buys: 1
+message: p1 bought Copper
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Copper
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Copper
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Copper, Copper
+message: Your hand: Copper, Copper, Copper
+message: Your hand: Copper, Copper
+message: Your hand: Copper
+message: Your hand: 
+message: Actions: 1 Money: 5 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Copper
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Copper
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Copper, Copper
+message: Your hand: Copper, Copper, Copper
+message: Your hand: Copper, Copper
+message: Your hand: Copper
+message: Your hand: 
+message: Actions: 1 Money: 5 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Estate, Estate
+message: Your hand: Silver, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 4 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Estate
+message: Your hand: Copper, Silver, Estate
+message: Your hand: Silver, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 5 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Estate, Estate
+message: Your hand: Silver, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 4 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Silver
+message: Your hand: Copper, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Estate, Estate
+message: Your hand: Silver, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 4 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Estate
+message: Your hand: Copper, Silver, Estate
+message: Your hand: Silver, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 5 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Silver
+message: Your hand: Copper, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Silver, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Silver, Estate
+message: Your hand: Silver, Silver, Estate
+message: Your hand: Silver, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 6 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Silver, Silver, Silver, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Silver, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Silver, Estate, Estate
+message: Your hand: Silver, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 6 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Gold
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Gold
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Gold
+message: Your hand: Copper, Silver, Gold
+message: Your hand: Silver, Gold
+message: Your hand: Gold
+message: Your hand: 
+message: Actions: 1 Money: 8 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Gold, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Gold, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Gold, Estate, Estate
+message: Your hand: Gold, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Silver, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Silver, Estate
+message: Your hand: Silver, Silver, Estate
+message: Your hand: Silver, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 6 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Gold
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Silver, Gold
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Silver, Gold
+message: Your hand: Silver, Silver, Gold
+message: Your hand: Silver, Gold
+message: Your hand: Gold
+message: Your hand: 
+message: Actions: 1 Money: 9 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Copper, Silver, Silver, Gold, Gold
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Silver, Gold, Gold
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Silver, Gold, Gold
+message: Your hand: Silver, Gold, Gold
+message: Your hand: Gold, Gold
+message: Your hand: Gold
+message: Your hand: 
+message: Actions: 1 Money: 11 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Province
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Silver, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Silver, Province
+message: Your hand: Silver, Silver, Province
+message: Your hand: Silver, Province
+message: Your hand: Province
+message: Actions: 1 Money: 6 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Gold, Gold, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Gold, Gold, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Gold, Gold, Estate
+message: Your hand: Gold, Gold, Estate
+message: Your hand: Gold, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 8 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Gold, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Gold, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Gold, Estate, Estate
+message: Your hand: Gold, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Silver, Gold
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Silver, Gold
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Copper, Silver, Gold
+message: Your hand: Copper, Silver, Gold
+message: Your hand: Silver, Gold
+message: Your hand: Gold
+message: Your hand: 
+message: Actions: 1 Money: 8 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Gold, Province
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Gold, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Gold, Province
+message: Your hand: Silver, Gold, Province
+message: Your hand: Gold, Province
+message: Your hand: Province
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Silver, Silver, Gold, Province
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Silver, Gold, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Silver, Gold, Province
+message: Your hand: Silver, Gold, Province
+message: Your hand: Gold, Province
+message: Your hand: Province
+message: Actions: 1 Money: 8 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Gold, Gold, Gold, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Gold, Gold, Gold, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Gold, Gold, Estate, Estate
+message: Your hand: Gold, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 9 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Estate, Province
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Estate, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Estate, Province
+message: Your hand: Silver, Estate, Province
+message: Your hand: Estate, Province
+message: Actions: 1 Money: 4 Buys: 1
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Gold, Province
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Gold, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Copper, Silver, Gold, Province
+message: Your hand: Silver, Gold, Province
+message: Your hand: Gold, Province
+message: Your hand: Province
+message: Actions: 1 Money: 7 Buys: 1
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Copper, Silver, Silver, Gold, Gold
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Silver, Gold, Gold
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+message: Your hand: Silver, Silver, Gold, Gold
+message: Your hand: Silver, Gold, Gold
+message: Your hand: Gold, Gold
+message: Your hand: Gold
+message: Your hand: 
+message: Actions: 1 Money: 11 Buys: 1
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Gold, Gold, Province
+message: GAME OVER!!!
+message: p1: 51     Estate,Estate,Estate,Province,Province,Province,Province,Province,Province,Province,Province
