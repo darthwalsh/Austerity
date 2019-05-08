@@ -4,7 +4,7 @@ const Lib = require("../cli/lib");
 require("../server/app");
 
 describe("e2e", () => {
-  it("plays a game", async () => {
+  it("plays a game", async done => {
     let output = "";
     const playGame = new Promise((res, rej) => {
       const url = "http://localhost:8080";
@@ -27,5 +27,7 @@ describe("e2e", () => {
     await playGame;
 
     expect(output).toEqual("");
+
+    done();
   });
 });
