@@ -47,6 +47,7 @@ describe("e2e", () => {
         output.push(`Chose: ${result}`);
         return result;
       }, line => {
+        expect(line.includes("\n")).toBeFalsy();
         output.push(line);
         if (line.includes("GAME OVER!!!")) {
           res();
