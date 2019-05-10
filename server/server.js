@@ -23,7 +23,21 @@ class Server {
     const lobbyOptions = {};
     if (options.trivialShuffle) {
       console.log("Using trivial shuffle");
-      lobbyOptions.shuffle = array => array.sort();
+      lobbyOptions.shuffle = array => array.sort((a, b) => {
+        if (typeof a.name === "string") {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }
+        if (typeof a === "number") {
+          return a - b;
+        }
+        throw new Error(a.toString());
+      });
     }
 
     const lobby = new Lobby(lobbyOptions);

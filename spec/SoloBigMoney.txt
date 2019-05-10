@@ -38,6 +38,21 @@ Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done Wit
 Chose: Buy: Silver
 message: p1 bought Silver
 message: 
+message: Your upcoming hand: Copper, Silver, Estate, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Estate, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Estate, Estate, Estate
+message: Your hand: Estate, Estate, Estate
+message: Actions: 1 Money: 3 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
 message: Your upcoming hand: Copper, Copper, Copper, Copper, Copper
 message: 
 message: Your turn!
@@ -56,413 +71,408 @@ Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done Wit
 Chose: Buy: Silver
 message: p1 bought Silver
 message: 
-message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Silver
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Silver, Estate, Estate
+message: Your hand: Copper, Copper, Silver, Silver, Silver
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Copper, Copper, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Silver, Estate, Estate
-message: Your hand: Silver, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 4 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
-Chose: Buy: Silver
-message: p1 bought Silver
-message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Estate
-message: Your hand: Copper, Silver, Estate
-message: Your hand: Silver, Estate
-message: Your hand: Estate
-message: Actions: 1 Money: 5 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Silver
-message: p1 bought Silver
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Estate, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Estate, Estate
-message: Your hand: Silver, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 4 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
-Chose: Buy: Silver
-message: p1 bought Silver
-message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Silver
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Silver
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Silver
-message: Your hand: Copper, Silver, Silver
+message: Your hand: Copper, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
+message: Actions: 1 Money: 8 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
 message: 
-message: Your upcoming hand: Copper, Copper, Silver, Estate, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Estate, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Estate, Estate
-message: Your hand: Silver, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 4 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
-Chose: Buy: Silver
-message: p1 bought Silver
-message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Estate
+message: Your upcoming hand: Copper, Copper, Estate, Estate, Estate
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Estate
+message: Your hand: Copper, Copper, Estate, Estate, Estate
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Estate
-message: Your hand: Copper, Silver, Estate
-message: Your hand: Silver, Estate
-message: Your hand: Estate
-message: Actions: 1 Money: 5 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Silver
-message: p1 bought Silver
+message: Your hand: Copper, Estate, Estate, Estate
+message: Your hand: Estate, Estate, Estate
+message: Actions: 1 Money: 2 Buys: 1
+Choices: Buy: Copper, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Copper
+message: p1 bought Copper
 message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Silver
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Silver
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Silver
+message: Your hand: Copper, Copper, Copper, Copper, Silver
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Silver
-message: Your hand: Copper, Silver, Silver
-message: Your hand: Silver, Silver
+message: Your hand: Copper, Copper, Copper, Silver
+message: Your hand: Copper, Copper, Silver
+message: Your hand: Copper, Silver
 message: Your hand: Silver
 message: Your hand: 
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Silver, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Silver, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Silver, Estate
-message: Your hand: Silver, Silver, Estate
-message: Your hand: Silver, Estate
-message: Your hand: Estate
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
 message: p1 bought Gold
 message: 
-message: Your upcoming hand: Silver, Silver, Silver, Estate, Estate
+message: Your upcoming hand: Silver, Silver, Estate, Estate, Province
 message: 
 message: Your turn!
-message: Your hand: Silver, Silver, Silver, Estate, Estate
+message: Your hand: Silver, Silver, Estate, Estate, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Estate, Estate, Province
+message: Your hand: Estate, Estate, Province
+message: Actions: 1 Money: 4 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Copper, Estate
+message: Your hand: Copper, Copper, Estate
+message: Your hand: Copper, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 4 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Silver, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 9 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Gold, Estate, Estate, Province
+message: 
+message: Your turn!
+message: Your hand: Silver, Gold, Estate, Estate, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Gold, Estate, Estate, Province
+message: Your hand: Estate, Estate, Province
+message: Actions: 1 Money: 5 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Copper, Estate
+message: Your hand: Copper, Copper, Estate
+message: Your hand: Copper, Estate
+message: Your hand: Estate
+message: Actions: 1 Money: 4 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Copper, Silver
+message: Your hand: Copper, Copper, Silver
+message: Your hand: Copper, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 6 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
+Chose: Buy: Gold
+message: p1 bought Gold
+message: 
+message: Your upcoming hand: Silver, Silver, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 10 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Gold, Estate, Province, Province
+message: 
+message: Your turn!
+message: Your hand: Silver, Gold, Estate, Province, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Gold, Estate, Province, Province
+message: Your hand: Estate, Province, Province
+message: Actions: 1 Money: 5 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Estate, Estate
+message: Your hand: Copper, Estate, Estate
+message: Your hand: Estate, Estate
+message: Actions: 1 Money: 3 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 8 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 10 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Gold, Province, Province, Province
+message: 
+message: Your turn!
+message: Your hand: Silver, Gold, Province, Province, Province
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Gold, Province, Province, Province
+message: Your hand: Province, Province, Province
+message: Actions: 1 Money: 5 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Gold, Estate, Estate, Estate
+message: 
+message: Your turn!
+message: Your hand: Copper, Gold, Estate, Estate, Estate
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Gold, Estate, Estate, Estate
+message: Your hand: Estate, Estate, Estate
+message: Actions: 1 Money: 4 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Copper
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Copper
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Copper, Copper
+message: Your hand: Copper, Copper, Copper
+message: Your hand: Copper, Copper
+message: Your hand: Copper
+message: Your hand: 
+message: Actions: 1 Money: 5 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
+Chose: Buy: Silver
+message: p1 bought Silver
+message: 
+message: Your upcoming hand: Copper, Silver, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Copper, Silver, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 9 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Silver, Silver, Silver
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Silver, Silver, Silver
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Silver, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
+message: Your hand: 
+message: Actions: 1 Money: 10 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
+Chose: Buy: Province
+message: p1 bought Province
+message: 
+message: Your upcoming hand: Silver, Silver, Silver, Province, Province
+message: 
+message: Your turn!
+message: Your hand: Silver, Silver, Silver, Province, Province
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
 Choices: Play All Treasures, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Silver, Silver, Estate, Estate
-message: Your hand: Silver, Estate, Estate
-message: Your hand: Estate, Estate
+message: Your hand: Silver, Silver, Province, Province
+message: Your hand: Silver, Province, Province
+message: Your hand: Province, Province
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
 message: p1 bought Gold
 message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Gold
+message: Your upcoming hand: Gold, Gold, Province, Province, Province
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Gold
+message: Your hand: Gold, Gold, Province, Province, Province
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Gold
-message: Your hand: Copper, Silver, Gold
-message: Your hand: Silver, Gold
-message: Your hand: Gold
-message: Your hand: 
-message: Actions: 1 Money: 8 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Silver, Silver, Gold, Estate, Estate
-message: 
-message: Your turn!
-message: Your hand: Silver, Silver, Gold, Estate, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Silver, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Silver, Gold, Estate, Estate
-message: Your hand: Gold, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Silver, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Silver, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Silver, Estate
-message: Your hand: Silver, Silver, Estate
-message: Your hand: Silver, Estate
-message: Your hand: Estate
+message: Your hand: Gold, Province, Province, Province
+message: Your hand: Province, Province, Province
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
 message: p1 bought Gold
 message: 
-message: Your upcoming hand: Copper, Copper, Silver, Silver, Gold
+message: Your upcoming hand: Copper, Copper, Estate, Estate, Estate
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Silver, Silver, Gold
+message: Your hand: Copper, Copper, Estate, Estate, Estate
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Silver, Silver, Gold
-message: Your hand: Silver, Silver, Gold
-message: Your hand: Silver, Gold
-message: Your hand: Gold
+message: Your hand: Copper, Estate, Estate, Estate
+message: Your hand: Estate, Estate, Estate
+message: Actions: 1 Money: 2 Buys: 1
+Choices: Buy: Copper, Buy: Estate, Buy: Curse, Done With Buys
+Chose: Buy: Copper
+message: p1 bought Copper
+message: 
+message: Your upcoming hand: Copper, Copper, Copper, Copper, Copper
+message: 
+message: Your turn!
+message: Your hand: Copper, Copper, Copper, Copper, Copper
+message: No Action cards to play, starting Buy phase
+message: Actions: 1 Money: 0 Buys: 1
+Choices: Play All Treasures, Copper, Copper, Copper, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done With Buys
+Chose: Play All Treasures
+message: Your hand: Copper, Copper, Copper, Copper
+message: Your hand: Copper, Copper, Copper
+message: Your hand: Copper, Copper
+message: Your hand: Copper
 message: Your hand: 
-message: Actions: 1 Money: 9 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Copper, Silver, Silver, Gold, Gold
-message: 
-message: Your turn!
-message: Your hand: Copper, Silver, Silver, Gold, Gold
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Silver, Silver, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Silver, Silver, Gold, Gold
-message: Your hand: Silver, Gold, Gold
-message: Your hand: Gold, Gold
-message: Your hand: Gold
-message: Your hand: 
-message: Actions: 1 Money: 11 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Silver, Province
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Silver, Province
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Silver, Province
-message: Your hand: Silver, Silver, Province
-message: Your hand: Silver, Province
-message: Your hand: Province
-message: Actions: 1 Money: 6 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Copper, Gold, Gold, Estate
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Gold, Gold, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Gold, Gold, Estate
-message: Your hand: Gold, Gold, Estate
-message: Your hand: Gold, Estate
-message: Your hand: Estate
-message: Actions: 1 Money: 8 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Silver, Silver, Gold, Estate, Estate
-message: 
-message: Your turn!
-message: Your hand: Silver, Silver, Gold, Estate, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Silver, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Silver, Gold, Estate, Estate
-message: Your hand: Gold, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Copper, Copper, Silver, Gold
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Copper, Silver, Gold
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Copper, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Copper, Silver, Gold
-message: Your hand: Copper, Silver, Gold
-message: Your hand: Silver, Gold
-message: Your hand: Gold
-message: Your hand: 
-message: Actions: 1 Money: 8 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Gold, Province
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Gold, Province
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Gold, Province
-message: Your hand: Silver, Gold, Province
-message: Your hand: Gold, Province
-message: Your hand: Province
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Silver, Silver, Gold, Province
-message: 
-message: Your turn!
-message: Your hand: Copper, Silver, Silver, Gold, Province
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Silver, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Silver, Silver, Gold, Province
-message: Your hand: Silver, Gold, Province
-message: Your hand: Gold, Province
-message: Your hand: Province
-message: Actions: 1 Money: 8 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Gold, Gold, Gold, Estate, Estate
-message: 
-message: Your turn!
-message: Your hand: Gold, Gold, Gold, Estate, Estate
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Gold, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Gold, Gold, Estate, Estate
-message: Your hand: Gold, Estate, Estate
-message: Your hand: Estate, Estate
-message: Actions: 1 Money: 9 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
-Chose: Buy: Province
-message: p1 bought Province
-message: 
-message: Your upcoming hand: Copper, Copper, Silver, Estate, Province
-message: 
-message: Your turn!
-message: Your hand: Copper, Copper, Silver, Estate, Province
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Copper, Silver, Estate, Province
-message: Your hand: Silver, Estate, Province
-message: Your hand: Estate, Province
-message: Actions: 1 Money: 4 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
+message: Actions: 1 Money: 5 Buys: 1
+Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
 message: p1 bought Silver
 message: 
-message: Your upcoming hand: Copper, Copper, Silver, Gold, Province
+message: Your upcoming hand: Copper, Silver, Silver, Silver, Silver
 message: 
 message: Your turn!
-message: Your hand: Copper, Copper, Silver, Gold, Province
+message: Your hand: Copper, Silver, Silver, Silver, Silver
 message: No Action cards to play, starting Buy phase
 message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Copper, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
+Choices: Play All Treasures, Copper, Silver, Silver, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done With Buys
 Chose: Play All Treasures
-message: Your hand: Copper, Silver, Gold, Province
-message: Your hand: Silver, Gold, Province
-message: Your hand: Gold, Province
-message: Your hand: Province
-message: Actions: 1 Money: 7 Buys: 1
-Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
-Chose: Buy: Gold
-message: p1 bought Gold
-message: 
-message: Your upcoming hand: Copper, Silver, Silver, Gold, Gold
-message: 
-message: Your turn!
-message: Your hand: Copper, Silver, Silver, Gold, Gold
-message: No Action cards to play, starting Buy phase
-message: Actions: 1 Money: 0 Buys: 1
-Choices: Play All Treasures, Copper, Silver, Silver, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With Buys
-Chose: Play All Treasures
-message: Your hand: Silver, Silver, Gold, Gold
-message: Your hand: Silver, Gold, Gold
-message: Your hand: Gold, Gold
-message: Your hand: Gold
+message: Your hand: Silver, Silver, Silver, Silver
+message: Your hand: Silver, Silver, Silver
+message: Your hand: Silver, Silver
+message: Your hand: Silver
 message: Your hand: 
-message: Actions: 1 Money: 11 Buys: 1
+message: Actions: 1 Money: 9 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
 message: p1 bought Province
 message: 
-message: Your upcoming hand: Silver, Silver, Gold, Gold, Province
+message: Your upcoming hand: Silver, Silver, Silver, Silver, Silver
 message: GAME OVER!!!
 message: p1: 51     Estate,Estate,Estate,Province,Province,Province,Province,Province,Province,Province,Province
