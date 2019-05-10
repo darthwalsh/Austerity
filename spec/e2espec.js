@@ -78,7 +78,7 @@ describe("e2e", () => {
  */
 function expectArrayEqual(output, expected) {
   for (let i = 0; i < Math.min(output.length, expected.length); ++i) {
-    expect(output[i]).toEqual(expected[i]);
+    expect(`[${i+1}] ${output[i]}`).toEqual(`[${i+1}] ${expected[i]}`);
   }
   expect(output.length).toEqual(expected.length);
 }
