@@ -38,11 +38,16 @@ describe("e2e", () => {
   new Server().listen({trivialShuffle: true});
 
   it("plays a game", async done => {
-    let output = "";
+    const output = [];
     const playGame = new Promise((res, rej) => {
       const url = "http://localhost:8080";
-      const p1 = new Lib(url, bigMoney, line => {
-        output += line + "\n";
+      const p1 = new Lib(url, async choices => {
+        const result = await bigMoney(choices);
+        output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
+        output.push(`Chose: ${result}`);
+        return result;
+      }, line => {
+        output.push(line);
         if (line.includes("GAME OVER!!!")) {
           res();
         }
@@ -54,9 +59,26 @@ describe("e2e", () => {
 
     const transcript = path.join(__dirname, "SoloBigMoney.txt");
 
-    const expected = await fs.readFileSync(transcript, {encoding: "utf8"});
-    expect(output).toEqual(expected);
+    output.push(""); // trailing new line
+    const expected = fs.readFileSync(transcript, {encoding: "utf8"}).split(/\r?\n/);
+    if (output !== expected) {
+      fs.writeFileSync(transcript, output.join("\r\n")); // re-baseline the test data for next run
+    }
+
+    expectArrayEqual(output, expected);
 
     done();
   });
 });
+
+/**
+ * @param {any[]} output
+ * @param {any[]} expected
+ */
+function expectArrayEqual(output, expected) {
+  for (let i = 0; i < Math.min(output.length, expected.length); ++i) {
+    expect(output[i]).toEqual(expected[i]);
+  }
+  expect(output.length).toEqual(expected.length);
+}
+
