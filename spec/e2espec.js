@@ -36,11 +36,11 @@ async function bigMoney(choices) {
 
 describe("e2e", () => {
   new Server().listen({trivialShuffle: true});
+  const url = "http://localhost:8080";
 
   it("plays a game", async done => {
     const output = [];
-    const playGame = new Promise((res, rej) => {
-      const url = "http://localhost:8080";
+    await new Promise((res, rej) => {
       const p1 = new Lib(url, async choices => {
         const result = await bigMoney(choices);
         output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
@@ -56,8 +56,6 @@ describe("e2e", () => {
       p1.connect("p1");
     });
 
-    await playGame;
-
     const transcript = path.join(__dirname, "SoloBigMoney.txt");
 
     output.push(""); // trailing new line
@@ -69,6 +67,40 @@ describe("e2e", () => {
     expectArrayEqual(output, expected);
 
     done();
+  });
+
+  async function closeReopenAt(choice, done) {
+    await new Promise((res, rej) => {
+      const p1 = new Lib(url, choices => {
+        if (!choices.includes(choice)) {
+          return bigMoney(choices);
+        }
+        p1.close();
+        res();
+        return new Promise((res, rej) => {/* black-hole lib instance */});
+      }, _ => { });
+      p1.connect("p1");
+    });
+
+    await new Promise((res, rej) => {
+      const p1 = new Lib(url, bigMoney, line => {
+        if (line.includes("GAME OVER!!!")) {
+          res();
+        }
+      });
+      p1.connect("p1");
+    });
+
+    done();
+  }
+
+  // TODO what should the behavior be? Just delete the game and start over? -- see keep note
+  // it("handles lobby close/reopen", async done => {
+  //   closeReopenAt("Platinum", done);
+  // });
+
+  it("handles gameplay close/reopen", async done => {
+    closeReopenAt("Buy: Copper", done);
   });
 });
 
