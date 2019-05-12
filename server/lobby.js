@@ -48,7 +48,17 @@ class Lobby {
       game.allLog(`${connection.name} rejoined`);
     } else {
       game.addPlayer(connection);
+
+      connection.ws.addEventListener("close", e => {
+        if (!game.started) {
+          game.removePlayer(connection);
+        }
+      });
     }
+  }
+
+  clearGames() {
+    this.games = {};
   }
 }
 

@@ -9,4 +9,6 @@ const junitReporter = new reporters.JUnitXmlReporter({
 });
 jasmine.getEnv().addReporter(junitReporter);
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
+const isDebugger = /--debug|--inspect/.test(process.execArgv.join(" "));
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = isDebugger ? 1000 * 60 * 60 : 500;

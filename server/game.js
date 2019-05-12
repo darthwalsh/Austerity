@@ -61,7 +61,7 @@ class Game {
     this.started = true;
     const ps = this.allPlayers();
 
-    this.initClients(ps);
+    this.initClients(ps.filter(p => p.connection.connected)); // disconnected clients will be initialized later
 
     ps.forEach(p => p.redrawHand());
 
@@ -97,6 +97,9 @@ class Game {
    * @param {Connection} connection
    */
   addPlayer(connection) {
+    if (this.started) {
+      throw new Error("Can't change players after game started");
+    }
     const name = connection.name;
 
     const player = new Player(connection, this);
@@ -122,6 +125,16 @@ class Game {
     connection.ws.addEventListener("close", () => {
       this.allLog(player.name + " disconnected");
     });
+  }
+
+  /**
+   * @param {Connection} connection
+   */
+  removePlayer(connection) {
+    if (this.started) {
+      throw new Error("Can't change players after game started");
+    }
+    delete this.players[connection.name];
   }
 
   allPlayers() {

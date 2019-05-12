@@ -59,7 +59,7 @@ class Connection {
    * @param {object} data
    */
   send(data) {
-    if (!this.ws) {
+    if (!this.connected) {
       if (typeof data.message !== "undefined") {
         return;
       }
@@ -77,9 +77,6 @@ class Connection {
    */
   choose(choices) {
     return new Promise(resolve => {
-      if (!this.ws) {
-        throw new Error("Player is disconnected");
-      }
       if (!choices.length) {
         throw new Error("EMPTY CHOICE!!!");
       }
@@ -87,6 +84,12 @@ class Connection {
         throw new Error("onChoice wasn't empty!!!");
       }
 
+      this.sentChoices = JSON.stringify({choices});
+      if (!this.connected) {
+        // TODO(E2E) fix disconnected player
+        throw new Error("Player is disconnected");
+      }
+      
       this.onChoice = choice => {
         if (!choices.includes(choice)) {
           this.send({message: `"${choice}" not a valid choice of "${choices}"!!!`});
@@ -98,9 +101,13 @@ class Connection {
         resolve(choice);
       };
 
-      this.sentChoices = JSON.stringify({choices});
       this.ws.send(this.sentChoices);
     });
+  }
+
+  get connected() {
+    const READY_STATE_OPEN = 1;
+    return this.ws && this.ws.readyState === READY_STATE_OPEN;
   }
 }
 

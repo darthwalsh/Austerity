@@ -1,10 +1,12 @@
-/* global describe it expect */
+/* global describe afterEach it expect */
 
 const fs = require("fs");
 const path = require("path");
 
 const Lib = require("../cli/lib");
 const Server = require("../server/server");
+
+const url = "http://localhost:8080";
 
 /**
  * @param {string[]} choices
@@ -34,9 +36,40 @@ async function bigMoney(choices) {
   return choices[0];
 }
 
+
+class ManualPlayer {
+  constructor(name = "p1") {
+    this.name = name;
+    this.lib = /** @type {Lib} */ (null);
+  }
+
+  /**
+   * @param {(function(string[]): string | Promise<string>)[]} actions
+   * @return {Promise<Lib>}
+   */
+  play(actions) {
+    return new Promise((res, rej) => {
+      let i = 0;
+      this.lib = new Lib(url, choices => {
+        if (i === actions.length) {
+          res(this.lib);
+          return new Promise((res, rej) => {/* black-hole lib instance */});
+        }
+        const action = actions[i++];
+
+        const ret = action(choices);
+        return typeof ret === "string" ? Promise.resolve(ret) : ret;
+      }, _ => { });
+      this.lib.connect(this.name);
+    });
+  }
+}
+
+
 describe("e2e", () => {
-  new Server().listen({trivialShuffle: true});
-  const url = "http://localhost:8080";
+  const server = new Server();
+  server.listen({trivialShuffle: true});
+  afterEach(() => server.lobby.clearGames());
 
   it("plays a game", async done => {
     const output = [];
@@ -77,7 +110,7 @@ describe("e2e", () => {
         }
         p1.close();
         res();
-        return new Promise((res, rej) => {/* black-hole lib instance */});
+        return new Promise((res, rej) => {/* black-hole lib instance */}); // TODO manual player?
       }, _ => { });
       p1.connect("p1");
     });
@@ -101,6 +134,31 @@ describe("e2e", () => {
 
   it("handles gameplay close/reopen", async done => {
     closeReopenAt("Buy: Copper", done);
+  });
+
+  it("handles p2 joins then leaves lobby", async done => {
+    const p1 = await new ManualPlayer().play([
+      _ => "New Game",
+      async _ => {
+        await new Promise((res, rej) => {
+          const p2 = new Lib(url, bigMoney, line => {
+            if (line === "message: Waiting for the leader to start the game") {
+              p2.close();
+              setTimeout(res, 5); // Wait for close timeouts to run before game starts
+            }
+          });
+          p2.connect("p2");
+        });
+
+        return "Moat";
+      },
+      _ => "Play All Treasures",
+      _ => "Buy: Moat",
+    ]);
+
+    p1.close();
+
+    done();
   });
 });
 

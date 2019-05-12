@@ -40,11 +40,11 @@ class Server {
       });
     }
 
-    const lobby = new Lobby(lobbyOptions);
+    this.lobby = new Lobby(lobbyOptions);
 
     const wss = new ws.Server({server});
     wss.on("connection", ws => {
-      lobby.sendLobby(new Connection(ws));
+      this.lobby.sendLobby(new Connection(ws));
     });
   }
 }
