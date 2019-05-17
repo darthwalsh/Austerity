@@ -26,8 +26,7 @@ class Player {
     this.hand = /** @type {Card[]} */ ([]);
   }
 
-  takeTurn(callback) {
-    this.afterTurn = callback;
+  async takeTurn(callback) {
     this.actions = 1;
     this.money = 0;
     this.buys = 1;
@@ -38,107 +37,99 @@ class Player {
     this.sendMessage("");
     this.sendMessage("Your turn!");
     this.sendHand();
-    this.promptAction();
+    await this.actionPhase();
+    await this.buyPhase();
+    this.turnDone();
+    callback();
   }
 
-  async promptAction() {
-    if (!this.actions) {
-      this.sendMessage("No Action points remaining, starting Buy phase");
-      this.promptBuys();
-      return;
+  async actionPhase() {
+    for (;;) {
+      if (!this.actions) {
+        this.sendMessage("No Action points remaining, starting Buy phase");
+        return;
+      }
+
+      const actionCards = this.hand.filter(c => c.ofKind("action"));
+      const choices = actionCards.map(c => c.name);
+
+      if (!choices.length) {
+        this.sendMessage("No Action cards to play, starting Buy phase");
+        return;
+      }
+
+      choices.push("Done With Actions");
+
+      this.sendPoints();
+      const choice = await this.choose(choices);
+
+      if (choice === "Done With Actions") {
+        return;
+      }
+
+      --this.actions;
+
+      this.game.allLog(this.name + " played " + choice);
+      await this.playCard(choice);
     }
-
-    const actionCards = this.hand.filter(c => c.ofKind("action"));
-    const choices = actionCards.map(c => c.name);
-
-    if (!choices.length) {
-      this.sendMessage("No Action cards to play, starting Buy phase");
-      this.promptBuys();
-      return;
-    }
-
-    choices.push("Done With Actions");
-
-    this.sendPoints();
-    this.receiveAction(await this.choose(choices));
-  }
-
-  receiveAction(choice) {
-    if (choice === "Done With Actions") {
-      this.promptBuys();
-      return;
-    }
-
-    --this.actions;
-
-    this.game.allLog(this.name + " played " + choice);
-    this.playCard(choice, this.promptAction.bind(this));
   }
 
   sendPoints() {
     this.sendMessage(`Actions: ${this.actions} Money: ${this.money} Buys: ${this.buys}`);
   }
 
-  async promptBuys() {
-    if (!this.buys) {
-      this.turnDone();
-      return;
-    }
+  async buyPhase() {
+    for (;;) {
+      if (!this.buys) {
+        return;
+      }
 
-    const treasureCards = this.hand.filter(c => c.ofKind("treasure"));
+      const treasureCards = this.hand.filter(c => c.ofKind("treasure"));
+      const choices = treasureCards.map(c => c.name);
 
-    const choices = treasureCards.map(c => c.name);
+      if (choices.length) {
+        choices.unshift("Play All Treasures");
+        choices.push("\n");
+      }
 
-    if (choices.length) {
-      choices.unshift("Play All Treasures");
-      choices.push("\n");
-    }
+      choices.push(...this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
 
-    choices.push(...this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
+      if (!choices.length) {
+        this.sendMessage("Nothing to buy");
+        return;
+      }
 
-    if (!choices.length) {
-      this.sendMessage("Nothing to buy");
-      this.turnDone();
-      return;
-    }
+      choices.push("Done With Buys");
 
-    choices.push("Done With Buys");
+      this.sendPoints();
+      const choice = await this.choose(choices);
 
-    this.sendPoints();
-    this.receiveBuys(await this.choose(choices));
-  }
+      if (choice === "Done With Buys") {
+        return;
+      }
 
-  receiveBuys(choice) {
-    if (choice === "Done With Buys") {
-      this.turnDone();
-      return;
-    }
+      if (choice === "Play All Treasures") {
+        this.playAllTreasures();
+        continue;
+      }
 
-    if (choice === "Play All Treasures") {
-      this.playAllTreasures();
-      return;
-    }
+      if (choice.substring(0, 5) === "Buy: ") {
+        const buying = cards[choice.substring(5)];
+        this.discardPile.push(buying);
+        this.money -= buying.cost;
+        --this.buys;
 
-    if (choice.substring(0, 5) === "Buy: ") {
-      const buying = cards[choice.substring(5)];
-      this.discardPile.push(buying);
-      this.money -= buying.cost;
-      --this.buys;
-
-      this.game.allLog(this.name + " bought " + buying.name);
-      this.game.store.bought(buying);
-      this.promptBuys();
-    } else {
-      this.playCard(choice, this.promptBuys.bind(this));
+        this.game.allLog(this.name + " bought " + buying.name);
+        this.game.store.bought(buying);
+      } else {
+        await this.playCard(choice);
+      }
     }
   }
 
   playAllTreasures() {
-    const treasures = this.hand.filter(c => c.ofKind("treasure"));
-    if (treasures.length) {
-      this.playCard(treasures[0].name, this.playAllTreasures.bind(this));
-    } else {
-      this.promptBuys();
+    for (const treasure of this.hand.filter(c => c.ofKind("treasure"))) {
+      this.playCard(treasure.name);
     }
   }
 
@@ -174,14 +165,13 @@ class Player {
     return cards;
   }
 
-  async playCard(name, callback) {
+  async playCard(name) {
     const card = this.fromHand(name);
     if (card === null) {
       throw new Error("Card doesn't exist: " + name);
     }
     await card.play(this);
     this.afterPlay(card);
-    callback();
   }
 
   /**
@@ -204,8 +194,6 @@ class Player {
 
     this.sendMessage("");
     this.redrawHand();
-
-    this.afterTurn();
   }
 
   draw(n = 1, prefix) {
