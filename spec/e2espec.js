@@ -136,31 +136,40 @@ describe("e2e", () => {
     closeReopenAt("Buy: Copper", done);
   });
 
-  it("handles p2 joins then leaves lobby", async done => {
-    const p1 = await new ManualPlayer().play([
-      _ => "New Game",
-      async _ => {
-        await new Promise((res, rej) => {
-          const p2 = new Lib(url, bigMoney, line => {
-            if (line === "message: Waiting for the leader to start the game") {
-              p2.close();
-              setTimeout(res, 5); // Wait for close timeouts to run before game starts
-            }
-          });
-          p2.connect("p2");
-        });
+  it("p2 joins, leaves lobby", async done => {
+    await p2JoinsThenLeaveLobby(done, true);
+  });
 
-        return "Moat";
-      },
-      _ => "Play All Treasures",
-      _ => "Buy: Moat",
-    ]);
-
-    p1.close();
-
-    done();
+  it("p2 joins, starts to leave lobby", async done => {
+    await p2JoinsThenLeaveLobby(done, false);
   });
 });
+
+async function p2JoinsThenLeaveLobby(done, waitForClose) {
+  const p1 = await new ManualPlayer().play([
+    _ => "New Game",
+    async _ => {
+      await new Promise((res, rej) => {
+        const p2 = new Lib(url, bigMoney, line => {
+          if (line === "message: Waiting for the leader to start the game") {
+            p2.close();
+            if (waitForClose) {
+              // Wait for close timeouts to run before game starts
+              setTimeout(res, 10); // ugly hack, but as long as it works...
+            } else {
+              res();
+            }
+          }
+        });
+        p2.connect("p2");
+      });
+      return "Moat";
+    },
+    _ => "Play All Treasures",
+  ]);
+  p1.close();
+  done();
+}
 
 /**
  * @param {any[]} output

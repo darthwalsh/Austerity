@@ -85,11 +85,7 @@ class Connection {
       }
 
       this.sentChoices = JSON.stringify({choices});
-      if (!this.connected) {
-        // TODO(E2E) fix disconnected player
-        throw new Error("Player is disconnected");
-      }
-      
+
       this.onChoice = choice => {
         if (!choices.includes(choice)) {
           this.send({message: `"${choice}" not a valid choice of "${choices}"!!!`});
@@ -101,7 +97,9 @@ class Connection {
         resolve(choice);
       };
 
-      this.ws.send(this.sentChoices);
+      if (this.connected) { // If player is disconnected, they will get choices sent if/when they reconnect
+        this.ws.send(this.sentChoices);
+      }
     });
   }
 
