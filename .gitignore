@@ -1,3 +1,5 @@
 node_modules/
 .vs/
 junitresults-*.xml
+.nyc_output/
+coverage/
