@@ -3,3 +3,4 @@ node_modules/
 junitresults-*.xml
 .nyc_output/
 coverage/
+spec/Multiplayer.txt

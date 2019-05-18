@@ -36,6 +36,36 @@ async function bigMoney(choices) {
   return choices[0];
 }
 
+class CuriousBot {
+  constructor() {
+    this.seen = /** @type {Map<string, number>} */ (new Map());
+
+    // Limit buying cheap cards
+    this.limitChoice = [
+      "Buy: Copper",
+      "Buy: Estate",
+      "Buy: Chapel",
+      "Buy: Moat",
+    ];
+  }
+
+  count(choice) {
+    return this.seen.get(choice) || 0;
+  }
+
+  /**
+   * @param {string[]} choices
+   */
+  async choose(choices) {
+    choices = choices.filter(c => c !== "\n");
+    choices = choices.filter(c => !(this.limitChoice.includes(c) && this.count(c) > 0));
+    choices.sort((a, b) => this.count(a) - this.count(b));
+    const choice = choices[0];
+
+    this.seen.set(choice, this.count(choice) + 1);
+    return choice;
+  }
+}
 
 class ManualPlayer {
   constructor(name = "p1") {
@@ -74,31 +104,46 @@ describe("e2e", () => {
   it("plays a game", async done => {
     const output = [];
     await new Promise((res, rej) => {
-      const p1 = new Lib(url, async choices => {
-        const result = await bigMoney(choices);
-        output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
-        output.push(`Chose: ${result}`);
-        return result;
-      }, line => {
-        expect(line.includes("\n")).toBeFalsy();
-        output.push(line);
-        if (line.includes("GAME OVER!!!")) {
-          res();
-        }
-      });
+      const p1 = new Lib(url,
+        wrapWithLogging(bigMoney, output),
+        logUntilGameOver(output, res));
       p1.connect("p1");
     });
 
-    const transcript = path.join(__dirname, "SoloBigMoney.txt");
+    checkOutput("SoloBigMoney.txt", output);
+    done();
+  });
 
-    output.push(""); // trailing new line
-    const expected = fs.readFileSync(transcript, {encoding: "utf8"}).split(/\r?\n/);
-    if (output !== expected) {
-      fs.writeFileSync(transcript, output.join("\r\n")); // re-baseline the test data for next run
-    }
+  it("multiplayer", async done => {
+    const output = [];
 
-    expectArrayEqual(output, expected);
+    await new Promise((res, rej) => {
+      let joined = false;
+      const dedupedStrategy = new CuriousBot(); // Use same backing storage for p1 and p2
+      const strategy = wrapWithLogging(choices => dedupedStrategy.choose(choices), output);
+      const joiningStrategy = async choices => {
+        if (!joined && choices.length > 20) {
+          await new Promise((rr, _) => {
+            new Lib(url, wrapWithLogging(choices => {
+              const joinGame = choices.filter(c => c.endsWith("'s game"))[0];
+              if (joinGame) {
+                setTimeout(rr, 10); // ugly hack, but as long as it works...
+                return Promise.resolve(joinGame);
+              }
+              return dedupedStrategy.choose(choices);
+            }, output), logUntilGameOver(output, res)).connect("Ape");
+            joined = true;
+          });
 
+          return choices.join(" ");
+        }
+        return strategy(choices);
+      };
+
+      new Lib(url, joiningStrategy, logUntilGameOver(output, res)).connect("Monkey");
+    });
+
+    fs.writeFileSync(path.join(__dirname, "Multiplayer.txt"), output.join("\r\n"));
     done();
   });
 
@@ -145,6 +190,42 @@ describe("e2e", () => {
   });
 });
 
+/**
+ * @param {function(string[]): Promise<string>} strategy
+ * @param {string[]} output
+ * @return {function(string[]): Promise<string>}
+ */
+function wrapWithLogging(strategy, output) {
+  return /** @param {string[]} choices */ async choices => {
+    const result = await strategy(choices);
+    output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
+    output.push(`Chose: ${result}`);
+    return result;
+  };
+}
+
+function logUntilGameOver(output, res) {
+  return line => {
+    expect(line.includes("\n")).toBeFalsy();
+    output.push(line);
+    if (line.includes("GAME OVER!!!")) {
+      res();
+    }
+  };
+}
+
+function checkOutput(name, output) {
+  const transcript = path.join(__dirname, name);
+  output.push(""); // trailing new line
+  const expected = fs.existsSync(transcript) ?
+    fs.readFileSync(transcript, {encoding: "utf8"}).split(/\r?\n/) :
+    ["<File didn't exist>"];
+  if (output !== expected) {
+    fs.writeFileSync(transcript, output.join("\r\n")); // re-baseline the test data for next run
+  }
+  expectArrayEqual(output, expected);
+}
+
 async function p2JoinsThenLeaveLobby(done, waitForClose) {
   const p1 = await new ManualPlayer().play([
     _ => "New Game",
@@ -177,7 +258,9 @@ async function p2JoinsThenLeaveLobby(done, waitForClose) {
  */
 function expectArrayEqual(output, expected) {
   for (let i = 0; i < Math.min(output.length, expected.length); ++i) {
-    expect(`[${i+1}] ${output[i]}`).toEqual(`[${i+1}] ${expected[i]}`);
+    if (output[i] !== expected[i]) { // Quick check for perf
+      expect(`[${i+1}] ${output[i]}`).toEqual(`[${i+1}] ${expected[i]}`);
+    }
   }
   expect(output.length).toEqual(expected.length);
 }
