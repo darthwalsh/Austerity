@@ -137,7 +137,7 @@ window.onload = () => {
   });
 
   const helpOverlay = $("helpOverlay");
-  $("closeOverlay").onclick = () => helpOverlay.style.display = "none";
+  helpOverlay.onclick = () => helpOverlay.style.display = "none";
   $("help").onclick = () => helpOverlay.style.display = "";
 
   let turnAlert;
@@ -204,8 +204,8 @@ window.onload = () => {
       colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
       break;
     case "included":
-      while (helpOverlay.firstElementChild.nextElementSibling) {
-        helpOverlay.removeChild(helpOverlay.firstElementChild.nextElementSibling);
+      while (helpOverlay.firstElementChild) {
+        helpOverlay.removeChild(helpOverlay.firstElementChild);
       }
       for (const cardName of data) {
         const jpg = document.createElement("img");
