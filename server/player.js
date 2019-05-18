@@ -227,12 +227,12 @@ class Player {
   async attacked(attack) {
     if (this.hand.filter(c => c.name === "Moat").length) {
       const choice = await this.choose(["Moat", "Get Attacked"]);
-      if (choice === "Get Attacked") {
-        return attack(this);
+      if (choice === "Moat") {
+        this.game.allLog(`${this.name} revealed Moat`);
+        return;
       }
-    } else {
-      return attack(this);
     }
+    return attack(this);
   }
 
   getPoints() {

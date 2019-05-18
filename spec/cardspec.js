@@ -522,6 +522,10 @@ const tests = {
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
+    interactions: [
+      "ALL: Other#0 revealed Moat",
+    ],
+
     others: [{
       hand: ["Moat"],
       discard: [],
@@ -556,6 +560,10 @@ const tests = {
 
   Militia_Moat: {
     dMoney: 2,
+
+    interactions: [
+      "ALL: Other#0 revealed Moat",
+    ],
 
     others: [{
       hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
@@ -820,6 +828,7 @@ const tests = {
 
   Thief_Moat: {
     interactions: [
+      "ALL: Other#0 revealed Moat",
       "Trash or steal a Treasure:",
       ["Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
