@@ -34,6 +34,7 @@ class Store {
     }, {});
 
     this.included = included;
+    this.allCards = this.default.concat(this.included).sort((a, b) => a.compareTo(b));
 
     this.counts = this.included.reduce((o, c) => {
       o[c.name] = c.ofKind("victory") ? victoryCount : actionCount;
@@ -42,7 +43,7 @@ class Store {
   }
 
   getAllCards() {
-    return this.default.concat(this.included).sort((a, b) => a.compareTo(b));
+    return this.allCards;
   }
 
   getAvailable(price) {

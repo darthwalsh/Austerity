@@ -9,10 +9,12 @@
   "scripts": {
     "cli": "node cli/cli.js",
     "start": "node server/app.js",
+    "watch": "supervisor --poll-interval 2000 --quiet --ignore client,.git,node_modules server/app.js",
     "pretest": "eslint --fix server client spec && tsc -p jsconfig.json",
     "test": "jasmine",
     "cover": "nyc --reporter=lcov --reporter=text-summary jasmine",
-    "watch": "supervisor --poll-interval 2000 --quiet --ignore client,.git,node_modules server/app.js"
+    "profile": "node --inspect-brk node_modules/jasmine/bin/jasmine.js spec/e2espec.js",
+    "genCards": "node server/generateCardsTable.js > server\\cardsTable.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
     "@types/jasmine": "3.3.12",
     "@types/node": "11.13.9",
     "@types/ws": "6.0.1",
+    "csv-parse": "^4.3.3",
     "eslint": "5.16.0",
     "eslint-config-google": "0.13.0",
     "jasmine": "3.4.0",
@@ -39,7 +42,6 @@
     "typescript": "3.4.5"
   },
   "dependencies": {
-    "csv-parse": "^4.3.3",
     "express": "^4.16.4",
     "ws": "^7.0.0"
   }

@@ -3,10 +3,7 @@
  * @typedef { import("./player") } Player
  */
 
-const csvParse = /** @type {function(string|Buffer, object): Array} */
-  (require("csv-parse/lib/sync"));
-const fs = require("fs");
-const path = require("path");
+const cardsTable = require("./cardsTable");
 
 if (!Array.prototype.flatMap) {
   // eslint-disable-next-line no-extend-native
@@ -16,7 +13,7 @@ if (!Array.prototype.flatMap) {
 }
 
 function money(provides) {
-  return async /** @param {Player} player */ player =>
+  return /** @param {Player} player */ async player =>
     player.money += provides;
 }
 
@@ -540,21 +537,6 @@ const kindOrder = {
   action: 3,
 };
 
-function getTable() {
-  const csv = fs.readFileSync(path.join(__dirname, "AusterityWiki.csv"));
-  const table = csvParse(csv, {columns: h => h.map(c => c.toLowerCase())});
-  return table.reduce((o, row) => {
-    const name = row.name.replace(/[ ']/g, "");
-    if (o[name]) {
-      throw new Error(`${row.name} overlaps with ${o[row.name].name}`);
-    }
-    o[name] = row;
-    return o;
-  }, {});
-}
-
-const table = getTable();
-
 /**
  * @param {{cost: string, name: string}} tableRow
  * @return {number}
@@ -568,7 +550,7 @@ function getCost(tableRow) {
 }
 
 /**
- * @param {{types: string, name: string}} tableRow
+ * @param {{types: string}} tableRow
  * @return {string[]}
  */
 function getKinds(tableRow) {
@@ -614,7 +596,7 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   card.name = name;
   card.compareTo = compareTo;
 
-  const tableRow = table[name];
+  const tableRow = cardsTable[name];
   if (!tableRow) {
     throw new Error(`Can't find ${name}`);
   }
