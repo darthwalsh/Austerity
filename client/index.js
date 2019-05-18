@@ -209,8 +209,9 @@ window.onload = () => {
       }
       for (const cardName of data) {
         const jpg = document.createElement("img");
-        jpg.width = 200;
-        jpg.height = 320;
+        jpg.style.width = "200";
+        jpg.style.maxWidth = "50%";
+        jpg.style.height = "auto";
         jpg.src = `/cards/${cardName}.jpg`;
         helpOverlay.appendChild(jpg);
       }
