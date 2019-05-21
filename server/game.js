@@ -180,7 +180,8 @@ class Game {
   /**
    * @param {Player} player
    * @param {string} cardName
-   * @param {object} options {toHand: boolean}
+   * @param {object} options
+   * @param {boolean} [options.toHand]
    */
   gainCard(player, cardName, {toHand = false} = {}) {
     if (!this.store.counts[cardName]) {

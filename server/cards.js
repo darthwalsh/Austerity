@@ -38,7 +38,7 @@ const kingdom = {
     let treasures = 0;
     const drawn = [];
     while (treasures < 2) {
-      const card = player.fromDraw();
+      const card = player.fromDraw({reveal: true});
       if (!card) {
         break;
       }
@@ -74,7 +74,7 @@ const kingdom = {
     player.game.tryGainCard(player, "Gold");
 
     await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const drawn = other.multiFromDraw(2);
+      const drawn = other.multiFromDraw(2, {reveal: true});
       const goodTreasures = drawn.filter(c => c.ofKind("treasure") && c.name !== "Copper").map(t => t.name);
       if (goodTreasures.length) {
         other.sendMessage("Choose a treasure to trash:");
@@ -96,7 +96,11 @@ const kingdom = {
       if (discardChoices.length) {
         other.sendMessage("Put a Victory card onto your deck:");
         const choice = await other.choose(discardChoices);
+        player.game.allLog(`${other.name} revealed ${choice} and put it onto their deck`);
         other.drawPile.push(other.fromHand(choice));
+      } else {
+        const hand = other.hand.map(c => c.name).join(", ");
+        player.game.allLog(`${other.name} revealed ${hand}`);
       }
     });
   },
@@ -376,7 +380,7 @@ const kingdom = {
     player.draw();
 
     const attack = /** @param {Player} other */ async other => {
-      const card = other.fromDraw();
+      const card = other.fromDraw({reveal: true});
       if (!card) {
         return;
       }
@@ -396,7 +400,7 @@ const kingdom = {
 
   Thief: /** @param {Player} player */ async player => {
     await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
-      const drawn = other.multiFromDraw(2);
+      const drawn = other.multiFromDraw(2, {reveal: true});
       const treasures = drawn
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
@@ -573,6 +577,14 @@ function compareTo(other) {
 }
 
 /**
+ * Cards are defined here combined with info from cardsTable
+ * Name should be valid JS identifiers, and match the real name s/[ ']//g
+ * If the card is type function, then that is assumed to be play()
+ *
+ * When implementing, use caution to ensure proper bookkeeping:
+ * - use player.store.gainCard() instead of directly adding copied cards
+ * - revealed cards should use player.fromDraw({reveal: true}) // TODO test this?
+ *
  * @typedef {object} Card
  * @property {string} name
  * @property {number} cost

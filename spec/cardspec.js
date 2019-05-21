@@ -67,6 +67,13 @@ const tests = {
   Adventurer: {
     draw: ["Copper", "Village", "Silver"],
     hand: [],
+
+    interactions: [
+      "ALL: Bot revealed Silver",
+      "ALL: Bot revealed Village",
+      "ALL: Bot revealed Copper",
+    ],
+
     discardAfter: ["Village"],
     handAfter: ["Copper", "Silver"],
   },
@@ -74,6 +81,13 @@ const tests = {
   Adventurer_None: {
     draw: ["Village", "Estate", "Duchy"],
     hand: [],
+
+    interactions: [
+      "ALL: Bot revealed Duchy",
+      "ALL: Bot revealed Estate",
+      "ALL: Bot revealed Village",
+    ],
+
     discardAfter: ["Duchy", "Estate", "Village"],
     handAfter: [],
   },
@@ -82,6 +96,11 @@ const tests = {
     draw: [],
     discard: ["Copper"],
     hand: [],
+
+    interactions: [
+      "ALL: Bot revealed Copper",
+    ],
+
     discardAfter: [],
     handAfter: ["Copper"],
   },
@@ -89,6 +108,13 @@ const tests = {
   Adventurer_Extra: {
     draw: ["Estate", "Copper", "Village", "Silver"],
     hand: [],
+
+    interactions: [
+      "ALL: Bot revealed Silver",
+      "ALL: Bot revealed Village",
+      "ALL: Bot revealed Copper",
+    ],
+
     drawAfter: ["Estate"],
     discardAfter: ["Village"],
     handAfter: ["Copper", "Silver"],
@@ -114,6 +140,8 @@ const tests = {
   Bandit: {
     interactions: [
       "ALL: Bot gained Gold",
+      "ALL: Other#0 revealed Silver",
+      "ALL: Other#0 revealed Gold",
       "ALL: Other#0 trashed Silver",
     ],
     others: [{
@@ -132,6 +160,8 @@ const tests = {
   Bandit_OneTreasure: {
     interactions: [
       "ALL: Bot gained Gold",
+      "ALL: Other#0 revealed Silver",
+      "ALL: Other#0 revealed Copper",
       "ALL: Other#0 trashed Silver",
     ],
     others: [{
@@ -150,6 +180,7 @@ const tests = {
   Bandit_NoTreasure: {
     interactions: [
       "ALL: Bot gained Gold",
+      "ALL: Other#0 revealed Copper",
     ],
     others: [{
       draw: ["Copper"],
@@ -163,6 +194,7 @@ const tests = {
 
     interactions: [
       "ALL: Bot gained Silver",
+      "ALL: Other#0 revealed Estate and put it onto their deck",
     ],
 
     others: [{
@@ -182,6 +214,7 @@ const tests = {
 
     interactions: [
       "ALL: Bot gained Silver",
+      "ALL: Other#0 revealed Copper, Silver, Gold",
     ],
 
     others: [{
@@ -711,12 +744,15 @@ const tests = {
     draw: ["Moneylender", "Copper", "Silver"],
 
     interactions: [
+      "ALL: Other#1 revealed Thief",
       "Put back on deck or discard Other#1's Thief",
       ["Put back", "Discard"],
       "Discard",
+      "ALL: Other#2 revealed Copper",
       "Put back on deck or discard Other#2's Copper",
       ["Put back", "Discard"],
       "Put back",
+      "ALL: Bot revealed Copper",
       "Put back on deck or discard Your Copper",
       ["Put back", "Discard"],
       "Discard",
@@ -749,6 +785,8 @@ const tests = {
 
   Thief: {
     interactions: [
+      "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 revealed Silver",
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
@@ -763,7 +801,9 @@ const tests = {
   },
 
   Thief_NonTreasure: {
-    interactions: [],
+    interactions: [
+      "ALL: Other#0 revealed Village",
+    ],
 
     others: [{
       draw: ["Village"],
@@ -773,10 +813,13 @@ const tests = {
 
   Thief_SequentialMultiple: {
     interactions: [
+      "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 revealed Silver",
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Trash: Silver",
       "ALL: Bot trashed Silver",
+      "ALL: Other#1 revealed Gold",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
       "Steal: Gold",
@@ -808,9 +851,13 @@ const tests = {
       ["Thief"],
       "Thief",
       "ALL: Bot played Thief doubled!",
+      "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 revealed Silver",
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Other#0 revealed Gold",
+      "ALL: Other#0 revealed Village",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
       "Steal: Gold",
@@ -829,6 +876,7 @@ const tests = {
   Thief_Moat: {
     interactions: [
       "ALL: Other#0 revealed Moat",
+      "ALL: Other#1 revealed Silver",
       "Trash or steal a Treasure:",
       ["Trash: Silver", "Steal: Silver"],
       "Steal: Silver",

@@ -148,20 +148,35 @@ class Player {
     return card;
   }
 
-  fromDraw() {
+  /**
+   * @param {object} options
+   * @param {boolean} [options.reveal]
+   * @return {Card}
+   */
+  fromDraw({reveal = false} = {}) {
     if (!this.drawPile.length) {
       this.shuffle();
       if (!this.drawPile.length) {
         return null;
       }
     }
-    return this.drawPile.pop();
+    const drawn = this.drawPile.pop();
+    if (reveal) {
+      this.game.allLog(`${this.name} revealed ${drawn.name}`);
+    }
+    return drawn;
   }
 
-  multiFromDraw(count) {
+  /**
+   * @param {number} count
+   * @param {object} [options]
+   * @param {boolean} [options.reveal]
+   * @return {Card[]}
+   */
+  multiFromDraw(count, options = {}) {
     const cards = [];
     for (let i = 0; i < count; ++i) {
-      const draw = this.fromDraw();
+      const draw = this.fromDraw(options);
       if (!draw) {
         break;
       }
