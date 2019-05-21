@@ -15,6 +15,7 @@ Choices: Play All Treasures, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done W
 Chose: Play All Treasures
 message: Your hand: Copper, Estate, Estate, Estate
 message: Your hand: Estate, Estate, Estate
+message: p1 played all treasures for 2 coin
 message: Actions: 1 Money: 2 Buys: 1
 Choices: Buy: Copper, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Copper
@@ -33,6 +34,7 @@ message: Your hand: Copper, Copper, Copper
 message: Your hand: Copper, Copper
 message: Your hand: Copper
 message: Your hand: 
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -48,6 +50,7 @@ Choices: Play All Treasures, Copper, Silver, \n, Buy: Copper, Buy: Curse, Done W
 Chose: Play All Treasures
 message: Your hand: Silver, Estate, Estate, Estate
 message: Your hand: Estate, Estate, Estate
+message: p1 played all treasures for 3 coin
 message: Actions: 1 Money: 3 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -66,6 +69,7 @@ message: Your hand: Copper, Copper, Copper
 message: Your hand: Copper, Copper
 message: Your hand: Copper
 message: Your hand: 
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -84,6 +88,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 8 coin
 message: Actions: 1 Money: 8 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -99,6 +104,7 @@ Choices: Play All Treasures, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done W
 Chose: Play All Treasures
 message: Your hand: Copper, Estate, Estate, Estate
 message: Your hand: Estate, Estate, Estate
+message: p1 played all treasures for 2 coin
 message: Actions: 1 Money: 2 Buys: 1
 Choices: Buy: Copper, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Copper
@@ -117,6 +123,7 @@ message: Your hand: Copper, Copper, Silver
 message: Your hand: Copper, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 6 coin
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
@@ -132,6 +139,7 @@ Choices: Play All Treasures, Silver, Silver, \n, Buy: Copper, Buy: Curse, Done W
 Chose: Play All Treasures
 message: Your hand: Silver, Estate, Estate, Province
 message: Your hand: Estate, Estate, Province
+message: p1 played all treasures for 4 coin
 message: Actions: 1 Money: 4 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -149,6 +157,7 @@ message: Your hand: Copper, Copper, Copper, Estate
 message: Your hand: Copper, Copper, Estate
 message: Your hand: Copper, Estate
 message: Your hand: Estate
+message: p1 played all treasures for 4 coin
 message: Actions: 1 Money: 4 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -167,6 +176,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 9 coin
 message: Actions: 1 Money: 9 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -182,6 +192,7 @@ Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done Wit
 Chose: Play All Treasures
 message: Your hand: Gold, Estate, Estate, Province
 message: Your hand: Estate, Estate, Province
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -199,6 +210,7 @@ message: Your hand: Copper, Copper, Copper, Estate
 message: Your hand: Copper, Copper, Estate
 message: Your hand: Copper, Estate
 message: Your hand: Estate
+message: p1 played all treasures for 4 coin
 message: Actions: 1 Money: 4 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -217,6 +229,7 @@ message: Your hand: Copper, Copper, Silver
 message: Your hand: Copper, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 6 coin
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
@@ -235,6 +248,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 10 coin
 message: Actions: 1 Money: 10 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -250,6 +264,7 @@ Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done Wit
 Chose: Play All Treasures
 message: Your hand: Gold, Estate, Province, Province
 message: Your hand: Estate, Province, Province
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -266,6 +281,7 @@ Chose: Play All Treasures
 message: Your hand: Copper, Copper, Estate, Estate
 message: Your hand: Copper, Estate, Estate
 message: Your hand: Estate, Estate
+message: p1 played all treasures for 3 coin
 message: Actions: 1 Money: 3 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -284,6 +300,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 8 coin
 message: Actions: 1 Money: 8 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -302,6 +319,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 10 coin
 message: Actions: 1 Money: 10 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -317,6 +335,7 @@ Choices: Play All Treasures, Silver, Gold, \n, Buy: Copper, Buy: Curse, Done Wit
 Chose: Play All Treasures
 message: Your hand: Gold, Province, Province, Province
 message: Your hand: Province, Province, Province
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -332,6 +351,7 @@ Choices: Play All Treasures, Copper, Gold, \n, Buy: Copper, Buy: Curse, Done Wit
 Chose: Play All Treasures
 message: Your hand: Gold, Estate, Estate, Estate
 message: Your hand: Estate, Estate, Estate
+message: p1 played all treasures for 4 coin
 message: Actions: 1 Money: 4 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -350,6 +370,7 @@ message: Your hand: Copper, Copper, Copper
 message: Your hand: Copper, Copper
 message: Your hand: Copper
 message: Your hand: 
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -368,6 +389,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 9 coin
 message: Actions: 1 Money: 9 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -386,6 +408,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 10 coin
 message: Actions: 1 Money: 10 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province
@@ -402,6 +425,7 @@ Chose: Play All Treasures
 message: Your hand: Silver, Silver, Province, Province
 message: Your hand: Silver, Province, Province
 message: Your hand: Province, Province
+message: p1 played all treasures for 6 coin
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
@@ -417,6 +441,7 @@ Choices: Play All Treasures, Gold, Gold, \n, Buy: Copper, Buy: Curse, Done With 
 Chose: Play All Treasures
 message: Your hand: Gold, Province, Province, Province
 message: Your hand: Province, Province, Province
+message: p1 played all treasures for 6 coin
 message: Actions: 1 Money: 6 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Gold
@@ -432,6 +457,7 @@ Choices: Play All Treasures, Copper, Copper, \n, Buy: Copper, Buy: Curse, Done W
 Chose: Play All Treasures
 message: Your hand: Copper, Estate, Estate, Estate
 message: Your hand: Estate, Estate, Estate
+message: p1 played all treasures for 2 coin
 message: Actions: 1 Money: 2 Buys: 1
 Choices: Buy: Copper, Buy: Estate, Buy: Curse, Done With Buys
 Chose: Buy: Copper
@@ -450,6 +476,7 @@ message: Your hand: Copper, Copper, Copper
 message: Your hand: Copper, Copper
 message: Your hand: Copper
 message: Your hand: 
+message: p1 played all treasures for 5 coin
 message: Actions: 1 Money: 5 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Estate, Buy: Duchy, Buy: Curse, Done With Buys
 Chose: Buy: Silver
@@ -468,6 +495,7 @@ message: Your hand: Silver, Silver, Silver
 message: Your hand: Silver, Silver
 message: Your hand: Silver
 message: Your hand: 
+message: p1 played all treasures for 9 coin
 message: Actions: 1 Money: 9 Buys: 1
 Choices: Buy: Copper, Buy: Silver, Buy: Gold, Buy: Platinum, Buy: Estate, Buy: Duchy, Buy: Province, Buy: Curse, Done With Buys
 Chose: Buy: Province

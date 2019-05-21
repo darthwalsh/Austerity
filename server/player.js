@@ -122,15 +122,20 @@ class Player {
         this.game.allLog(this.name + " bought " + buying.name);
         this.game.store.bought(buying);
       } else {
+        this.game.allLog(this.name + " played " + choice);
         await this.playCard(choice);
       }
     }
   }
 
   playAllTreasures() {
+    const before = this.money;
+
+    // When implementing nontrivial treasures, this probably shouldn't include them
     for (const treasure of this.hand.filter(c => c.ofKind("treasure"))) {
       this.playCard(treasure.name);
     }
+    this.game.allLog(`${this.name} played all treasures for ${this.money - before} coin`);
   }
 
   fromHand(name) {
