@@ -10,7 +10,11 @@ class lib {
     this.ws = new WebSocket(url);
     this.log = log;
     this.open = false;
+    this.readline = readline;
+    this.initWS();
+  }
 
+  initWS() {
     this.opened = new Promise((res, rej) => {
       this.ws.addEventListener("open", () => {
         this.open = true;
@@ -30,11 +34,11 @@ class lib {
 
       switch (type) {
       case "choices":
-        const choice = await readline(data);
+        const choice = await this.readline(data);
         this.send({choice});
         break;
       case "isLeader":
-        const included = (await readline(data)).split(" ");
+        const included = (await this.readline(data)).split(" ");
         const debugMode = false;
         this.send({gameStart: {included, debugMode}});
         break;
@@ -43,16 +47,20 @@ class lib {
       }
     });
   }
+
   async connect(name) {
     if (this.open) {
       throw new Error("Already open");
     }
+    this.name = name;
     await this.opened;
     this.send({name});
   }
+
   close() {
     this.ws.close();
   }
+
   /**
    * @param {object} o
    */

@@ -119,19 +119,25 @@ describe("e2e", () => {
 
     await new Promise((res, rej) => {
       let joined = false;
+      let p1 = null, p2 = null;
       const dedupedStrategy = new CuriousBot(); // Use same backing storage for p1 and p2
       const strategy = wrapWithLogging(choices => dedupedStrategy.choose(choices), output);
       const joiningStrategy = async choices => {
         if (!joined && choices.length > 20) {
           await new Promise((rr, _) => {
-            new Lib(url, wrapWithLogging(choices => {
+            p2 = new Lib(url, wrapWithLogging(choices => {
               const joinGame = choices.filter(c => c.endsWith("'s game"))[0];
               if (joinGame) {
-                setTimeout(rr, 10); // ugly hack, but as long as it works...
+                // Ugly hack, but as long as it works...
+                setTimeout(() => {
+                  bypassSockets(server, [p1, p2]);
+                  rr();
+                }, 10);
                 return Promise.resolve(joinGame);
               }
               return dedupedStrategy.choose(choices);
-            }, output), logUntilGameOver(output, res)).connect("Ape");
+            }, output), logUntilGameOver(output, res));
+            p2.connect("Ape");
             joined = true;
           });
 
@@ -140,7 +146,8 @@ describe("e2e", () => {
         return strategy(choices);
       };
 
-      new Lib(url, joiningStrategy, logUntilGameOver(output, res)).connect("Monkey");
+      p1 = new Lib(url, joiningStrategy, logUntilGameOver(output, res));
+      p1.connect("Monkey");
     });
 
     fs.writeFileSync(path.join(__dirname, "Multiplayer.txt"), output.join("\r\n"));
@@ -250,6 +257,62 @@ async function p2JoinsThenLeaveLobby(done, waitForClose) {
   ]);
   p1.close();
   done();
+}
+
+class MockWebSocket {
+  constructor() {
+    this.readyState = 1;
+    this.handlers = [];
+    this.otherHandlers = [];
+  }
+
+  addEventListener(name, handler) {
+    switch (name) {
+    case "message": this.handlers.push(handler); return;
+    case "open": setTimeout(handler, 0);
+    }
+  }
+
+  removeEventListener(name, handler) {
+    if (name !== "message") {
+      throw new Error(name);
+    }
+    this.handlers.splice(this.handlers.indexOf(handler), 1);
+  }
+
+  send(data) {
+    if (typeof data !== "string") {
+      throw new Error(data);
+    }
+    this.otherHandlers.forEach(f => f({data}));
+  }
+
+  static newPair() {
+    const a = new MockWebSocket(), b = new MockWebSocket;
+    [a.otherHandlers, b.otherHandlers] = [b.handlers, a.handlers];
+    return [a, b];
+  }
+}
+
+/**
+ * @param {Server} server
+ * @param {Lib[]} clients
+ */
+function bypassSockets(server, clients) {
+  const names = Object.keys(server.lobby.games);
+  if (names.length !== 1) {
+    throw new Error("not single game");
+  }
+  const game = server.lobby.games[names[0]];
+  for (const client of clients) {
+    client.ws.close();
+    const conn = game.players[client.name].connection;
+    conn.ws.close();
+    const [clientMock, serverMock] = /** @type {any[]} */ (MockWebSocket.newPair());
+    conn.newConnection(serverMock);
+    client.ws = clientMock;
+    client.initWS();
+  }
 }
 
 /**
