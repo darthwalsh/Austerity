@@ -583,12 +583,13 @@ function compareTo(other) {
  *
  * When implementing, use caution to ensure proper bookkeeping:
  * - use player.store.gainCard() instead of directly adding copied cards
- * - revealed cards should use player.fromDraw({reveal: true}) // TODO test this?
+ * - revealed cards should use player.fromDraw({reveal: true})
  *
  * @typedef {object} Card
  * @property {string} name
  * @property {number} cost
  * @property {string[]} kind
+ * @property {string} text
  * @property {string} color
  *
  * @property {function(Player): Promise<void>} play
@@ -614,8 +615,9 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   }
 
   card.cost = getCost(tableRow);
-
   card.kind = getKinds(tableRow);
+  card.text = tableRow.text;
+
   card.ofKind = k => card.kind.includes(k);
   card.color = colorMap[card.kind[0]];
 

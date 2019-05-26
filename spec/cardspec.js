@@ -1268,6 +1268,16 @@ describe("cards", () => {
       expect(cards[cardName].color).toBeTruthy();
     }
   });
+
+  it("has reveal message for all", () => {
+    const cardsWithReveal = Object.entries(cards).filter(entry => /reveal/i.test(entry[1].text));
+    const testsWithReveal = new Set(Object.entries(tests)
+      .filter(entry => entry[1].interactions && entry[1].interactions.some(i => /ALL: .*revealed/.test(i)))
+      .flatMap(entry => entry[0].split("_")));
+    for (const card of cardsWithReveal) {
+      expect(testsWithReveal.has(card[0])).toBeTruthy();
+    }
+  });
 });
 
 // TODO(CRASH) add a test for player turn, streaming in shuffle, asserting all output
