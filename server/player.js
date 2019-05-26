@@ -192,6 +192,18 @@ class Player {
     this.game.trashPush(this, trash);
   }
 
+  /**
+   * @param {Card[]} discard Cards to discard, where [0] is revealed
+   */
+  discardPush(discard) {
+    if (!discard.length) {
+      return;
+    }
+    const others = discard.length > 1 ? ` and ${discard.length - 1} more` : "";
+    this.game.allLog(`${this.name} discarded ${discard[0].name}${others}`);
+    this.discardPile.push(...discard);
+  }
+
   async playCard(name) {
     const card = this.fromHand(name);
     if (card === null) {

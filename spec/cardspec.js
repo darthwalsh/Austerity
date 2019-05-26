@@ -72,6 +72,7 @@ const tests = {
       "ALL: Bot revealed Silver",
       "ALL: Bot revealed Village",
       "ALL: Bot revealed Copper",
+      "ALL: Bot discarded Village",
     ],
 
     discardAfter: ["Village"],
@@ -86,6 +87,7 @@ const tests = {
       "ALL: Bot revealed Duchy",
       "ALL: Bot revealed Estate",
       "ALL: Bot revealed Village",
+      "ALL: Bot discarded Duchy and 2 more",
     ],
 
     discardAfter: ["Duchy", "Estate", "Village"],
@@ -113,6 +115,7 @@ const tests = {
       "ALL: Bot revealed Silver",
       "ALL: Bot revealed Village",
       "ALL: Bot revealed Copper",
+      "ALL: Bot discarded Village",
     ],
 
     drawAfter: ["Estate"],
@@ -143,6 +146,7 @@ const tests = {
       "ALL: Other#0 revealed Silver",
       "ALL: Other#0 revealed Gold",
       "ALL: Other#0 trashed Silver",
+      "ALL: Other#0 discarded Gold",
     ],
     others: [{
       draw: ["Gold", "Silver"],
@@ -163,6 +167,7 @@ const tests = {
       "ALL: Other#0 revealed Silver",
       "ALL: Other#0 revealed Copper",
       "ALL: Other#0 trashed Silver",
+      "ALL: Other#0 discarded Copper",
     ],
     others: [{
       draw: ["Copper", "Silver"],
@@ -181,6 +186,7 @@ const tests = {
     interactions: [
       "ALL: Bot gained Gold",
       "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 discarded Copper",
     ],
     others: [{
       draw: ["Copper"],
@@ -235,6 +241,7 @@ const tests = {
       "Discard cards:",
       ["Gold", "Done Discarding"],
       "Gold",
+      "ALL: Bot discarded Copper and 1 more",
     ],
     drawAfter: [],
     discardAfter: ["Copper", "Gold"],
@@ -263,6 +270,7 @@ const tests = {
       "Discard your draw pile?",
       ["No", "Discard"],
       "Discard",
+      "ALL: Bot discarded Silver",
     ],
     drawAfter: [],
     discardAfter: ["Silver"],
@@ -445,6 +453,7 @@ const tests = {
       "Add card to hand or set aside:",
       ["Smithy", "Set Aside"],
       "Set Aside",
+      "ALL: Bot discarded Smithy",
     ],
     drawAfter: ["Village"],
     handAfter: ["Copper", "Copper", "Copper", "Silver", "Silver", "Silver", "Gold"],
@@ -495,6 +504,10 @@ const tests = {
 
   Militia: {
     dMoney: 2,
+
+    interactions: [
+      "ALL: Other#0 discarded Village and 1 more",
+    ],
 
     others: [{
       hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
@@ -596,6 +609,7 @@ const tests = {
 
     interactions: [
       "ALL: Other#0 revealed Moat",
+      "ALL: Other#1 discarded Village and 1 more",
     ],
 
     others: [{
@@ -667,6 +681,7 @@ const tests = {
       "Discard 1:",
       ["Village", "Smithy"],
       "Smithy",
+      "ALL: Bot discarded Mine and 1 more",
     ],
     drawAfter: ["Silver"],
     handAfter: ["Village"],
@@ -700,6 +715,7 @@ const tests = {
       ["Trash: Copper", "Discard: Copper", "To Deck: Copper"],
       "Trash: Copper",
       "ALL: Bot trashed Copper",
+      "ALL: Bot discarded Silver",
     ],
     drawAfter: [],
     handAfter: ["Gold"],
@@ -750,6 +766,7 @@ const tests = {
       "Put back on deck or discard Other#1's Thief",
       ["Put back", "Discard"],
       "Discard",
+      "ALL: Other#1 discarded Thief",
       "ALL: Other#2 revealed Copper",
       "Put back on deck or discard Other#2's Copper",
       ["Put back", "Discard"],
@@ -758,6 +775,7 @@ const tests = {
       "Put back on deck or discard Your Copper",
       ["Put back", "Discard"],
       "Discard",
+      "ALL: Bot discarded Copper",
     ],
 
     handAfter: ["Silver"],
@@ -792,6 +810,7 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Other#0 discarded Copper",
     ],
 
     discardAfter: ["Silver"],
@@ -805,6 +824,7 @@ const tests = {
   Thief_NonTreasure: {
     interactions: [
       "ALL: Other#0 revealed Village",
+      "ALL: Other#0 discarded Village",
     ],
 
     others: [{
@@ -821,6 +841,7 @@ const tests = {
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Trash: Silver",
       "ALL: Bot trashed Silver",
+      "ALL: Other#0 discarded Copper",
       "ALL: Other#1 revealed Gold",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
@@ -858,11 +879,13 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Other#0 discarded Copper",
       "ALL: Other#0 revealed Gold",
       "ALL: Other#0 revealed Village",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
       "Steal: Gold",
+      "ALL: Other#0 discarded Village",
     ],
 
     handAfter: [],
@@ -1050,6 +1073,7 @@ const tests = {
       "What do you want to do with ThroneRoom?",
       ["Play", "Discard"],
       "Discard",
+      "ALL: Bot discarded ThroneRoom",
     ],
     discardAfter: ["ThroneRoom"],
   },
@@ -1057,7 +1081,7 @@ const tests = {
   Vassal_NoAction: {
     draw: ["Copper"],
     interactions: [
-      "Discarded Copper",
+      "ALL: Bot discarded Copper",
     ],
     discardAfter: ["Copper"],
   },
@@ -1272,17 +1296,29 @@ describe("cards", () => {
   });
 
   it("has reveal message for all", () => {
-    const cardsWithReveal = Object.entries(cards).filter(entry => /reveal/i.test(entry[1].text));
-    const testsWithReveal = new Set(Object.entries(tests)
-      .filter(entry => entry[1].interactions && entry[1].interactions.some(i => /ALL: .*revealed/.test(i)))
-      .flatMap(entry => entry[0].split("_")));
-    for (const card of cardsWithReveal) {
-      expect(testsWithReveal).toContain(card[0]);
-    }
+    testMessageSubstring("reveal");
+  });
+
+  it("has discard message for all", () => {
+    testMessageSubstring("discard");
   });
 });
 
-// TODO(CRASH) add a test for player turn, streaming in shuffle, asserting all output
+function testMessageSubstring(substring) {
+  const cardRegex = new RegExp(substring, "i");
+  const cardsWithReveal = Object.entries(cards).filter(entry => cardRegex.test(entry[1].text));
+  const testRegex = new RegExp(`ALL: .*${substring}`);
+  const testsWithReveal = new Set(Object.entries(tests)
+    .filter(entry => entry[1].interactions && entry[1].interactions.some(i => testRegex.test(i)))
+    .flatMap(entry => entry[0].split("_")));
+  for (const card of cardsWithReveal) {
+    switch (card[0]) {
+    case "Harbinger":
+      continue;
+    }
+    expect(testsWithReveal).toContain(card[0]);
+  }
+}
 
 function isHandMessage(message) {
   if (!message) {

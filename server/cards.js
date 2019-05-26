@@ -51,7 +51,7 @@ const kingdom = {
     }
 
     player.sendHand();
-    player.discardPile.push(...drawn);
+    player.discardPush(drawn);
   },
 
   Artisan: /** @param {Player} player */ async player => {
@@ -82,7 +82,7 @@ const kingdom = {
         const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
         other.trashPush(trashed);
       }
-      other.discardPile.push(...drawn);
+      other.discardPush(drawn);
     });
   },
 
@@ -107,7 +107,7 @@ const kingdom = {
 
   Cellar: /** @param {Player} player */ async player => {
     player.actions += 1;
-    let discarded = 0;
+    const toDiscard = [];
 
     for (;;) {
       const choices = player.hand.map(c => c.name);
@@ -122,12 +122,11 @@ const kingdom = {
         break;
       }
 
-      const discard = player.fromHand(choice);
-      ++discarded;
-      player.discardPile.push(discard);
+      toDiscard.push(player.fromHand(choice));
     }
 
-    player.draw(discarded);
+    player.discardPush(toDiscard);
+    player.draw(toDiscard.length);
   },
 
   Chancellor: /** @param {Player} player */ async player => {
@@ -135,7 +134,7 @@ const kingdom = {
     player.sendMessage("Discard your draw pile?");
     const choice = await player.choose(["No", "Discard"]);
     if (choice === "Discard") {
-      player.discardPile.push(...player.drawPile.splice(0));
+      player.discardPush(player.drawPile.splice(0));
     }
   },
 
@@ -233,7 +232,7 @@ const kingdom = {
       }
       player.hand.push(card);
     }
-    player.discardPile.push(...aside);
+    player.discardPush(aside);
     player.sendHand();
   },
 
@@ -261,12 +260,14 @@ const kingdom = {
     player.money += 2;
 
     await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      const toDiscard = [];
       while (other.hand.length > 3) {
         const discardChoices = other.hand.map(c => c.name);
         other.sendMessage("Discard down to three cards:");
         const choice = await other.choose(discardChoices);
-        other.discardPile.push(other.fromHand(choice));
+        toDiscard.push(other.fromHand(choice));
       }
+      other.discardPush(toDiscard);
     });
   },
 
@@ -314,11 +315,13 @@ const kingdom = {
     player.draw();
 
     const emptyCount = Object.values(player.game.store.counts).filter(n => !n).length;
+    const toDiscard = [];
     for (let i = emptyCount; i > 0; --i) {
       player.sendMessage(`Discard ${i}:`);
       const choice = await player.choose(player.hand.map(c => c.name));
-      player.discardPile.push(player.fromHand(choice));
+      toDiscard.push(player.fromHand(choice));
     }
+    player.discardPush(toDiscard);
   },
 
   Remodel: /** @param {Player} player */ async player => {
@@ -348,6 +351,7 @@ const kingdom = {
     player.actions += 1;
 
     const toDecide = player.multiFromDraw(2).map(c => c.name);
+    const toDiscard = [];
     while (toDecide.length) {
       const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
       player.sendMessage("Trash, discard, and/or place on top of deck:");
@@ -361,13 +365,14 @@ const kingdom = {
         player.trashPush(card);
         break;
       case "Discard":
-        player.discardPile.push(card);
+        toDiscard.push(card);
         break;
       case "To Deck":
         player.game.allLog(`${player.name} placed a card back on their deck`);
         player.drawPile.push(card);
       }
     }
+    player.discardPush(toDiscard);
   },
 
   Smithy: /** @param {Player} player */ async player => {
@@ -391,7 +396,7 @@ const kingdom = {
       if (choice === "Put back") {
         other.drawPile.push(card);
       } else {
-        other.discardPile.push(card);
+        other.discardPush([card]);
       }
     };
 
@@ -406,7 +411,7 @@ const kingdom = {
         .filter(c => c.ofKind("treasure"))
         .map(c => c.name);
       if (!treasures.length) {
-        other.discardPile.push(...drawn);
+        other.discardPush(drawn);
         return;
       }
       const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
@@ -429,9 +434,8 @@ const kingdom = {
         player.trashPush(chosen);
       }
       const treasureCards = treasures.map(n => cards[n]);
-      other.discardPile.push(...treasureCards);
       const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
-      other.discardPile.push(...notTreasures);
+      other.discardPush(treasureCards.concat(notTreasures));
     });
   },
 
@@ -458,8 +462,7 @@ const kingdom = {
       return;
     }
     if (!drawn.ofKind("action")) {
-      player.sendMessage(`Discarded ${drawn.name}`);
-      player.discardPile.push(drawn);
+      player.discardPush([drawn]);
       return;
     }
     player.sendMessage(`What do you want to do with ${drawn.name}?`);
@@ -468,7 +471,7 @@ const kingdom = {
       await drawn.play(player);
       player.afterPlay(drawn);
     } else {
-      player.discardPile.push(drawn);
+      player.discardPush([drawn]);
     }
   },
 
