@@ -1277,7 +1277,7 @@ describe("cards", () => {
       .filter(entry => entry[1].interactions && entry[1].interactions.some(i => /ALL: .*revealed/.test(i)))
       .flatMap(entry => entry[0].split("_")));
     for (const card of cardsWithReveal) {
-      expect(testsWithReveal.has(card[0])).toBeTruthy();
+      expect(testsWithReveal).toContain(card[0]);
     }
   });
 });
