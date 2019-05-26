@@ -364,6 +364,7 @@ const kingdom = {
         player.discardPile.push(card);
         break;
       case "To Deck":
+        player.game.allLog(`${player.name} placed a card back on their deck`);
         player.drawPile.push(card);
       }
     }
