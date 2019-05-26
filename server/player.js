@@ -185,6 +185,13 @@ class Player {
     return cards;
   }
 
+  /**
+   * @param {Card} trash
+   */
+  trashPush(trash) {
+    this.game.trashPush(this, trash);
+  }
+
   async playCard(name) {
     const card = this.fromHand(name);
     if (card === null) {

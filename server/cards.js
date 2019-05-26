@@ -80,7 +80,7 @@ const kingdom = {
         other.sendMessage("Choose a treasure to trash:");
         const toTrash = await other.choose(goodTreasures);
         const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
-        player.game.trashPush(other, trashed);
+        other.trashPush(trashed);
       }
       other.discardPile.push(...drawn);
     });
@@ -152,7 +152,7 @@ const kingdom = {
         return;
       }
       const trash = player.fromHand(choice);
-      player.game.trashPush(player, trash);
+      player.trashPush(trash);
     }
   },
 
@@ -181,7 +181,7 @@ const kingdom = {
     },
 
     afterPlay(player) {
-      player.game.trashPush(player, this);
+      player.trashPush(this);
     },
   },
 
@@ -281,7 +281,7 @@ const kingdom = {
     player.sendMessage("Trash a Treasure:");
     const trashChoice = await player.choose(trashChoices);
     const trash = player.fromHand(trashChoice);
-    player.game.trashPush(player, trash);
+    player.trashPush(trash);
     const gainChoices = player.game.store
       .getAvailable(trash.cost + 3)
       .filter(c => c.ofKind("treasure"))
@@ -303,7 +303,7 @@ const kingdom = {
       const choice = await player.choose(["Trash a Copper", "Do Nothing"]);
       if (choice === "Trash a Copper") {
         player.money += 3;
-        player.game.trashPush(player, player.fromHand("Copper"));
+        player.trashPush(player.fromHand("Copper"));
       }
     }
   },
@@ -331,7 +331,7 @@ const kingdom = {
     player.sendMessage("Trash a card:");
     const trashChoice = await player.choose(trashChoices);
     const trash = player.fromHand(trashChoice);
-    player.game.trashPush(player, trash);
+    player.trashPush(trash);
     const gainChoices = player.game.store
       .getAvailable(trash.cost + 2)
       .map(c => c.name);
@@ -358,7 +358,7 @@ const kingdom = {
       toDecide.splice(toDecide.indexOf(cardName), 1);
       switch (action) {
       case "Trash":
-        player.game.trashPush(player, card);
+        player.trashPush(card);
         break;
       case "Discard":
         player.discardPile.push(card);
@@ -426,7 +426,7 @@ const kingdom = {
       if (isSteal) {
         player.discardPile.push(chosen);
       } else {
-        player.game.trashPush(player, chosen);
+        player.trashPush(chosen);
       }
       const treasureCards = treasures.map(n => cards[n]);
       other.discardPile.push(...treasureCards);
