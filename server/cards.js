@@ -429,6 +429,7 @@ const kingdom = {
       chosen = cards[chosen];
 
       if (isSteal) {
+        player.game.allLog(`${player.name} stole ${other.name}'s ${chosen.name}`);
         player.discardPile.push(chosen);
       } else {
         player.trashPush(chosen);

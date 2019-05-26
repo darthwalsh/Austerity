@@ -810,6 +810,7 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Bot stole Other#0's Silver",
       "ALL: Other#0 discarded Copper",
     ],
 
@@ -846,6 +847,7 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
       "Steal: Gold",
+      "ALL: Bot stole Other#1's Gold",
     ],
 
     discardAfter: ["Gold"],
@@ -879,12 +881,14 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Copper", "Steal: Copper", "Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Bot stole Other#0's Silver",
       "ALL: Other#0 discarded Copper",
       "ALL: Other#0 revealed Gold",
       "ALL: Other#0 revealed Village",
       "Trash or steal a Treasure:",
       ["Trash: Gold", "Steal: Gold"],
       "Steal: Gold",
+      "ALL: Bot stole Other#0's Gold",
       "ALL: Other#0 discarded Village",
     ],
 
@@ -905,6 +909,7 @@ const tests = {
       "Trash or steal a Treasure:",
       ["Trash: Silver", "Steal: Silver"],
       "Steal: Silver",
+      "ALL: Bot stole Other#1's Silver",
     ],
 
     discardAfter: ["Silver"],
