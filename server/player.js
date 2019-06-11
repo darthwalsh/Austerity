@@ -135,7 +135,7 @@ class Player {
     for (const treasure of this.hand.filter(c => c.ofKind("treasure"))) {
       this.playCard(treasure.name);
     }
-    this.game.allLog(`${this.name} played all treasures for ${this.money - before} coin`);
+    this.game.allLog(`${this.name} played all treasures for +${this.money - before} coin`);
   }
 
   fromHand(name) {
