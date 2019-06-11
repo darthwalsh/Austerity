@@ -1227,9 +1227,9 @@ describe("cards", () => {
 
       if (card.ofKind("action") || card.ofKind("treasure")) {
         p.hand.splice(0, 0, card);
-        await p.playCard(card.name, () => {/* nop */});
+        await p.playCard(card.name);
         for (const also of test.alsoPlay) {
-          await p.playCard(also, () => {/* nop */});
+          await p.playCard(also);
         }
         expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
         expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");

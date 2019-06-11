@@ -109,7 +109,7 @@ class Player {
       }
 
       if (choice === "Play All Treasures") {
-        this.playAllTreasures();
+        await this.playAllTreasures();
         continue;
       }
 
@@ -128,12 +128,12 @@ class Player {
     }
   }
 
-  playAllTreasures() {
+  async playAllTreasures() {
     const before = this.money;
 
     // When implementing nontrivial treasures, this probably shouldn't include them
     for (const treasure of this.hand.filter(c => c.ofKind("treasure"))) {
-      this.playCard(treasure.name);
+      await this.playCard(treasure.name);
     }
     this.game.allLog(`${this.name} played all treasures for +${this.money - before} coin`);
   }
