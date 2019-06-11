@@ -455,4 +455,4 @@ message: p1 bought Province
 message: 
 message: Your upcoming hand: Silver, Silver, Silver, Silver, Silver
 message: GAME OVER!!!
-message: p1: 51     Estate,Estate,Estate,Province,Province,Province,Province,Province,Province,Province,Province
+message: p1: 51     Estate (3), Province (8), Copper (10), Silver (13), Gold (4)

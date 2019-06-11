@@ -76,12 +76,7 @@ class Game {
       if (this.store.gameOver()) {
         this.allLog("GAME OVER!!!");
         ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
-          .map(p => `${p.name}: ${p.getPoints()}     ` +
-            p.allCards()
-              .filter(c => c.ofKind("victory") || c.ofKind("curse"))
-              .map(c => c.name)
-              .sort()
-              .toString())
+          .map(p => `${p.name}: ${p.getPoints()}     ${this.getEndGame(p.allCards())}`)
           .forEach(line => this.allLog(line));
         return;
       }
@@ -91,6 +86,23 @@ class Game {
     };
 
     ps[turn].takeTurn(nextTurn);
+  }
+
+  /**
+   * @param {Card[]} cards
+   * @return {string}
+   */
+  getEndGame(cards) {
+    cards = cards.slice().sort((a, b) => a.compareTo(b));
+    const isPoint = c => c.ofKind("victory") || c.ofKind("curse");
+    const byVictory = [...cards.filter(isPoint), ...cards.filter(c => !isPoint(c))];
+
+    const map = new Map();
+    byVictory.forEach(c => map.set(c.name, 1 + (map.get(c.name) || 0)));
+
+    const text = [];
+    map.forEach((count, name) => text.push(`${name} (${count})`));
+    return text.join(", ");
   }
 
   /**
