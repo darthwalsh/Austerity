@@ -24,6 +24,7 @@ class Player {
       this.discardPile.push(cards.Estate);
     }
     this.hand = /** @type {Card[]} */ ([]);
+    this.enableSendHand = true;
   }
 
   async takeTurn(callback) {
@@ -131,11 +132,17 @@ class Player {
   async playAllTreasures() {
     const before = this.money;
 
+    this.sendHand();
+    this.enableSendHand = false;
+
     // When implementing nontrivial treasures, this probably shouldn't include them
     for (const treasure of this.hand.filter(c => c.ofKind("treasure"))) {
       await this.playCard(treasure.name);
     }
     this.game.allLog(`${this.name} played all treasures for +${this.money - before} coin`);
+
+    this.enableSendHand = true;
+    this.sendHand();
   }
 
   fromHand(name) {
@@ -295,6 +302,10 @@ class Player {
   }
 
   sendHand(prefix = "Your hand") {
+    if (!this.enableSendHand) {
+      return;
+    }
+
     this.hand.sort((a, b) => a.compareTo(b));
     this.sendMessage(prefix + ": " + this.hand.map(c => c.name).join(", "));
   }
