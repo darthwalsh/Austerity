@@ -40,25 +40,42 @@ function log(text) {
   $("log").scrollTop = $("log").scrollHeight;
 }
 
-function addManage(options, ws) {
+/**
+ * @param {Object<string, string[]>} data
+ * @param {WebSocket} ws
+ */
+function addManage(data, ws) {
   const CARD_COUNT = 10;
 
   const manageDiv = $("manage");
 
-  for (let i = 0; i < options.length; ++i) {
-    const id = "optional" + options[i];
+  const options = Object.values(data).flat(1);
 
-    const box = document.createElement("input");
-    box.setAttribute("type", "checkbox");
-    box.setAttribute("id", id);
+  for (const set in data) {
+    const setOptions = data[set];
+    if (!setOptions.length) {
+      continue;
+    }
 
-    const label = document.createElement("label");
-    label.style.whiteSpace = "nowrap";
-    label.append(box, options[i]);
-    manageDiv.append(label, " ");
+    const setHeader = document.createElement("span");
+    setHeader.textContent = set;
+    setHeader.style.color = "grey";
+    manageDiv.append(setHeader);
+    manageDiv.appendChild(document.createElement("br"));
+
+    for (const option of setOptions) {
+      const box = document.createElement("input");
+      box.setAttribute("type", "checkbox");
+      box.setAttribute("id", "optional" + option);
+
+      const label = document.createElement("label");
+      label.style.whiteSpace = "nowrap";
+      label.append(box, option);
+      manageDiv.append(label, " ");
+    }
+
+    manageDiv.appendChild(document.createElement("br"));
   }
-
-  manageDiv.appendChild(document.createElement("br"));
 
   const randomButton = document.createElement("button");
   randomButton.innerText = "Randomize";

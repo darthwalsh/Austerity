@@ -117,8 +117,29 @@ class Game {
     const player = new Player(connection, this);
 
     if (!Object.keys(this.players).length) {
-      player.send({isLeader: this.store.optional()});
-      player.send({included: this.store.optional()});
+      const setOrder = [
+        "Base",
+        "Base v1",
+        "Intrigue",
+        "Seaside",
+        "Alchemy",
+        "Prosperity",
+        "Cornucopia",
+        "Hinterlands",
+        "Dark Ages",
+        "Guilds",
+        "Adventures",
+        "Empires",
+        "Nocturne",
+        "Renaissance",
+        "Promo",
+      ];
+      const setCards = setOrder.reduce((o, set) => {
+        o[set] = this.store.optional().filter(card => card.set === set).map(c => c.name);
+        return o;
+      }, {});
+      player.send({isLeader: setCards});
+      player.send({included: this.store.optional().map(c => c.name)});
     } else {
       player.sendMessage("Waiting for the leader to start the game");
       this.allLog(player.name + " joined");

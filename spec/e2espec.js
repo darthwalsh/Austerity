@@ -19,6 +19,7 @@ async function bigMoney(choices) {
     "Buy: Silver",
     /'s game/,
     "New Game",
+    "Platinum",
   ];
 
   for (const pick of pickOrder) {

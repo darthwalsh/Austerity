@@ -38,6 +38,7 @@ class lib {
         this.send({choice});
         break;
       case "isLeader":
+        data = Object.values(data).flat(1);
         const included = (await this.readline(data)).split(" ");
         const debugMode = false;
         this.send({gameStart: {included, debugMode}});

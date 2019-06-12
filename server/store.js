@@ -12,9 +12,12 @@ class Store {
     ];
   }
 
+  /**
+   * @return {Card[]}
+   */
   optional() {
-    return Object.keys(cards).filter(n => !this.default.includes(cards[n]))
-      .sort((a, b) => cards[a].compareTo(cards[b]));
+    return Object.values(cards).filter(c => !this.default.includes(c))
+      .sort((a, b) => a.compareTo(b));
   }
 
   /**

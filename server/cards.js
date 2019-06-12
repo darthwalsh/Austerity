@@ -633,6 +633,7 @@ function compareTo(other) {
  * @property {number} cost
  * @property {string[]} kind
  * @property {string} text
+ * @property {string} set
  * @property {string} color
  *
  * @property {function(Player): Promise<void>} play
@@ -660,6 +661,7 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   card.cost = getCost(tableRow);
   card.kind = getKinds(tableRow);
   card.text = tableRow.text;
+  card.set = tableRow.set;
 
   card.ofKind = k => card.kind.includes(k);
   card.color = colorMap[card.kind[0]];
