@@ -1136,6 +1136,11 @@ const tests = {
     trashAfter: ["KingsCourt", "Moat"],
   },
 
+  Monument: {
+    dMoney: 2,
+    dVictory: 1,
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,

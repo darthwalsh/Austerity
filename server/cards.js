@@ -544,6 +544,11 @@ const kingdom = {
       }));
   },
 
+  Monument: /** @param {Player} player */ async player => {
+    player.money += 2;
+    player.victory += 1;
+  },
+
   KingsCourt: /** @param {Player} player */ async player => {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
