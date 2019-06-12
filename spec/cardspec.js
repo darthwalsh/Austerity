@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const cards = require("../server/cards");
+const cardsTable = require("../server/cardsTable");
 const Game = require("../server/game");
 const Player = require("../server/player");
 
@@ -1323,6 +1324,38 @@ describe("cards", () => {
     for (const cardName in cards) {
       expect(tests[cardName]).toBeDefined("tests " + cardName);
     }
+  });
+
+  it("implements all", () => {
+    const doneSets = new Set([
+      "Base",
+      "Base v1",
+    ]);
+    const implemented = /** @type {Map<string, {impl: number, total: number}>} */ (new Map());
+    for (const [name, value] of Object.entries(cardsTable)) {
+      if (doneSets.has(value.set)) {
+        expect(cards[name]).toBeDefined(name);
+      }
+      const impl = cards[name] ? 1 : 0;
+      const o = implemented.get(value.set);
+      if (o) {
+        o.impl += impl;
+        o.total += 1;
+      } else {
+        implemented.set(value.set, {impl, total: 1});
+      }
+    }
+    for (const set of doneSets) {
+      expect(implemented.get(set)).toBeDefined(set);
+    }
+    const output = [];
+    for (const [set, o] of implemented) {
+      output.push(`${(set + ":").padEnd(12)} ${Math.floor(100 * o.impl / o.total).toString().padStart(3)}% (${o.impl}/${o.total})`);
+    }
+    output.push("");
+    const [cardL, total] = [Object.keys(cards).length, Object.keys(cardsTable).length];
+    output.push(`${("Total:").padEnd(12)} ${Math.floor(100 * cardL / total).toString().padStart(3)}% (${cardL}/${total})`);
+    fs.writeFileSync(path.join(__dirname, "Completion.txt"), output.join("\r\n"));
   });
 
   it("has images for all", () => {
