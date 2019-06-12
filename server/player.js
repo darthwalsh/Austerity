@@ -24,6 +24,7 @@ class Player {
       this.discardPile.push(cards.Estate);
     }
     this.hand = /** @type {Card[]} */ ([]);
+    this.victory = 0;
     this.enableSendHand = true;
   }
 
@@ -282,7 +283,7 @@ class Player {
   }
 
   getPoints() {
-    return this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0);
+    return this.victory + this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0);
   }
 
   allCards() {

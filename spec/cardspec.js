@@ -10,6 +10,7 @@ const defaultTest = {
   dMoney: 0,
   dActions: 0,
   dBuys: 0,
+  dVictory: 0,
   points: 0,
   draw: [],
   discard: [],
@@ -1099,6 +1100,42 @@ const tests = {
     points: 10,
   },
 
+  Bishop: {
+    hand: ["Copper", "KingsCourt"],
+    dMoney: 1,
+    dVictory: 4, // 1 + floor(3.5)
+    interactions: [
+      "Trash a card:",
+      ["Copper", "KingsCourt"],
+      "KingsCourt",
+      "ALL: Bot trashed KingsCourt",
+      "ALL: Other#2 could not trash a card",
+      "ALL: Other#0 trashed Moat",
+      "ALL: Other#1 did not trash a card",
+    ],
+    others: [{
+      hand: ["Moat"],
+      interactions: [
+        "Trash a card?",
+        ["Moat", "Don't Trash"],
+        "Moat",
+      ],
+      handAfter: [],
+    }, {
+      hand: ["Curse"],
+      interactions: [
+        "Trash a card?",
+        ["Curse", "Don't Trash"],
+        "Don't Trash",
+      ],
+      handAfter: ["Curse"],
+    }, {
+      hand: [],
+    }],
+    handAfter: ["Copper"],
+    trashAfter: ["KingsCourt", "Moat"],
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,
@@ -1147,6 +1184,7 @@ describe("cards", () => {
         actions: 3,
         buys: 3,
         money: 3,
+        victory: 0,
       };
 
       let interactionIndex = 0;
@@ -1234,6 +1272,7 @@ describe("cards", () => {
         expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
         expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
         expect(p.money - init.money).toEqual(test.dMoney, "dMoney");
+        expect(p.victory - init.victory).toEqual(test.dVictory, "dVictory");
 
         expect(p.drawPile.map(c => c.name))
           .toEqual(test.drawAfter, "drawAfter");

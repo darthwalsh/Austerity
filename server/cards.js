@@ -511,6 +511,39 @@ const kingdom = {
   Platinum: money(5),
   Colony: points(10),
 
+  Bishop: /** @param {Player} player */ async player => {
+    player.money += 1;
+    player.victory += 1;
+    const trashChoices = player.hand
+      .map(c => c.name);
+    if (!trashChoices.length) {
+      player.sendMessage("No cards to trash");
+    } else {
+      player.sendMessage("Trash a card:");
+      const trashChoice = await player.choose(trashChoices);
+      const trash = player.fromHand(trashChoice);
+      player.victory += Math.floor(trash.cost / 2);
+      player.trashPush(trash);
+    }
+    await Promise.all(player.game.otherPlayers(player).map(
+      /** @param {Player} other */ async other => {
+        const otherChoices = other.hand
+          .map(c => c.name);
+        if (!otherChoices.length) {
+          other.game.allLog(`${other.name} could not trash a card`);
+          return;
+        }
+        otherChoices.push("Don't Trash");
+        other.sendMessage("Trash a card?");
+        const otherChoice = await other.choose(otherChoices);
+        if (otherChoice === "Don't Trash") {
+          other.game.allLog(`${other.name} did not trash a card`);
+          return;
+        }
+        other.trashPush(other.fromHand(otherChoice));
+      }));
+  },
+
   KingsCourt: /** @param {Player} player */ async player => {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
