@@ -205,6 +205,9 @@ describe("e2e", () => {
 function wrapWithLogging(strategy, output) {
   return /** @param {string[]} choices */ async choices => {
     const result = await strategy(choices);
+    if (choices.length > 30) {
+      choices = ["SNIP_FOR_STABILITY!"];
+    }
     output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
     output.push(`Chose: ${result}`);
     return result;
@@ -214,6 +217,9 @@ function wrapWithLogging(strategy, output) {
 function logUntilGameOver(output, res) {
   return line => {
     expect(line.includes("\n")).toBeFalsy();
+    if (line.startsWith("included:")) {
+      line = "included: SNIP_FOR_STABILITY!";
+    }
     output.push(line);
     if (line.includes("GAME OVER!!!")) {
       res();

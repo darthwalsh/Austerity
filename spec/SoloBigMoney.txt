@@ -1,9 +1,9 @@
 Choices: Refresh, New Game
 Chose: New Game
-included: Platinum,Gardens,Colony,Cellar,Chapel,Moat,Chancellor,Harbinger,Merchant,Vassal,Village,Woodcutter,Workshop,Bureaucrat,Feast,Militia,Moneylender,Poacher,Remodel,Smithy,Spy,Thief,ThroneRoom,Bandit,CouncilRoom,Festival,Laboratory,Library,Market,Mine,Sentry,Witch,Adventurer,Artisan,KingsCourt
-Choices: Platinum, Gardens, Colony, Cellar, Chapel, Moat, Chancellor, Harbinger, Merchant, Vassal, Village, Woodcutter, Workshop, Bureaucrat, Feast, Militia, Moneylender, Poacher, Remodel, Smithy, Spy, Thief, ThroneRoom, Bandit, CouncilRoom, Festival, Laboratory, Library, Market, Mine, Sentry, Witch, Adventurer, Artisan, KingsCourt
+included: SNIP_FOR_STABILITY!
+Choices: SNIP_FOR_STABILITY!
 Chose: Platinum
-included: Platinum
+included: SNIP_FOR_STABILITY!
 colors: [object Object]
 message: Your upcoming hand: Copper, Copper, Estate, Estate, Estate
 message: 
