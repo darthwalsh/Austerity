@@ -38,7 +38,7 @@ class lib {
         this.send({choice});
         break;
       case "isLeader":
-        data = Object.values(data).flat(1);
+        data = Object.values(data).flatMap(d => d);
         const included = (await this.readline(data)).split(" ");
         const debugMode = false;
         this.send({gameStart: {included, debugMode}});

@@ -49,7 +49,7 @@ function addManage(data, ws) {
 
   const manageDiv = $("manage");
 
-  const options = Object.values(data).flat(1);
+  const options = Object.values(data).flatMap(d => d);
 
   for (const set in data) {
     const setOptions = data[set];
