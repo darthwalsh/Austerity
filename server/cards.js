@@ -550,6 +550,20 @@ const kingdom = {
       }));
   },
 
+  City: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 2;
+
+    const emptyCount = Object.values(player.game.store.counts).filter(n => !n).length;
+    if (emptyCount >= 1) {
+      player.draw();
+    }
+    if (emptyCount >= 2) {
+      player.buys += 1;
+      player.money += 1;
+    }
+  },
+
   Goons: {
     /**
      * @param {Player} player
@@ -592,6 +606,12 @@ const kingdom = {
   Monument: /** @param {Player} player */ async player => {
     player.money += 2;
     player.gainVictory(1);
+  },
+
+  WorkersVillage: /** @param {Player} player */ async player => {
+    player.draw();
+    player.actions += 2;
+    player.buys += 1;
   },
 };
 

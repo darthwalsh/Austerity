@@ -1139,6 +1139,35 @@ const tests = {
     trashAfter: ["KingsCourt", "Moat"],
   },
 
+  City: {
+    storeCounts: {},
+    dActions: 2,
+
+    draw: ["Silver", "Mine"],
+    drawAfter: ["Silver"],
+    handAfter: ["Mine"],
+  },
+
+  City_One: {
+    storeCounts: {Village: 0},
+    dActions: 2,
+
+    draw: ["Silver", "Mine"],
+    drawAfter: [],
+    handAfter: ["Silver", "Mine"],
+  },
+
+  City_Two: {
+    storeCounts: {Village: 0, Smithy: 0},
+    dActions: 2,
+    dMoney: 1,
+    dBuys: 1,
+
+    draw: ["Silver", "Mine"],
+    drawAfter: [],
+    handAfter: ["Silver", "Mine"],
+  },
+
   Goons: {
     dBuys: -1, // +1 from card, -2 from alsoBuy
     dMoney: 2,
@@ -1212,6 +1241,14 @@ const tests = {
 
     dMoney: 2,
     dVictory: 1,
+  },
+
+  WorkersVillage: {
+    dActions: 2,
+    dBuys: 1,
+    draw: ["Copper"],
+    hand: [],
+    handAfter: ["Copper"],
   },
 };
 
