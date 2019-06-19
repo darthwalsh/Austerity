@@ -23,6 +23,18 @@ function points(points) {
   };
 }
 
+/** @param {Player} other */
+async function discardToThree(other) {
+  const toDiscard = [];
+  while (other.hand.length > 3) {
+    const discardChoices = other.hand.map(c => c.name);
+    other.sendMessage("Discard down to three cards:");
+    const choice = await other.choose(discardChoices);
+    toDiscard.push(other.fromHand(choice));
+  }
+  other.discardPush(toDiscard);
+}
+
 const kingdom = {
   /* Base Deck */
   Copper: money(1),
@@ -179,8 +191,11 @@ const kingdom = {
       player.game.gainCard(player, gainChoice);
     },
 
+    /**
+     * @param {Player} player
+     */
     afterPlay(player) {
-      player.trashPush(this);
+      player.trashPush(cards.Feast);
     },
   },
 
@@ -258,17 +273,7 @@ const kingdom = {
 
   Militia: /** @param {Player} player */ async player => {
     player.money += 2;
-
-    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const toDiscard = [];
-      while (other.hand.length > 3) {
-        const discardChoices = other.hand.map(c => c.name);
-        other.sendMessage("Discard down to three cards:");
-        const choice = await other.choose(discardChoices);
-        toDiscard.push(other.fromHand(choice));
-      }
-      other.discardPush(toDiscard);
-    });
+    await player.game.parallelAttack(player, discardToThree);
   },
 
   Mine: /** @param {Player} player */ async player => {
@@ -567,6 +572,27 @@ const kingdom = {
     await action.play(player);
     player.afterPlay(action);
   },
+
+  Goons: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.buys += 1;
+      player.money += 2;
+      await player.game.parallelAttack(player, discardToThree);
+    },
+
+    /**
+     * @param {Player} player
+     */
+    afterPlay(player) {
+      player.onBought.push(/** @param {Card} card */ card => {
+        player.gainVictory(1);
+      });
+      player.played.push(cards.Goons);
+    },
+  },
 };
 
 const knownKinds = new Set(["action", "attack", "curse", "reaction", "treasure", "victory"]);
@@ -629,6 +655,9 @@ function compareTo(other) {
  * - use player.store.gainCard() instead of directly adding copied cards
  * - revealed cards should use player.fromDraw({reveal: true})
  * - gaining VP tokens should use player.gainVictory
+ * - "While this is in play" effects go in afterPlay() not play()
+ *   - That way they trigger exactly once on ThroneRoom
+ *   - It's assumed cards can't be removed early from In Play, otherwise the callback will need to be removed
  *
  * @typedef {object} Card
  * @property {string} name

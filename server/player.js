@@ -34,6 +34,7 @@ class Player {
     this.buys = 1;
     this.played = /** @type {Card[]} */ ([]);
     this.onPlayed = /** @type {(function(Card): void)[]} */ ([]);
+    this.onBought = /** @type {(function(Card): void)[]} */ ([]);
 
     this.game.otherPlayers(this).forEach(p => p.sendMessage(`${this.name}'s turn`));
     this.sendMessage("");
@@ -116,17 +117,26 @@ class Player {
       }
 
       if (choice.substring(0, 5) === "Buy: ") {
-        const buying = cards[choice.substring(5)];
-        this.discardPile.push(buying);
-        this.money -= buying.cost;
-        --this.buys;
-
-        this.game.allLog(this.name + " bought " + buying.name);
-        this.game.store.bought(buying);
+        this.buyCard(choice.substring(5));
       } else {
         this.game.allLog(this.name + " played " + choice);
         await this.playCard(choice);
       }
+    }
+  }
+
+  /**
+   * @param {string} buyChoice
+   */
+  buyCard(buyChoice) {
+    const buying = cards[buyChoice];
+    this.discardPile.push(buying);
+    this.money -= buying.cost;
+    --this.buys;
+    this.game.allLog(this.name + " bought " + buying.name);
+    this.game.store.bought(buying);
+    for (const e of this.onBought) {
+      e(buying);
     }
   }
 

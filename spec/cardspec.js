@@ -29,6 +29,7 @@ const defaultTest = {
   trashAfter: [],
 
   alsoPlay: [],
+  alsoBuy: [],
 };
 
 const defaultOthers = {
@@ -1147,6 +1148,58 @@ const tests = {
     dVictory: 1,
   },
 
+  Goons: {
+    dBuys: -1, // +1 from card, -2 from alsoBuy
+    dMoney: 2,
+    dVictory: 2,
+
+    interactions: [
+      "ALL: Other#0 discarded Village and 1 more",
+      "ALL: Bot bought Copper",
+      "ALL: Bot gained 1 Victory tokens",
+      "ALL: Bot bought Copper",
+      "ALL: Bot gained 1 Victory tokens",
+    ],
+
+    others: [{
+      hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
+      interactions: [
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Village", "Smithy"],
+        "Village",
+        "Discard down to three cards:",
+        ["Copper", "Silver", "Gold", "Smithy"],
+        "Silver",
+      ],
+      handAfter: ["Copper", "Gold", "Smithy"],
+      discardAfter: ["Village", "Silver"],
+    }],
+
+    alsoBuy: ["Copper", "Copper"],
+    discardAfter: ["Copper", "Copper"],
+  },
+
+  ThroneRoom_GoonsSingleVictory: {
+    hand: ["Goons"],
+
+    dBuys: 1, // +1+1 from card, -1 from alsoBuy
+    dMoney: 4,
+    dVictory: 1,
+
+    interactions: [
+      "Pick an Action card to double:",
+      ["Goons"],
+      "Goons",
+      "ALL: Bot played Goons doubled!",
+      "ALL: Bot bought Copper",
+      "ALL: Bot gained 1 Victory tokens",
+    ],
+
+    playedAfter: ["Goons", "ThroneRoom"],
+    alsoBuy: ["Copper"],
+    discardAfter: ["Copper"],
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,
@@ -1267,6 +1320,7 @@ describe("cards", () => {
       p.buys = init.buys;
       p.played = [];
       p.onPlayed = [];
+      p.onBought = [];
 
       p.drawPile = test.draw.map(n => cards[n]);
       p.discardPile = test.discard.map(n => cards[n]);
@@ -1279,6 +1333,9 @@ describe("cards", () => {
         await p.playCard(card.name);
         for (const also of test.alsoPlay) {
           await p.playCard(also);
+        }
+        for (const also of test.alsoBuy) {
+          p.buyCard(also);
         }
         expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
         expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
@@ -1382,6 +1439,12 @@ describe("cards", () => {
     }
   });
 
+  it("has afterPlay for in-play", () => {
+    for (const [name] of Object.entries(cards).filter(entry => entry[1].text.includes("this is in play"))) {
+      expect(cards[name].afterPlay).toBeDefined();
+    }
+  });
+
   it("has reveal message for all", () => {
     testMessageSubstring("reveal");
   });
@@ -1393,17 +1456,17 @@ describe("cards", () => {
 
 function testMessageSubstring(substring) {
   const cardRegex = new RegExp(substring, "i");
-  const cardsWithReveal = Object.entries(cards).filter(entry => cardRegex.test(entry[1].text));
+  const cardsWith = Object.entries(cards).filter(entry => cardRegex.test(entry[1].text));
   const testRegex = new RegExp(`ALL: .*${substring}`);
-  const testsWithReveal = new Set(Object.entries(tests)
+  const testsWith = new Set(Object.entries(tests)
     .filter(entry => entry[1].interactions && entry[1].interactions.some(i => testRegex.test(i)))
     .flatMap(entry => entry[0].split("_")));
-  for (const card of cardsWithReveal) {
+  for (const card of cardsWith) {
     switch (card[0]) {
     case "Harbinger":
       continue;
     }
-    expect(testsWithReveal).toContain(card[0]);
+    expect(testsWith).toContain(card[0]);
   }
 }
 
