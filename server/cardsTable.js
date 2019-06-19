@@ -777,14 +777,14 @@ module.exports =
     "set": "Cornucopia",
     "types": "Action - Prize",
     "cost": "$0*",
-    "text": "+1 Action\r\nGain a Gold onto your deck.\r\n(This is not in the Supply)",
+    "text": "+1 Action\r\nGain a Gold onto your deck.\r\n(This is not in the Supply.)",
   },
   "Diadem": {
     "name": "Diadem",
     "set": "Cornucopia",
     "types": "Treasure - Prize",
     "cost": "$0*",
-    "text": "$2\r\nWhen you play this, +$1 per unused Action you have (Action, not Action card).\r\n(This is not in the Supply)",
+    "text": "$2\r\nWhen you play this, +$1 per unused Action you have (Action, not Action card).\r\n(This is not in the Supply.)",
   },
   "Fairgrounds": {
     "name": "Fairgrounds",
@@ -805,7 +805,7 @@ module.exports =
     "set": "Cornucopia",
     "types": "Action - Attack - Prize",
     "cost": "$0*",
-    "text": "+2 Cards\r\nGain an Estate. Each other player gains a Curse and discards down to 3 cards in hand.\r\n(This is not in the Supply)",
+    "text": "+2 Cards\r\nGain an Estate. Each other player gains a Curse and discards down to 3 cards in hand.\r\n(This is not in the Supply.)",
   },
   "FortuneTeller": {
     "name": "Fortune Teller",
@@ -868,7 +868,7 @@ module.exports =
     "set": "Cornucopia",
     "types": "Action - Prize",
     "cost": "$0*",
-    "text": "+1 Buy\r\nWhile this is in play, cards cost $2 less, but not less than $0.\r\n(This is not in the Supply)",
+    "text": "+1 Buy\r\nWhile this is in play, cards cost $2 less, but not less than $0.\r\n(This is not in the Supply.)",
   },
   "Remake": {
     "name": "Remake",
@@ -889,7 +889,7 @@ module.exports =
     "set": "Cornucopia",
     "types": "Action - Prize",
     "cost": "$0*",
-    "text": "Choose two: +2 Cards; or +2 Actions; or +$2; or gain 4 Silvers and put your deck into your discard pile. The choices must be different.\r\n(This is not in the Supply)",
+    "text": "Choose two: +2 Cards; or +2 Actions; or +$2; or gain 4 Silvers and put your deck into your discard pile. The choices must be different.\r\n(This is not in the Supply.)",
   },
   "YoungWitch": {
     "name": "Young Witch",
@@ -924,7 +924,7 @@ module.exports =
     "set": "Dark Ages",
     "types": "Action",
     "cost": "$5",
-    "text": "Play this as if it were a cheaper Action card in the Supply costing. This is that card until it leaves play.",
+    "text": "Play this as if it were a cheaper Action card in the Supply. This is that card until it leaves play.",
   },
   "BanditCamp": {
     "name": "Bandit Camp",
@@ -1155,7 +1155,7 @@ module.exports =
     "set": "Dark Ages",
     "types": "Action",
     "cost": "$5",
-    "text": "+1 Action. Name a card. Reveal cards from your deck until you reveal a Victory card you did not name. Discard the rest, trash the Victory card, and gain a Victory card costing up to $3 more than it.",
+    "text": "+1 Action\r\nName a card. Reveal cards from your deck until you reveal a Victory card you did not name. Discard the rest, trash the Victory card, and gain a Victory card costing up to $3 more than it.",
   },
   "Rogue": {
     "name": "Rogue",
@@ -1316,7 +1316,7 @@ module.exports =
     "set": "Empires",
     "types": "Landmark",
     "cost": "",
-    "text": "At the start of your Buy phase, you may discard an Action card. If you do, take 2 VP from here. — Setup: Put 6 VP here per player.",
+    "text": "At the start of your Buy phase, you may discard an Action card. If you do, take 2 VP from here.\r\nSetup: Put 6 VP here per player.",
   },
   "BanditFort": {
     "name": "Bandit Fort",
@@ -1960,7 +1960,7 @@ module.exports =
     "set": "Hinterlands",
     "types": "Action",
     "cost": "$4",
-    "text": "Gain a Silver. Look at the top card of your deck; you may discard. Draw until you have 5 cards in hand. You may trash a non-Treasure card from your hand.",
+    "text": "Gain a Silver. Look at the top card of your deck; you may discard it. Draw until you have 5 cards in hand. You may trash a non-Treasure card from your hand.",
   },
   "Mandarin": {
     "name": "Mandarin",
@@ -2324,7 +2324,7 @@ module.exports =
     "set": "Nocturne",
     "types": "Action",
     "cost": "$4",
-    "text": "+$2\r\nYou may play an action card from your hand that you don’t have a copy of in play. If you do, +1 Action.",
+    "text": "+$2\r\nYou may play an Action card from your hand that you don’t have a copy of in play. If you do, +1 Action.",
   },
   "Crypt": {
     "name": "Crypt",
@@ -2946,7 +2946,7 @@ module.exports =
     "name": "Grand Market",
     "set": "Prosperity",
     "types": "Action",
-    "cost": "$6",
+    "cost": "$6*",
     "text": "+1 Card\r\n+1 Action\r\n+1 Buy\r\n+$2.\r\nYou can’t buy this if you have any Coppers in play.",
   },
   "Hoard": {
@@ -3164,7 +3164,7 @@ module.exports =
     "set": "Renaissance",
     "types": "Project",
     "cost": "$4",
-    "text": "At the end of your Buy Phase, if you didn’t buy any cards, +1 Coffers and +1 Villager.",
+    "text": "At the end of your Buy phase, if you didn’t buy any cards, +1 Coffers and +1 Villager.",
   },
   "Fair": {
     "name": "Fair",
@@ -3276,7 +3276,7 @@ module.exports =
     "set": "Renaissance",
     "types": "Project",
     "cost": "$3",
-    "text": "At the end of your Buy Phase, you may pay $1 for +1 Coffers.",
+    "text": "At the end of your Buy phase, you may pay $1 for +1 Coffers.",
   },
   "Patron": {
     "name": "Patron",
@@ -3577,7 +3577,7 @@ module.exports =
     "set": "Seaside",
     "types": "Action",
     "cost": "$4",
-    "text": "Trash this and a Treasure Map from your hand. If you trashed two Treasure Maps, gain 4 Gold cards onto your deck.",
+    "text": "Trash this and a Treasure Map from your hand. If you trashed two Treasure Maps, gain 4 Golds onto your deck.",
   },
   "Treasury": {
     "name": "Treasury",

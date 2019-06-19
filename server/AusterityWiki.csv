@@ -227,16 +227,16 @@ Woodcutter,Base v1,Action,$3,"+1 Buy
 +$2"
 Bag of Gold,Cornucopia,Action - Prize,$0*,"+1 Action
 Gain a Gold onto your deck.
-(This is not in the Supply)"
+(This is not in the Supply.)"
 Diadem,Cornucopia,Treasure - Prize,$0*,"$2
 When you play this, +$1 per unused Action you have (Action, not Action card).
-(This is not in the Supply)"
+(This is not in the Supply.)"
 Fairgrounds,Cornucopia,Victory,$6,Worth 2 VP per 5 differently named cards you have (round down).
 Farming Village,Cornucopia,Action,$4,"+2 Actions
 Reveal cards from your deck until you reveal a Treasure or Action card. Put that card into your hand and discard the rest."
 Followers,Cornucopia,Action - Attack - Prize,$0*,"+2 Cards
 Gain an Estate. Each other player gains a Curse and discards down to 3 cards in hand.
-(This is not in the Supply)"
+(This is not in the Supply.)"
 Fortune Teller,Cornucopia,Action - Attack,$3,"+$2
 Each other player reveals cards from the top of their deck until they reveal a Victory card or a Curse. They put it on top and discard the rest."
 Hamlet,Cornucopia,Action,$2,"+1 Card
@@ -257,19 +257,19 @@ Menagerie,Cornucopia,Action,$3,"+1 Action
 Reveal your hand. If the revealed cards all have different names, +3 Cards. Otherwise, +1 Card."
 Princess,Cornucopia,Action - Prize,$0*,"+1 Buy
 While this is in play, cards cost $2 less, but not less than $0.
-(This is not in the Supply)"
+(This is not in the Supply.)"
 Remake,Cornucopia,Action,$4,"Do this twice: Trash a card from your hand, then gain a card costing exactly $1 more than it."
 Tournament,Cornucopia,Action,$4,"+1 Action
 Each player may reveal a Province from their hand. If you do, discard it and gain any Prize (from the Prize pile) or a Duchy, onto your deck. If no-one else does, +1 Card and +$1."
 Trusty Steed,Cornucopia,Action - Prize,$0*,"Choose two: +2 Cards; or +2 Actions; or +$2; or gain 4 Silvers and put your deck into your discard pile. The choices must be different.
-(This is not in the Supply)"
+(This is not in the Supply.)"
 Young Witch,Cornucopia,Action - Attack,$4,"+2 Cards
 Discard 2 cards. Each other player may reveal a Bane card from their hand; if they don’t, they gain a Curse.
 Setup: Add an extra Kingdom card pile costing $2 or $3 to the Supply. Cards from that pile are Bane cards."
 Abandoned Mine,Dark Ages,Action - Ruins,$0,+$1
 Altar,Dark Ages,Action,$6,Trash a card from your hand. Gain a card costing up to $5.
 Armory,Dark Ages,Action,$4,Gain a card onto your deck costing up to $4.
-Band of Misfits,Dark Ages,Action,$5,Play this as if it were a cheaper Action card in the Supply costing. This is that card until it leaves play.
+Band of Misfits,Dark Ages,Action,$5,Play this as if it were a cheaper Action card in the Supply. This is that card until it leaves play.
 Bandit Camp,Dark Ages,Action,$5,"+1 Card
 +2 Actions
 Gain a Spoils from the Spoils pile."
@@ -343,7 +343,8 @@ Rats,Dark Ages,Action,$4,"+1 Card
 +1 Action
 Gain a Rats. Trash a card from your hand other than a Rats (or reveal a hand of all Rats).
 When you trash this, +1 Card."
-Rebuild,Dark Ages,Action,$5,"+1 Action. Name a card. Reveal cards from your deck until you reveal a Victory card you did not name. Discard the rest, trash the Victory card, and gain a Victory card costing up to $3 more than it."
+Rebuild,Dark Ages,Action,$5,"+1 Action
+Name a card. Reveal cards from your deck until you reveal a Victory card you did not name. Discard the rest, trash the Victory card, and gain a Victory card costing up to $3 more than it."
 Rogue,Dark Ages,Action - Attack,$5,"+$2
 If there are any cards in the trash costing from $3 to $6, gain one of them. Otherwise, each other player reveals the top 2 cards of their deck, trashes one of them costing from $3 to $6, and discards the rest."
 Ruined Library,Dark Ages,Action - Ruins,$0,+1 Card
@@ -388,7 +389,8 @@ Aqueduct,Empires,Landmark,,"When you gain a Treasure, move 1 VP from its pile to
 Setup: Put 8 VP on the Silver and Gold piles."
 Archive,Empires,Action - Duration,$5,"+1 Action
 Set aside the top 3 cards of your deck face down (you may look at them). Now and at the start of your next two turns, put one into your hand."
-Arena,Empires,Landmark,,"At the start of your Buy phase, you may discard an Action card. If you do, take 2 VP from here. — Setup: Put 6 VP here per player."
+Arena,Empires,Landmark,,"At the start of your Buy phase, you may discard an Action card. If you do, take 2 VP from here.
+Setup: Put 6 VP here per player."
 Bandit Fort,Empires,Landmark,,"When scoring, -2 VP for each Silver and each Gold you have."
 Banquet,Empires,Event,$3,Gain 2 Coppers and a non-Victory card costing up to $5.
 Basilica,Empires,Landmark,,"When you buy a card, if you have $2 or more left, take 2 VP from here.
@@ -571,7 +573,7 @@ Inn,Hinterlands,Action,$5,"+2 Cards
 +2 Actions
 Discard 2 cards.
 When you gain this, look through your discard pile, reveal any number of Action cards from it (which can include this), and shuffle them into your deck."
-Jack of All Trades,Hinterlands,Action,$4,Gain a Silver. Look at the top card of your deck; you may discard. Draw until you have 5 cards in hand. You may trash a non-Treasure card from your hand.
+Jack of All Trades,Hinterlands,Action,$4,Gain a Silver. Look at the top card of your deck; you may discard it. Draw until you have 5 cards in hand. You may trash a non-Treasure card from your hand.
 Mandarin,Hinterlands,Action,$5,"+$3
 Put a card from your hand onto your deck.
 When you gain this, put all Treasures you have in play onto your deck in any order."
@@ -683,7 +685,7 @@ Changeling,Nocturne,Night,$3,"Trash this. Gain a copy of a card you have in play
 In games using this, when you gain a card costing $3 or more, you may exchange it for a Changeling."
 Cobbler,Nocturne,Night - Duration,$5,"At the start of your next turn, gain a card to your hand costing up to $4."
 Conclave,Nocturne,Action,$4,"+$2
-You may play an action card from your hand that you don’t have a copy of in play. If you do, +1 Action."
+You may play an Action card from your hand that you don’t have a copy of in play. If you do, +1 Action."
 Crypt,Nocturne,Night - Duration,$5,"Set aside any number of Treasures you have in play, face down (under this). While any remain, at the start of each of your turns, put one of them into your hand."
 Cursed Gold,Nocturne,Treasure - Heirloom,$4,"$3
 When you play this, gain a Curse."
@@ -850,7 +852,7 @@ Goons,Prosperity,Action - Attack,$6,"+1 Buy
 +$2
 Each other player discards down to 3 cards in hand.
 While this is in play, when you buy a card, +1VP ."
-Grand Market,Prosperity,Action,$6,"+1 Card
+Grand Market,Prosperity,Action,$6*,"+1 Card
 +1 Action
 +1 Buy
 +$2.
@@ -912,7 +914,7 @@ Experiment,Renaissance,Action,$3,"+2 Cards
 +1 Action
 Return this to the Supply.
 When you gain this, gain another Experiment (that doesn’t come with another)."
-Exploration,Renaissance,Project,$4,"At the end of your Buy Phase, if you didn’t buy any cards, +1 Coffers and +1 Villager."
+Exploration,Renaissance,Project,$4,"At the end of your Buy phase, if you didn’t buy any cards, +1 Coffers and +1 Villager."
 Fair,Renaissance,Project,$4,"At the start of your turn, +1 Buy."
 Flag,Renaissance,Artifact,,"When drawing your hand, +1 Card."
 Flag Bearer,Renaissance,Action,$4,"+$2
@@ -935,7 +937,7 @@ Mountain Village,Renaissance,Action,$4,"+2 Actions
 Look through your discard pile and put a card from it into your hand; if you can’t, +1 Card."
 Old Witch,Renaissance,Action - Attack,$5,"+3 Cards
 Each other player gains a Curse and may trash a Curse from their hand."
-Pageant,Renaissance,Project,$3,"At the end of your Buy Phase, you may pay $1 for +1 Coffers."
+Pageant,Renaissance,Project,$3,"At the end of your Buy phase, you may pay $1 for +1 Coffers."
 Patron,Renaissance,Action - Reaction,$4,"+1 Villager
 +$2
 When something causes you to reveal this (using the word ""reveal""), +1 Coffers."
@@ -1011,7 +1013,7 @@ Trash a card from your hand. +$1 per $1 it costs."
 Sea Hag,Seaside,Action - Attack,$4,"Each other player discards the top card of their deck, then gains a Curse onto their deck."
 Smugglers,Seaside,Action,$3,Gain a copy of a card costing up to $6 that the player to your right gained on their last turn.
 Tactician,Seaside,Action - Duration,$5,"If you have at least one card in hand, discard your hand, and at the start of your next turn, +5 Cards, +1 Action, and +1 Buy."
-Treasure Map,Seaside,Action,$4,"Trash this and a Treasure Map from your hand. If you trashed two Treasure Maps, gain 4 Gold cards onto your deck."
+Treasure Map,Seaside,Action,$4,"Trash this and a Treasure Map from your hand. If you trashed two Treasure Maps, gain 4 Golds onto your deck."
 Treasury,Seaside,Action,$5,"+1 Card
 +1 Action
 +$1

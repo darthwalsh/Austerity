@@ -2,6 +2,11 @@
 
 AusterityWiki.csv is downloaded from http://wiki.dominionstrategy.com/index.php/List_of_cards
 
+* Run the script below, then Save As with type CSV UTF-8
+* Remove the UTF8 BOM
+* Run `npm run genCards`
+* Run `npm test` to format the generated code
+
 Some other data sources I considered were:
 
 * https://dominionstrategy.com/all-cards/

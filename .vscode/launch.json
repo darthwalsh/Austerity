@@ -50,6 +50,16 @@
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
       ],
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch genCards",
+      "program": "${workspaceFolder}\\server\\generateCardsTable.js",
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ],
     }
   ]
 }
