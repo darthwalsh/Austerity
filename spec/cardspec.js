@@ -1139,15 +1139,6 @@ const tests = {
     trashAfter: ["KingsCourt", "Moat"],
   },
 
-  Monument: {
-    interactions: [
-      "ALL: Bot gained 1 Victory tokens",
-    ],
-
-    dMoney: 2,
-    dVictory: 1,
-  },
-
   Goons: {
     dBuys: -1, // +1 from card, -2 from alsoBuy
     dMoney: 2,
@@ -1212,6 +1203,15 @@ const tests = {
     ],
     handAfter: ["Woodcutter"],
     playedAfter: ["Woodcutter", "KingsCourt"],
+  },
+
+  Monument: {
+    interactions: [
+      "ALL: Bot gained 1 Victory tokens",
+    ],
+
+    dMoney: 2,
+    dVictory: 1,
   },
 };
 

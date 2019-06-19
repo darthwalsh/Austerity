@@ -550,9 +550,25 @@ const kingdom = {
       }));
   },
 
-  Monument: /** @param {Player} player */ async player => {
-    player.money += 2;
-    player.gainVictory(1);
+  Goons: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.buys += 1;
+      player.money += 2;
+      await player.game.parallelAttack(player, discardToThree);
+    },
+
+    /**
+     * @param {Player} player
+     */
+    afterPlay(player) {
+      player.onBought.push(/** @param {Card} card */ card => {
+        player.gainVictory(1);
+      });
+      player.played.push(cards.Goons);
+    },
   },
 
   KingsCourt: /** @param {Player} player */ async player => {
@@ -573,25 +589,9 @@ const kingdom = {
     player.afterPlay(action);
   },
 
-  Goons: {
-    /**
-     * @param {Player} player
-     */
-    async play(player) {
-      player.buys += 1;
-      player.money += 2;
-      await player.game.parallelAttack(player, discardToThree);
-    },
-
-    /**
-     * @param {Player} player
-     */
-    afterPlay(player) {
-      player.onBought.push(/** @param {Card} card */ card => {
-        player.gainVictory(1);
-      });
-      player.played.push(cards.Goons);
-    },
+  Monument: /** @param {Player} player */ async player => {
+    player.money += 2;
+    player.gainVictory(1);
   },
 };
 
