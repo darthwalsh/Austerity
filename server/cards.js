@@ -513,7 +513,7 @@ const kingdom = {
 
   Bishop: /** @param {Player} player */ async player => {
     player.money += 1;
-    player.victory += 1;
+    let points = 1;
     const trashChoices = player.hand
       .map(c => c.name);
     if (!trashChoices.length) {
@@ -522,9 +522,10 @@ const kingdom = {
       player.sendMessage("Trash a card:");
       const trashChoice = await player.choose(trashChoices);
       const trash = player.fromHand(trashChoice);
-      player.victory += Math.floor(trash.cost / 2);
+      points += Math.floor(trash.cost / 2);
       player.trashPush(trash);
     }
+    player.gainVictory(points);
     await Promise.all(player.game.otherPlayers(player).map(
       /** @param {Player} other */ async other => {
         const otherChoices = other.hand
@@ -546,7 +547,7 @@ const kingdom = {
 
   Monument: /** @param {Player} player */ async player => {
     player.money += 2;
-    player.victory += 1;
+    player.gainVictory(1);
   },
 
   KingsCourt: /** @param {Player} player */ async player => {
@@ -627,6 +628,7 @@ function compareTo(other) {
  * When implementing, use caution to ensure proper bookkeeping:
  * - use player.store.gainCard() instead of directly adding copied cards
  * - revealed cards should use player.fromDraw({reveal: true})
+ * - gaining VP tokens should use player.gainVictory
  *
  * @typedef {object} Card
  * @property {string} name

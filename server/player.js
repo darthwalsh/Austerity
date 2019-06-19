@@ -201,6 +201,14 @@ class Player {
   }
 
   /**
+   * @param {number} points
+   */
+  gainVictory(points) {
+    this.game.allLog(`${this.name} gained ${points} Victory tokens`);
+    this.victory += points;
+  }
+
+  /**
    * @param {Card[]} discard Cards to discard, where [0] is revealed
    */
   discardPush(discard) {

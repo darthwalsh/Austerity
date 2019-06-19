@@ -1110,6 +1110,7 @@ const tests = {
       ["Copper", "KingsCourt"],
       "KingsCourt",
       "ALL: Bot trashed KingsCourt",
+      "ALL: Bot gained 4 Victory tokens",
       "ALL: Other#2 could not trash a card",
       "ALL: Other#0 trashed Moat",
       "ALL: Other#1 did not trash a card",
@@ -1138,6 +1139,10 @@ const tests = {
   },
 
   Monument: {
+    interactions: [
+      "ALL: Bot gained 1 Victory tokens",
+    ],
+
     dMoney: 2,
     dVictory: 1,
   },
