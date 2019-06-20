@@ -564,6 +564,17 @@ const kingdom = {
     }
   },
 
+  CountingHouse: /** @param {Player} player */ async player => {
+    const coppers = player.discardPile.filter(c => c.name === "Copper").length;
+    const choices = Array.from({length: coppers+1}, (v, k) => k.toString());
+    player.sendMessage("Put Coppers from discard into hand:");
+    const choice = await player.choose(choices);
+    player.discardPile = player.discardPile.filter(c => c.name !== "Copper").concat(
+      Array.from({length: coppers - +choice}, _ => cards.Copper));
+    player.hand.push(...Array.from({length: +choice}, _ => cards.Copper));
+    player.game.allLog(`${player.name} revealed ${choice} Copper from their discard and put into their hand`);
+  },
+
   Goons: {
     /**
      * @param {Player} player

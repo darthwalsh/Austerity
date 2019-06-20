@@ -1168,6 +1168,20 @@ const tests = {
     handAfter: ["Silver", "Mine"],
   },
 
+  CountingHouse: {
+    discard: ["Copper", "Copper", "Silver", "Copper"],
+
+    interactions: [
+      "Put Coppers from discard into hand:",
+      ["0", "1", "2", "3"],
+      "2",
+      "ALL: Bot revealed 2 Copper from their discard and put into their hand",
+    ],
+
+    discardAfter: ["Silver", "Copper"],
+    handAfter: ["Copper", "Copper"],
+  },
+
   Goons: {
     dBuys: -1, // +1 from card, -2 from alsoBuy
     dMoney: 2,
