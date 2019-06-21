@@ -1396,6 +1396,62 @@ const tests = {
     trashAfter: ["Peddler"],
   },
 
+  Vault: {
+    draw: ["Copper", "Silver", "Gold"],
+    dMoney: 2,
+
+    interactions: [
+      "Discard cards for Money:",
+      ["Silver", "Gold", "Done Discarding"],
+      "Gold",
+      "ALL: Other#1 had only one card to discard",
+      "ALL: Other#1 discarded Copper",
+      "ALL: Other#2 chose not to discard",
+      "Discard cards for Money:",
+      ["Silver", "Done Discarding"],
+      "Silver",
+      "ALL: Other#0 discarded Copper and 1 more",
+      "ALL: Bot discarded Gold and 1 more",
+    ],
+
+    drawAfter: ["Copper"],
+    discardAfter: ["Gold", "Silver"],
+
+    others: [{
+      draw: ["Gold"],
+      hand: ["Copper", "Silver"],
+      interactions: [
+        "You may discard two cards to draw a card:",
+        ["Copper", "Silver", "Don't Discard"],
+        "Copper",
+        "Discard another card:",
+        ["Silver"],
+        "Silver",
+      ],
+      handAfter: ["Gold"],
+      discardAfter: ["Copper", "Silver"],
+    }, {
+      draw: ["Gold"],
+      hand: ["Copper"],
+      interactions: [
+        "You may discard two cards to draw a card:",
+        ["Copper", "Don't Discard"],
+        "Copper",
+      ],
+      drawAfter: ["Gold"],
+      discardAfter: ["Copper"],
+    }, {
+      draw: ["Gold"],
+      hand: [],
+      interactions: [
+        "You may discard two cards to draw a card:",
+        ["Don't Discard"],
+        "Don't Discard",
+      ],
+      drawAfter: ["Gold"],
+    }],
+  },
+
   WorkersVillage: {
     dActions: 2,
     dBuys: 1,

@@ -709,6 +709,56 @@ const kingdom = {
     },
   },
 
+  Vault: /** @param {Player} player */ async player => {
+    player.draw(2);
+
+    const others = Promise.all(player.game.otherPlayers(player).map(
+      /** @param {Player} other */ async other => {
+        const discardChoices = other.hand.map(c => c.name);
+        discardChoices.push("Don't Discard");
+
+        other.sendMessage("You may discard two cards to draw a card:");
+        const firstChoice = await other.choose(discardChoices);
+        if (firstChoice === "Don't Discard") {
+          other.game.allLog(`${other.name} chose not to discard`);
+          return;
+        }
+        const toDiscard = [other.fromHand(firstChoice)];
+
+        if (other.hand.length) {
+          other.sendMessage("Discard another card:");
+          const choice = await other.choose(other.hand.map(c => c.name));
+          toDiscard.push(other.fromHand(choice));
+
+          other.draw();
+        } else {
+          other.game.allLog(`${other.name} had only one card to discard`);
+        }
+        other.discardPush(toDiscard);
+      }));
+
+    const toDiscard = [];
+    for (;;) {
+      const choices = player.hand.map(c => c.name);
+      if (!choices.length) {
+        break;
+      }
+
+      choices.push("Done Discarding");
+      player.sendMessage("Discard cards for Money:");
+      const choice = await player.choose(choices);
+      if (choice === "Done Discarding") {
+        break;
+      }
+
+      toDiscard.push(player.fromHand(choice));
+    }
+    player.discardPush(toDiscard);
+    player.money += toDiscard.length;
+
+    await others;
+  },
+
   WorkersVillage: /** @param {Player} player */ async player => {
     player.draw();
     player.actions += 2;
