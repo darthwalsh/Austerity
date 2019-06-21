@@ -1278,6 +1278,43 @@ const tests = {
     discardAfter: ["Copper"],
   },
 
+  GrandMarket: {
+    dActions: 1,
+    dBuys: 1,
+    dMoney: 2,
+    draw: ["Copper"],
+    hand: [],
+    handAfter: ["Copper"],
+  },
+
+  CouncilRoom_GrandMarket_NormalCost: {
+    initMoney: 6,
+    played: ["Gold", "Gold"],
+    dMoney: -6,
+
+    interactions: [
+      "ALL: Bot bought GrandMarket",
+    ],
+
+    alsoBuy: ["GrandMarket"],
+    discardAfter: ["GrandMarket"],
+    playedAfter: ["Gold", "Gold", "CouncilRoom"],
+  },
+
+  CouncilRoom_Peddler_Pricey: {
+    initMoney: 6,
+    played: ["Copper", "Copper", "Copper", "Gold"],
+    dMoney: -Infinity,
+
+    interactions: [
+      "ALL: Bot bought GrandMarket",
+    ],
+
+    alsoBuy: ["GrandMarket"],
+    discardAfter: ["GrandMarket"],
+    playedAfter: ["Copper", "Copper", "Copper", "Gold", "CouncilRoom"],
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,

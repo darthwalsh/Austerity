@@ -638,6 +638,30 @@ const kingdom = {
     },
   },
 
+  GrandMarket: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.draw();
+      player.actions += 1;
+      player.buys += 1;
+      player.money += 2;
+    },
+
+    /**
+     * @param {Player | null} player
+     * @return {number}
+     */
+    getCost(player) {
+      if (!player || player.phase !== "buy") {
+        return 6;
+      }
+
+      return player.played.includes(cards.Copper) ? Infinity : 6;
+    },
+  },
+
   KingsCourt: /** @param {Player} player */ async player => {
     const actions = player.hand
       .filter(c => c.ofKind("action"))
@@ -755,6 +779,7 @@ function compareTo(other) {
  * - "While this is in play" effects go in afterPlay() not play()
  *   - That way they trigger exactly once on ThroneRoom
  *   - It's assumed cards can't be removed early from In Play, otherwise the callback will need to be removed
+ * - if a treasure card can detect the cost of Grand Market with Copper is infinity, there will need to be a canBuy predicate
  *
  * @typedef {object} Card
  * @property {string} name
