@@ -1,4 +1,4 @@
-/* global describe afterEach it expect */
+/* global describe beforeAll afterEach it expect */
 
 const fs = require("fs");
 const path = require("path");
@@ -99,7 +99,7 @@ class ManualPlayer {
 
 describe("e2e", () => {
   const server = new Server();
-  server.listen({trivialShuffle: true});
+  beforeAll(() => server.listen({trivialShuffle: true}));
   afterEach(() => server.lobby.clearGames());
 
   it("plays a game", async done => {
