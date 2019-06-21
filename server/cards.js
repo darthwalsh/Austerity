@@ -68,7 +68,7 @@ const kingdom = {
 
   Artisan: /** @param {Player} player */ async player => {
     const gainChoices = player.game.store
-      .getAvailable(5)
+      .getAvailable(5, player)
       .map(c => c.name);
     if (!gainChoices.length) {
       return;
@@ -181,7 +181,7 @@ const kingdom = {
      */
     async play(player) {
       const gainChoices = player.game.store
-        .getAvailable(5)
+        .getAvailable(5, player)
         .map(c => c.name);
       if (!gainChoices.length) {
         return;
@@ -289,7 +289,7 @@ const kingdom = {
     const trash = player.fromHand(trashChoice);
     player.trashPush(trash);
     const gainChoices = player.game.store
-      .getAvailable(trash.cost + 3)
+      .getAvailable(trash.getCost(player) + 3, player)
       .filter(c => c.ofKind("treasure"))
       .map(c => c.name);
     if (!gainChoices.length) {
@@ -341,7 +341,7 @@ const kingdom = {
     const trash = player.fromHand(trashChoice);
     player.trashPush(trash);
     const gainChoices = player.game.store
-      .getAvailable(trash.cost + 2)
+      .getAvailable(trash.getCost(player) + 2, player)
       .map(c => c.name);
     if (!gainChoices.length) {
       return;
@@ -501,7 +501,7 @@ const kingdom = {
 
   Workshop: /** @param {Player} player */ async player => {
     const gainChoices = player.game.store
-      .getAvailable(4)
+      .getAvailable(4, player)
       .map(c => c.name);
     if (!gainChoices.length) {
       return;
@@ -527,7 +527,7 @@ const kingdom = {
       player.sendMessage("Trash a card:");
       const trashChoice = await player.choose(trashChoices);
       const trash = player.fromHand(trashChoice);
-      points += Math.floor(trash.cost / 2);
+      points += Math.floor(trash.getCost(player) / 2);
       player.trashPush(trash);
     }
     player.gainVictory(points);
@@ -619,6 +619,30 @@ const kingdom = {
     player.gainVictory(1);
   },
 
+  Peddler: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.draw();
+      player.actions += 1;
+      player.money += 1;
+    },
+
+    /**
+     * @param {Player | null} player
+     * @return {number}
+     */
+    getCost(player) {
+      if (!player || player.phase !== "buy") {
+        return 8;
+      }
+
+      const playedActions = player.played.filter(c => c.ofKind("action")).length;
+      return Math.max(0, 8 - 2 * playedActions);
+    },
+  },
+
   WorkersVillage: /** @param {Player} player */ async player => {
     player.draw();
     player.actions += 2;
@@ -644,12 +668,12 @@ const kindOrder = {
 
 /**
  * @param {{cost: string, name: string}} tableRow
- * @return {number}
+ * @return {function(Player): number}
  */
 function getCost(tableRow) {
   const match = /^\$(\d+)$/.exec(tableRow.cost);
   if (match) {
-    return +match[1];
+    return _ => +match[1];
   }
   throw new Error(`${tableRow.name}: Unknown cost string '${tableRow.cost}'`);
 }
@@ -673,7 +697,7 @@ function getKinds(tableRow) {
  */
 function compareTo(other) {
   return kindOrder[this.kind[0]] - kindOrder[other.kind[0]]
-    || this.cost - other.cost
+    || this.getCost(null) - other.getCost(null) // Sorting is best-effort, so not knowing player is fine
     || this.name.localeCompare(other.name);
 }
 
@@ -692,13 +716,13 @@ function compareTo(other) {
  *
  * @typedef {object} Card
  * @property {string} name
- * @property {number} cost
  * @property {string[]} kind
  * @property {string} text
  * @property {string} set
  * @property {string} color
  *
  * @property {function(Player): Promise<void>} play
+ * @property {function(Player): number} getCost
  * @property {function(string): boolean} ofKind
  * @property {function(Card): number} compareTo
  * @property {function(Player): number} [getPoints]
@@ -720,7 +744,9 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
     throw new Error(`Can't find ${name}`);
   }
 
-  card.cost = getCost(tableRow);
+  if (!card.getCost) {
+    card.getCost = getCost(tableRow);
+  }
   card.kind = getKinds(tableRow);
   card.text = tableRow.text;
   card.set = tableRow.set;

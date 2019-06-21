@@ -66,7 +66,7 @@ class Game {
     ps.forEach(p => p.redrawHand());
 
     if (debugMode) {
-      ps[0].hand.push(...this.store.getAvailable(99));
+      ps[0].hand.push(...this.store.getAvailable(99, null));
       ps[0].sendHand();
       this.allLog("!!!!!! " + ps[0].name + " IS CHEATING!!!!!!");
     }

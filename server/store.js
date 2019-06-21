@@ -2,6 +2,7 @@ const cards = require("./cards");
 
 /**
  * @typedef { import("./cards").Card } Card
+ * @typedef { import("./player") } Player
  */
 
 class Store {
@@ -49,8 +50,13 @@ class Store {
     return this.allCards;
   }
 
-  getAvailable(price) {
-    return this.getAllCards().filter(c => c.cost <= price && this.counts[c.name]);
+  /**
+   * @param {number} price
+   * @param {Player} player
+   * @return {Card[]}
+   */
+  getAvailable(price, player) {
+    return this.getAllCards().filter(c => c.getCost(player) <= price && this.counts[c.name]);
   }
 
   bought(card) {

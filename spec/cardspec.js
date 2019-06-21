@@ -17,16 +17,22 @@ const defaultTest = {
   discard: [],
   hand: [],
   interactions: [],
+  played: [],
   drawAfter: [],
   discardAfter: [],
   handAfter: [],
   playedAfter: [],
+  trashAfter: [],
 
   others: [],
 
   store: [],
   storeCounts: {},
-  trashAfter: [],
+
+  initMoney: 3,
+  initBuys: 3,
+  initActions: 3,
+  initVictory: 0,
 
   alsoPlay: [],
   alsoBuy: [],
@@ -1257,6 +1263,64 @@ const tests = {
     dVictory: 1,
   },
 
+  Peddler: {
+    draw: ["Copper", "Silver"],
+    dMoney: 1,
+    dActions: 1,
+
+    drawAfter: ["Copper"],
+    handAfter: ["Silver"],
+  },
+
+  CouncilRoom_Peddler_PartialCost: {
+    initMoney: 20,
+    played: ["Village"],
+    dMoney: -4,
+
+    interactions: [
+      "ALL: Bot bought Peddler",
+    ],
+
+    alsoBuy: ["Peddler"],
+    discardAfter: ["Peddler"],
+    playedAfter: ["Village", "CouncilRoom"],
+  },
+
+  CouncilRoom_Peddler_NoCost: {
+    initMoney: 20,
+    played: ["Village", "Village", "Village", "Village", "Village"],
+    dMoney: 0,
+
+    interactions: [
+      "ALL: Bot bought Peddler",
+    ],
+
+    alsoBuy: ["Peddler"],
+    discardAfter: ["Peddler"],
+    playedAfter: ["Village", "Village", "Village", "Village", "Village", "CouncilRoom"],
+  },
+
+  Remodel_Peddler_ActionPhaseFullCost: {
+    hand: ["Peddler"],
+
+    played: ["Village", "Village", "Village"],
+
+    interactions: [
+      "Trash a card:",
+      ["Peddler"],
+      "Peddler",
+      "ALL: Bot trashed Peddler",
+      "Gain a card:",
+      ["Copper", "Silver", "Gold", "Estate", "Duchy", "Province", "Curse"],
+      "Province",
+      "ALL: Bot gained Province",
+    ],
+
+    discardAfter: ["Province"],
+    playedAfter: ["Village", "Village", "Village", "Remodel"],
+    trashAfter: ["Peddler"],
+  },
+
   WorkersVillage: {
     dActions: 2,
     dBuys: 1,
@@ -1294,13 +1358,6 @@ describe("cards", () => {
           test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
         }
       }
-
-      const init = {
-        actions: 3,
-        buys: 3,
-        money: 3,
-        victory: 0,
-      };
 
       let interactionIndex = 0;
 
@@ -1366,10 +1423,10 @@ describe("cards", () => {
         game.players[10 + otherCount] = oP;
       });
 
-      p.money = init.money;
-      p.actions = init.actions;
-      p.buys = init.buys;
-      p.played = [];
+      p.money = test.initMoney;
+      p.actions = test.initActions;
+      p.buys = test.initBuys;
+      p.played = test.played.map(n => cards[n]);
       p.onPlayed = [];
       p.onBought = [];
 
@@ -1381,17 +1438,19 @@ describe("cards", () => {
 
       if (card.ofKind("action") || card.ofKind("treasure")) {
         p.hand.splice(0, 0, card);
+        p.phase = "action";
         await p.playCard(card.name);
         for (const also of test.alsoPlay) {
           await p.playCard(also);
         }
+        p.phase = "buy";
         for (const also of test.alsoBuy) {
           p.buyCard(also);
         }
-        expect(p.actions - init.actions).toEqual(test.dActions, "dActions");
-        expect(p.buys - init.buys).toEqual(test.dBuys, "dBuys");
-        expect(p.money - init.money).toEqual(test.dMoney, "dMoney");
-        expect(p.victory - init.victory).toEqual(test.dVictory, "dVictory");
+        expect(p.actions - test.initActions).toEqual(test.dActions, "dActions");
+        expect(p.buys - test.initBuys).toEqual(test.dBuys, "dBuys");
+        expect(p.money - test.initMoney).toEqual(test.dMoney, "dMoney");
+        expect(p.victory - test.initVictory).toEqual(test.dVictory, "dVictory");
 
         expect(p.drawPile.map(c => c.name))
           .toEqual(test.drawAfter, "drawAfter");
@@ -1479,9 +1538,9 @@ describe("cards", () => {
   });
 
   it("sorts correctly", () => {
-    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Cellar];
+    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Peddler, cards.Cellar];
     const sorted = arr.sort((a, b) => a.compareTo(b)).map(c => c.name);
-    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Village"]);
+    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Village", "Peddler"]);
   });
 
   it("has colors for all", () => {

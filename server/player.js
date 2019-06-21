@@ -25,6 +25,7 @@ class Player {
     }
     this.hand = /** @type {Card[]} */ ([]);
     this.victory = 0;
+    this.phase = /** @type {"" | "action" | "buy"} */ ("");
     this.enableSendHand = true;
   }
 
@@ -47,6 +48,7 @@ class Player {
   }
 
   async actionPhase() {
+    this.phase = "action";
     for (;;) {
       if (!this.actions) {
         this.sendMessage("No Action points remaining, starting Buy phase");
@@ -82,6 +84,8 @@ class Player {
   }
 
   async buyPhase() {
+    this.phase = "buy";
+
     for (;;) {
       if (!this.buys) {
         return;
@@ -95,7 +99,7 @@ class Player {
         choices.push("\n");
       }
 
-      choices.push(...this.game.store.getAvailable(this.money).map(c => "Buy: " + c.name));
+      choices.push(...this.game.store.getAvailable(this.money, this).map(c => "Buy: " + c.name));
 
       if (!choices.length) {
         this.sendMessage("Nothing to buy");
@@ -131,7 +135,7 @@ class Player {
   buyCard(buyChoice) {
     const buying = cards[buyChoice];
     this.discardPile.push(buying);
-    this.money -= buying.cost;
+    this.money -= buying.getCost(this);
     --this.buys;
     this.game.allLog(this.name + " bought " + buying.name);
     this.game.store.bought(buying);
@@ -254,6 +258,8 @@ class Player {
   }
 
   turnDone() {
+    this.phase = "";
+
     this.discardPile.push(...this.hand.splice(0));
     this.discardPile.push(...this.played.splice(0));
 
