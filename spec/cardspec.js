@@ -1188,6 +1188,23 @@ const tests = {
     handAfter: ["Copper", "Copper"],
   },
 
+  Expand: {
+    hand: ["Copper", "Silver"],
+    interactions: [
+      "Trash a card:",
+      ["Copper", "Silver"],
+      "Copper",
+      "ALL: Bot trashed Copper",
+      "Gain a card:",
+      ["Copper", "Silver", "Estate", "Curse"],
+      "Estate",
+      "ALL: Bot gained Estate",
+    ],
+    handAfter: ["Silver"],
+    discardAfter: ["Estate"],
+    trashAfter: ["Copper"],
+  },
+
   Goons: {
     dBuys: -1, // +1 from card, -2 from alsoBuy
     dMoney: 2,

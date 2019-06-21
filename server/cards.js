@@ -330,12 +330,11 @@ const kingdom = {
   },
 
   Remodel: /** @param {Player} player */ async player => {
-    const trashChoices = player.hand
-      .map(c => c.name);
-    if (!trashChoices.length) {
+    if (!player.hand.length) {
       player.sendMessage("No Cards to trash");
       return;
     }
+    const trashChoices = player.hand.map(c => c.name);
     player.sendMessage("Trash a card:");
     const trashChoice = await player.choose(trashChoices);
     const trash = player.fromHand(trashChoice);
@@ -573,6 +572,27 @@ const kingdom = {
       Array.from({length: coppers - +choice}, _ => cards.Copper));
     player.hand.push(...Array.from({length: +choice}, _ => cards.Copper));
     player.game.allLog(`${player.name} revealed ${choice} Copper from their discard and put into their hand`);
+  },
+
+  Expand: /** @param {Player} player */ async player => {
+    if (!player.hand.length) {
+      player.sendMessage("No Cards to trash");
+      return;
+    }
+    const trashChoices = player.hand.map(c => c.name);
+    player.sendMessage("Trash a card:");
+    const trashChoice = await player.choose(trashChoices);
+    const trash = player.fromHand(trashChoice);
+    player.trashPush(trash);
+    const gainChoices = player.game.store
+      .getAvailable(trash.getCost(player) + 3, player)
+      .map(c => c.name);
+    if (!gainChoices.length) {
+      return;
+    }
+    player.sendMessage("Gain a card:");
+    const gainChoice = await player.choose(gainChoices);
+    player.game.gainCard(player, gainChoice);
   },
 
   Goons: {
