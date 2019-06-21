@@ -86,17 +86,23 @@ class Player {
   async buyPhase() {
     this.phase = "buy";
 
+    let bought = false;
+
     for (;;) {
       if (!this.buys) {
         return;
       }
 
       const treasureCards = this.hand.filter(c => c.ofKind("treasure"));
-      const choices = treasureCards.map(c => c.name);
+      const choices = [];
 
-      if (choices.length) {
-        choices.unshift("Play All Treasures");
-        choices.push("\n");
+      if (!bought) {
+        choices.push(...treasureCards.map(c => c.name));
+
+        if (choices.length) {
+          choices.unshift("Play All Treasures");
+          choices.push("\n");
+        }
       }
 
       choices.push(...this.game.store.getAvailable(this.money, this).map(c => "Buy: " + c.name));
@@ -121,6 +127,7 @@ class Player {
       }
 
       if (choice.substring(0, 5) === "Buy: ") {
+        bought = true;
         this.buyCard(choice.substring(5));
       } else {
         this.game.allLog(this.name + " played " + choice);
