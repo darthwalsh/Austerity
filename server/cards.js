@@ -595,6 +595,28 @@ const kingdom = {
     player.game.gainCard(player, gainChoice);
   },
 
+  Forge: /** @param {Player} player */ async player => {
+    let cost = 0;
+    for (;;) {
+      const trashChoices = player.hand.map(c => `Trash: ${c.name}`);
+      const gainChoices = player.game.store
+        .getAvailable(cost, player)
+        .filter(c => c.getCost(player) === cost)
+        .map(c => `Gain: ${c.name}`);
+      player.sendMessage("Trash cards, or finish by gaining a card:");
+      const trashChoice = await player.choose([...trashChoices, "\n", ...gainChoices]);
+      const [kind, name] = trashChoice.split(" ");
+      if (kind === "Trash:") {
+        const trash = player.fromHand(name);
+        player.trashPush(trash);
+        cost += trash.getCost(player);
+      } else {
+        player.game.gainCard(player, name);
+        return;
+      }
+    }
+  },
+
   Goons: {
     /**
      * @param {Player} player

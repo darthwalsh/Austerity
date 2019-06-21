@@ -1205,6 +1205,27 @@ const tests = {
     trashAfter: ["Copper"],
   },
 
+  Forge: {
+    hand: ["Copper", "Silver", "Peddler"],
+    interactions: [
+      "Trash cards, or finish by gaining a card:",
+      ["Trash: Copper", "Trash: Silver", "Trash: Peddler", "\n", "Gain: Copper", "Gain: Curse"],
+      "Trash: Copper",
+      "ALL: Bot trashed Copper",
+      "Trash cards, or finish by gaining a card:",
+      ["Trash: Silver", "Trash: Peddler", "\n", "Gain: Copper", "Gain: Curse"],
+      "Trash: Silver",
+      "ALL: Bot trashed Silver",
+      "Trash cards, or finish by gaining a card:",
+      ["Trash: Peddler", "\n", "Gain: Silver"],
+      "Gain: Silver",
+      "ALL: Bot gained Silver",
+    ],
+    handAfter: ["Peddler"],
+    discardAfter: ["Silver"],
+    trashAfter: ["Copper", "Silver"],
+  },
+
   Goons: {
     dBuys: -1, // +1 from card, -2 from alsoBuy
     dMoney: 2,
@@ -1405,8 +1426,9 @@ describe("cards", () => {
       game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
       game.store.counts = Object.assign(game.store.counts, test.storeCounts);
       game.allLog = message => {
-        const expected = test.interactions[interactionIndex++];
-        expect("ALL: " + message).toEqual(expected, "all log");
+        const expected = test.interactions[interactionIndex];
+        expect(`[${interactionIndex}] ALL: ${message}`).toEqual(`[${interactionIndex}] ${expected}`, "all log");
+        interactionIndex++;
       };
 
       let otherCount = 0;
