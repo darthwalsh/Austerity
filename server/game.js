@@ -21,6 +21,24 @@ class Game {
     this.trash = [];
     this.started = false;
     this.shuffle = shuffle || this.fisherYatesShuffle;
+
+    this.setOrder = [
+      "Base",
+      "Base v1",
+      "Intrigue",
+      "Seaside",
+      "Alchemy",
+      "Prosperity",
+      "Cornucopia",
+      "Hinterlands",
+      "Dark Ages",
+      "Guilds",
+      "Adventures",
+      "Empires",
+      "Nocturne",
+      "Renaissance",
+      "Promo",
+    ];
   }
 
   /**
@@ -117,24 +135,7 @@ class Game {
     const player = new Player(connection, this);
 
     if (!Object.keys(this.players).length) {
-      const setOrder = [
-        "Base",
-        "Base v1",
-        "Intrigue",
-        "Seaside",
-        "Alchemy",
-        "Prosperity",
-        "Cornucopia",
-        "Hinterlands",
-        "Dark Ages",
-        "Guilds",
-        "Adventures",
-        "Empires",
-        "Nocturne",
-        "Renaissance",
-        "Promo",
-      ];
-      const setCards = setOrder.reduce((o, set) => {
+      const setCards = this.setOrder.reduce((o, set) => {
         o[set] = this.store.optional().filter(card => card.set === set).map(c => c.name);
         return o;
       }, {});

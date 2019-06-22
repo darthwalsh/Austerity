@@ -13,11 +13,16 @@ const defaultTest = {
   dBuys: 0,
   dVictory: 0,
   points: 0,
+
+  play: null,
+
   draw: [],
   discard: [],
   hand: [],
-  interactions: [],
   played: [],
+
+  interactions: [],
+
   drawAfter: [],
   discardAfter: [],
   handAfter: [],
@@ -370,7 +375,9 @@ const tests = {
     playedAfter: [],
   },
 
-  ThroneRoom_Feast_OneTrash: {
+  FeastThroneRoomedOneTrash: {
+    play: "ThroneRoom",
+
     hand: ["Feast"],
     interactions: [
       "Pick an Action card to double:",
@@ -573,7 +580,9 @@ const tests = {
     handAfter: ["Silver", "Gold"],
   },
 
-  Witch_Moat: {
+  MoatBlocks: {
+    play: "Witch",
+
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
@@ -593,7 +602,9 @@ const tests = {
     }],
   },
 
-  Witch_MoatAttacked: {
+  MoatAttacked: {
+    play: "Witch",
+
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
@@ -613,7 +624,9 @@ const tests = {
     }],
   },
 
-  Militia_Moat: {
+  MoatOtherInteractive: {
+    play: "Militia",
+
     dMoney: 2,
 
     interactions: [
@@ -877,7 +890,9 @@ const tests = {
     others: [],
   },
 
-  ThroneRoom_Thief: {
+  ThiefUnderThroneRoom: {
+    play: "ThroneRoom",
+
     hand: ["Thief"],
 
     interactions: [
@@ -1257,7 +1272,9 @@ const tests = {
     discardAfter: ["Copper", "Copper"],
   },
 
-  ThroneRoom_GoonsSingleVictory: {
+  GoonsWithThroneRoomSingleVictory: {
+    play: "ThroneRoom",
+
     hand: ["Goons"],
 
     dBuys: 1, // +1+1 from card, -1 from alsoBuy
@@ -1287,7 +1304,9 @@ const tests = {
     handAfter: ["Copper"],
   },
 
-  CouncilRoom_GrandMarket_NormalCost: {
+  GrandMarketNormalCost: {
+    play: "CouncilRoom",
+
     initMoney: 6,
     played: ["Gold", "Gold"],
     dMoney: -6,
@@ -1301,7 +1320,9 @@ const tests = {
     playedAfter: ["Gold", "Gold", "CouncilRoom"],
   },
 
-  CouncilRoom_Peddler_Pricey: {
+  GrandMarketPricey: {
+    play: "CouncilRoom",
+
     initMoney: 6,
     played: ["Copper", "Copper", "Copper", "Gold"],
     dMoney: -Infinity,
@@ -1347,7 +1368,9 @@ const tests = {
     handAfter: ["Silver"],
   },
 
-  CouncilRoom_Peddler_PartialCost: {
+  PeddlerPartialCost: {
+    play: "CouncilRoom",
+
     initMoney: 20,
     played: ["Village"],
     dMoney: -4,
@@ -1361,7 +1384,9 @@ const tests = {
     playedAfter: ["Village", "CouncilRoom"],
   },
 
-  CouncilRoom_Peddler_NoCost: {
+  PeddlerNoCost: {
+    play: "CouncilRoom",
+
     initMoney: 20,
     played: ["Village", "Village", "Village", "Village", "Village"],
     dMoney: 0,
@@ -1375,7 +1400,9 @@ const tests = {
     playedAfter: ["Village", "Village", "Village", "Village", "Village", "CouncilRoom"],
   },
 
-  Remodel_Peddler_ActionPhaseFullCost: {
+  PeddlerActionPhaseFullCost: {
+    play: "Remodel",
+
     hand: ["Peddler"],
 
     played: ["Village", "Village", "Village"],
@@ -1461,169 +1488,191 @@ const tests = {
   },
 };
 
-describe("cards", () => {
-  for (const tName in tests) {
-    it("plays " + tName, async done => {
-      const test = tests[tName];
+function getCard(tName) {
+  const test = tests[tName];
 
-      let cardName = tName;
-      if (tName.includes("_")) {
-        cardName = tName.substring(0, tName.indexOf("_"));
-      }
-      const card = cards[cardName];
+  let cardName;
+  if (test.play) {
+    cardName = test.play;
+  } else if (tName.includes("_")) {
+    cardName = tName.substring(0, tName.indexOf("_"));
+  } else {
+    cardName = tName;
+  }
+  return cards[cardName];
+}
 
-      for (const testKey in test) {
-        expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultTest: " + testKey);
-      }
-      for (const key in defaultTest) {
-        if (key === "playedAfter") {
-          test[key] = test[key] || [card.name];
-        }
-        test[key] = test[key] || defaultTest[key];
-      }
-      for (let i = 0; i < test.others.length; ++i) {
-        for (const testOtherKey in test.others[i]) {
-          expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultTest: " + testOtherKey);
-        }
-        for (const oKey in defaultOthers) {
-          test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
-        }
-      }
+async function dataTest(tName, done) {
+  const test = tests[tName];
+  const card = getCard(tName);
 
-      let interactionIndex = 0;
-
-      const game = new Game();
-
-      // @ts-ignore create a mock connection
-      const p = new Player({
-        name: "Bot",
-        send: o => {
-          if (isHandMessage(o.message)) {
-            return;
-          }
-
-          const expected = test.interactions[interactionIndex++];
-          if (o.message) {
-            expect(o.message).toEqual(expected);
-          } else {
-            fail(Error("Not implemented: " + o));
-          }
-        },
-        choose: choices => {
-          const expected = test.interactions[interactionIndex++];
-          expect(choices).toEqual(expected);
-          return Promise.resolve(test.interactions[interactionIndex++]);
-        }}, game);
-
-      game.players[0] = p;
-      game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
-      game.store.counts = Object.assign(game.store.counts, test.storeCounts);
-      game.allLog = message => {
-        const expected = test.interactions[interactionIndex];
-        expect(`[${interactionIndex}] ALL: ${message}`).toEqual(`[${interactionIndex}] ${expected}`, "all log");
-        interactionIndex++;
-      };
-
-      let otherCount = 0;
-      test.others.forEach(testOther => {
-        // @ts-ignore create a mock connection
-        const oP = new Player({
-          name: "Other#" + otherCount++,
-          send: o => {
-            if (isHandMessage(o.message)) {
-              return;
-            }
-
-            const expected = testOther.interactions[oP["InteractionIndex"]++];
-            if (o.message) {
-              expect(o.message).toEqual(expected);
-            } else {
-              fail(Error("Not implemented: " + o));
-            }
-          },
-          choose: choices => {
-            const expected = testOther.interactions[oP["InteractionIndex"]++];
-            expect(choices).toEqual(expected);
-            return Promise.resolve(testOther.interactions[oP["InteractionIndex"]++]);
-          }}, game);
-        oP["TestIndex"] = otherCount - 1;
-        oP["InteractionIndex"] = 0;
-        oP.drawPile = testOther.draw.map(n => cards[n]);
-        oP.discardPile = testOther.discard.map(n => cards[n]);
-        oP.hand = testOther.hand.map(n => cards[n]);
-
-        game.players[10 + otherCount] = oP;
-      });
-
-      p.money = test.initMoney;
-      p.actions = test.initActions;
-      p.buys = test.initBuys;
-      p.played = test.played.map(n => cards[n]);
-      p.onPlayed = [];
-      p.onBought = [];
-
-      p.drawPile = test.draw.map(n => cards[n]);
-      p.discardPile = test.discard.map(n => cards[n]);
-      p.hand = test.hand.map(n => cards[n]);
-
-      let called = false;
-
-      if (card.ofKind("action") || card.ofKind("treasure")) {
-        p.hand.splice(0, 0, card);
-        p.phase = "action";
-        await p.playCard(card.name);
-        for (const also of test.alsoPlay) {
-          await p.playCard(also);
-        }
-        p.phase = "buy";
-        for (const also of test.alsoBuy) {
-          p.buyCard(also);
-        }
-        expect(p.actions - test.initActions).toEqual(test.dActions, "dActions");
-        expect(p.buys - test.initBuys).toEqual(test.dBuys, "dBuys");
-        expect(p.money - test.initMoney).toEqual(test.dMoney, "dMoney");
-        expect(p.victory - test.initVictory).toEqual(test.dVictory, "dVictory");
-
-        expect(p.drawPile.map(c => c.name))
-          .toEqual(test.drawAfter, "drawAfter");
-        expect(p.discardPile.map(c => c.name))
-          .toEqual(test.discardAfter, "discardAfter");
-        expect(p.hand.map(c => c.name))
-          .toEqual(test.handAfter, "handAfter");
-
-        expect(p.played.map(c => c.name))
-          .toEqual(test.playedAfter, "playedAfter");
-
-        expect(game.trash.map(c => c.name))
-          .toEqual(test.trashAfter, "trashAfter");
-
-        expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
-
-        game.otherPlayers(p).forEach(o => {
-          const otherTest = test.others[o["TestIndex"]];
-
-          expect(o.drawPile.map(c => c.name))
-            .toEqual(otherTest.drawAfter, o.name + " drawAfter");
-          expect(o.discardPile.map(c => c.name))
-            .toEqual(otherTest.discardAfter, o.name + " discardAfter");
-          expect(o.hand.map(c => c.name))
-            .toEqual(otherTest.handAfter, o.name + " handAfter");
-
-          expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
-        });
-
-        expect(called).toBeFalsy("called twice");
-        called = true;
-        done();
-      } else if (card.ofKind("victory") || card.ofKind("curse")) {
-        expect(card.getPoints(p)).toEqual(test.points, "points");
-        done();
-      } else {
-        fail(Error("Not implemented kind: " + card.name));
-      }
-    });
+  for (const testKey in test) {
+    expect(defaultTest[testKey]).toBeDefined("typo key wasn't a subset of defaultTest: " + testKey);
+  }
+  for (const key in defaultTest) {
+    if (key === "playedAfter") {
+      test[key] = test[key] || [card.name];
+    }
+    test[key] = test[key] || defaultTest[key];
+  }
+  for (let i = 0; i < test.others.length; ++i) {
+    for (const testOtherKey in test.others[i]) {
+      expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultTest: " + testOtherKey);
+    }
+    for (const oKey in defaultOthers) {
+      test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
+    }
   }
 
+  let interactionIndex = 0;
+
+  const game = new Game();
+
+  // @ts-ignore create a mock connection
+  const p = new Player({
+    name: "Bot",
+    send: o => {
+      if (isHandMessage(o.message)) {
+        return;
+      }
+
+      const expected = test.interactions[interactionIndex++];
+      if (o.message) {
+        expect(o.message).toEqual(expected);
+      } else {
+        fail(Error("Not implemented: " + o));
+      }
+    },
+    choose: choices => {
+      const expected = test.interactions[interactionIndex++];
+      expect(choices).toEqual(expected);
+      return Promise.resolve(test.interactions[interactionIndex++]);
+    }}, game);
+
+  game.players[0] = p;
+  game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
+  game.store.counts = Object.assign(game.store.counts, test.storeCounts);
+  game.allLog = message => {
+    const expected = test.interactions[interactionIndex];
+    expect(`[${interactionIndex}] ALL: ${message}`).toEqual(`[${interactionIndex}] ${expected}`, "all log");
+    interactionIndex++;
+  };
+
+  let otherCount = 0;
+  test.others.forEach(testOther => {
+    // @ts-ignore create a mock connection
+    const oP = new Player({
+      name: "Other#" + otherCount++,
+      send: o => {
+        if (isHandMessage(o.message)) {
+          return;
+        }
+
+        const expected = testOther.interactions[oP["InteractionIndex"]++];
+        if (o.message) {
+          expect(o.message).toEqual(expected);
+        } else {
+          fail(Error("Not implemented: " + o));
+        }
+      },
+      choose: choices => {
+        const expected = testOther.interactions[oP["InteractionIndex"]++];
+        expect(choices).toEqual(expected);
+        return Promise.resolve(testOther.interactions[oP["InteractionIndex"]++]);
+      }}, game);
+    oP["TestIndex"] = otherCount - 1;
+    oP["InteractionIndex"] = 0;
+    oP.drawPile = testOther.draw.map(n => cards[n]);
+    oP.discardPile = testOther.discard.map(n => cards[n]);
+    oP.hand = testOther.hand.map(n => cards[n]);
+
+    game.players[10 + otherCount] = oP;
+  });
+
+  p.money = test.initMoney;
+  p.actions = test.initActions;
+  p.buys = test.initBuys;
+  p.played = test.played.map(n => cards[n]);
+  p.onPlayed = [];
+  p.onBought = [];
+
+  p.drawPile = test.draw.map(n => cards[n]);
+  p.discardPile = test.discard.map(n => cards[n]);
+  p.hand = test.hand.map(n => cards[n]);
+
+  let called = false;
+
+  if (card.ofKind("action") || card.ofKind("treasure")) {
+    p.hand.splice(0, 0, card);
+    p.phase = "action";
+    await p.playCard(card.name);
+    for (const also of test.alsoPlay) {
+      await p.playCard(also);
+    }
+    p.phase = "buy";
+    for (const also of test.alsoBuy) {
+      p.buyCard(also);
+    }
+    expect(p.actions - test.initActions).toEqual(test.dActions, "dActions");
+    expect(p.buys - test.initBuys).toEqual(test.dBuys, "dBuys");
+    expect(p.money - test.initMoney).toEqual(test.dMoney, "dMoney");
+    expect(p.victory - test.initVictory).toEqual(test.dVictory, "dVictory");
+
+    expect(p.drawPile.map(c => c.name))
+      .toEqual(test.drawAfter, "drawAfter");
+    expect(p.discardPile.map(c => c.name))
+      .toEqual(test.discardAfter, "discardAfter");
+    expect(p.hand.map(c => c.name))
+      .toEqual(test.handAfter, "handAfter");
+
+    expect(p.played.map(c => c.name))
+      .toEqual(test.playedAfter, "playedAfter");
+
+    expect(game.trash.map(c => c.name))
+      .toEqual(test.trashAfter, "trashAfter");
+
+    expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
+
+    game.otherPlayers(p).forEach(o => {
+      const otherTest = test.others[o["TestIndex"]];
+
+      expect(o.drawPile.map(c => c.name))
+        .toEqual(otherTest.drawAfter, o.name + " drawAfter");
+      expect(o.discardPile.map(c => c.name))
+        .toEqual(otherTest.discardAfter, o.name + " discardAfter");
+      expect(o.hand.map(c => c.name))
+        .toEqual(otherTest.handAfter, o.name + " handAfter");
+
+      expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
+    });
+
+    expect(called).toBeFalsy("called twice");
+    called = true;
+    done();
+  } else if (card.ofKind("victory") || card.ofKind("curse")) {
+    expect(card.getPoints(p)).toEqual(test.points, "points");
+    done();
+  } else {
+    fail(Error("Not implemented kind: " + card.name));
+  }
+}
+
+const sets = new Map(new Game().setOrder.map(s => [s, /** @type {string[]} */ ([])]));
+Object.keys(tests).forEach(tName => sets.get(getCard(tName).set).push(tName));
+
+for (const setName of sets.keys()) {
+  const testNames = sets.get(setName);
+  if (!testNames.length) {
+    continue;
+  }
+  describe(`${setName} cards`, () => {
+    for (const tName of testNames) {
+      it("plays " + tName, async done => dataTest(tName, done));
+    }
+  });
+}
+
+describe("cards", () => {
   it("tests all", () => {
     for (const cardName in cards) {
       expect(tests[cardName]).toBeDefined("tests " + cardName);
