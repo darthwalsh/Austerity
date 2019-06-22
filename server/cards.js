@@ -709,6 +709,29 @@ const kingdom = {
     },
   },
 
+  // Actually valid jsdoc https://github.com/eslint/eslint/issues/11468
+  // eslint-disable-next-line valid-jsdoc
+  Rabble: /** @param {Player} player */ async player => {
+    player.draw(3);
+    const shouldDiscard = /** @param {Card} c */ c => c.ofKind("action") || c.ofKind("treasure");
+    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
+      const fromDraw = other.multiFromDraw(3, {reveal: true});
+      const toDiscard = fromDraw.filter(shouldDiscard);
+      if (toDiscard.length) {
+        other.sendMessage(`Discarded ${toDiscard.map(c => c.name).join(", ")} from draw`);
+        other.discardPush(toDiscard);
+      }
+
+      const backToDraw = fromDraw.filter(c => !shouldDiscard(c)).map(c => c.name);
+      while (backToDraw.length) {
+        other.sendMessage("Put back on draw:");
+        const choice = await other.choose(backToDraw);
+        backToDraw.splice(backToDraw.indexOf(choice), 1);
+        other.drawPile.push(cards[choice]);
+      }
+    });
+  },
+
   Vault: /** @param {Player} player */ async player => {
     player.draw(2);
 

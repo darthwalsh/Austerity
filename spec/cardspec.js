@@ -1423,6 +1423,66 @@ const tests = {
     trashAfter: ["Peddler"],
   },
 
+  Rabble: {
+    draw: ["Copper", "Copper", "Copper", "Copper"],
+
+    interactions: [
+      "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 revealed Smithy",
+      "ALL: Other#0 revealed Copper",
+      "ALL: Other#0 discarded Copper and 2 more",
+      "ALL: Other#1 revealed Estate",
+      "ALL: Other#1 revealed Duchy",
+      "ALL: Other#1 revealed Estate",
+      "ALL: Other#2 revealed Estate",
+      "ALL: Other#2 revealed Duchy",
+      "ALL: Other#2 revealed Copper",
+      "ALL: Other#2 discarded Copper",
+    ],
+
+    handAfter: ["Copper", "Copper", "Copper"],
+    drawAfter: ["Copper"],
+
+    others: [
+      {
+        draw: ["Copper", "Smithy", "Copper"],
+        interactions: [
+          "Discarded Copper, Smithy, Copper from draw",
+        ],
+        discardAfter: ["Copper", "Smithy", "Copper"],
+      },
+      {
+        draw: ["Estate", "Duchy", "Estate"],
+        interactions: [
+          "Put back on draw:",
+          ["Estate", "Duchy", "Estate"],
+          "Estate",
+          "Put back on draw:",
+          ["Duchy", "Estate"],
+          "Estate",
+          "Put back on draw:",
+          ["Duchy"],
+          "Duchy",
+        ],
+        drawAfter: ["Estate", "Estate", "Duchy"],
+      },
+      {
+        draw: ["Copper", "Duchy", "Estate"],
+        interactions: [
+          "Discarded Copper from draw",
+          "Put back on draw:",
+          ["Estate", "Duchy"],
+          "Estate",
+          "Put back on draw:",
+          ["Duchy"],
+          "Duchy",
+        ],
+        drawAfter: ["Estate", "Duchy"],
+        discardAfter: ["Copper"],
+      },
+    ],
+  },
+
   Vault: {
     draw: ["Copper", "Silver", "Gold"],
     dMoney: 2,
