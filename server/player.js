@@ -170,7 +170,7 @@ class Player {
   fromHand(name) {
     const hi = this.hand.map(c => c.name).indexOf(name);
     if (hi === -1) {
-      return null; // TODO should this throw?
+      throw new Error(`Card ${name} not in hand: ${this.hand.map(c => c.name).join(", ")}`);
     }
     const card = this.hand.splice(hi, 1)[0];
     this.sendHand();
