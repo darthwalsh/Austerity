@@ -25,7 +25,7 @@ class Player {
     }
     this.hand = /** @type {Card[]} */ ([]);
     this.victory = 0;
-    this.phase = /** @type {"" | "action" | "buy"} */ ("");
+    this.phase = /** @type {"" | "action" | "buy" | "cleanup"} */ ("");
     this.enableSendHand = true;
   }
 
@@ -35,7 +35,6 @@ class Player {
     this.buys = 1;
     this.played = /** @type {Card[]} */ ([]);
     this.onPlayed = /** @type {(function(Card): void)[]} */ ([]);
-    this.onBought = /** @type {(function(Card): void)[]} */ ([]);
 
     this.game.otherPlayers(this).forEach(p => p.sendMessage(`${this.name}'s turn`));
     this.sendMessage("");
@@ -43,7 +42,8 @@ class Player {
     this.sendHand();
     await this.actionPhase();
     await this.buyPhase();
-    this.turnDone();
+    this.cleanupPhase();
+    this.phase = "";
     callback();
   }
 
@@ -146,8 +146,8 @@ class Player {
     --this.buys;
     this.game.allLog(this.name + " bought " + buying.name);
     this.game.store.bought(buying);
-    for (const e of this.onBought) {
-      e(buying);
+    for (const onBought of this.played.map(c => c.onBought).filter(f => f)) {
+      onBought(this, buying);
     }
   }
 
@@ -264,8 +264,8 @@ class Player {
     }
   }
 
-  turnDone() {
-    this.phase = "";
+  cleanupPhase() {
+    this.phase = "cleanup";
 
     this.discardPile.push(...this.hand.splice(0));
     this.discardPile.push(...this.played.splice(0));

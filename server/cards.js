@@ -629,12 +629,10 @@ const kingdom = {
 
     /**
      * @param {Player} player
+     * @param {Card} card
      */
-    afterPlay(player) {
-      player.onBought.push(/** @param {Card} card */ card => {
-        player.gainVictory(1);
-      });
-      player.played.push(cards.Goons);
+    onBought(player, card) {
+      player.gainVictory(1);
     },
   },
 
@@ -845,13 +843,12 @@ function compareTo(other) {
  * Name should be valid JS identifiers, and match the real name s/[ ']//g
  * If the card is type function, then that is assumed to be play()
  *
- * When implementing, use caution to ensure proper bookkeeping:
+ * When implementing, use caution to ensure proper bookkeeping/assumptions:
  * - use player.store.gainCard() instead of directly adding copied cards
  * - revealed cards should use player.fromDraw({reveal: true})
  * - gaining VP tokens should use player.gainVictory
- * - "While this is in play" effects go in afterPlay() not play()
+ * - "While this is in play" effects go in i.e. onBought() that are called by player
  *   - That way they trigger exactly once on ThroneRoom
- *   - It's assumed cards can't be removed early from In Play, otherwise the callback will need to be removed
  * - if a treasure card can detect the cost of Grand Market with Copper is infinity, there will need to be a canBuy predicate
  *
  * @typedef {object} Card
@@ -865,8 +862,9 @@ function compareTo(other) {
  * @property {function(Player): number} getCost
  * @property {function(string): boolean} ofKind
  * @property {function(Card): number} compareTo
- * @property {function(Player): number} [getPoints]
- * @property {function(Player): void} [afterPlay]
+ * @property {function(Player): number} [getPoints] optionally say how many VP the card is worth at game end
+ * @property {function(Player): void} [afterPlay] optionally override the default logic of putting card in played
+ * @property {function(Player, Card): void} [onBought] optional event when any card is bought
  */
 
 /**

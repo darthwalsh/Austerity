@@ -1654,7 +1654,6 @@ async function dataTest(tName, done) {
   p.buys = test.initBuys;
   p.played = test.played.map(n => cards[n]);
   p.onPlayed = [];
-  p.onBought = [];
 
   p.drawPile = test.draw.map(n => cards[n]);
   p.discardPile = test.discard.map(n => cards[n]);
@@ -1790,9 +1789,9 @@ describe("cards", () => {
     }
   });
 
-  it("has afterPlay for in-play", () => {
+  it("has effect for while-in-play", () => {
     for (const [name] of Object.entries(cards).filter(entry => entry[1].text.includes("this is in play"))) {
-      expect(cards[name].afterPlay).toBeDefined();
+      expect(cards[name].onBought).toBeDefined();
     }
   });
 
