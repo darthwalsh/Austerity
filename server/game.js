@@ -75,7 +75,7 @@ class Game {
   /**
    * @param {boolean} debugMode
    */
-  start(debugMode) {
+  async start(debugMode) {
     this.started = true;
     const ps = this.allPlayers();
 
@@ -90,7 +90,11 @@ class Game {
     }
 
     let turn = this.shuffle([...Array(ps.length).keys()])[0];
-    const nextTurn = () => {
+
+    for (;;) {
+      await ps[turn % ps.length].takeTurn();
+      ++turn;
+
       if (this.store.gameOver()) {
         this.allLog("GAME OVER!!!");
         ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
@@ -98,12 +102,7 @@ class Game {
           .forEach(line => this.allLog(line));
         return;
       }
-
-      ++turn;
-      ps[turn % ps.length].takeTurn(nextTurn);
-    };
-
-    ps[turn].takeTurn(nextTurn);
+    }
   }
 
   /**

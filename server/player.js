@@ -29,7 +29,7 @@ class Player {
     this.enableSendHand = true;
   }
 
-  async takeTurn(callback) {
+  async takeTurn() {
     this.actions = 1;
     this.money = 0;
     this.buys = 1;
@@ -44,7 +44,6 @@ class Player {
     await this.buyPhase();
     this.cleanupPhase();
     this.phase = "";
-    callback();
   }
 
   async actionPhase() {
