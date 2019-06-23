@@ -678,6 +678,33 @@ const kingdom = {
     player.afterPlay(action);
   },
 
+  Mint: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      const choices = player.hand.filter(c => c.ofKind("treasure")).map(c => c.name);
+      choices.push("No");
+      player.sendMessage("Gain a Treasure card:");
+      const choice = await player.choose(choices);
+      if (choice === "No") {
+        return;
+      }
+      player.game.allLog(`${player.name} revealed ${choice}`);
+      player.game.gainCard(player, choice);
+    },
+
+    /**
+     * @param {Player} player
+     */
+    onThisBought(player) {
+      for (const card of player.played.filter(c => c.ofKind("treasure"))) {
+        player.trashPush(card);
+      }
+      player.played = player.played.filter(c => !c.ofKind("treasure"));
+    },
+  },
+
   Monument: /** @param {Player} player */ async player => {
     player.money += 2;
     player.gainVictory(1);
@@ -865,6 +892,7 @@ function compareTo(other) {
  * @property {function(Player): number} [getPoints] optionally say how many VP the card is worth at game end
  * @property {function(Player): void} [afterPlay] optionally override the default logic of putting card in played
  * @property {function(Player, Card): void} [onBought] optional event when any card is bought
+ * @property {function(Player): void} [onThisBought] optional event when this card is bought
  */
 
 /**

@@ -1350,6 +1350,49 @@ const tests = {
     playedAfter: ["Woodcutter", "KingsCourt"],
   },
 
+  Mint: {
+    hand: ["Village", "Silver"],
+
+    interactions: [
+      "Gain a Treasure card:",
+      ["Silver", "No"],
+      "Silver",
+      "ALL: Bot revealed Silver",
+      "ALL: Bot gained Silver",
+    ],
+    handAfter: ["Silver", "Village"],
+    discardAfter: ["Silver"],
+  },
+
+  Mint_No: {
+    hand: ["Village", "Silver"],
+
+    interactions: [
+      "Gain a Treasure card:",
+      ["Silver", "No"],
+      "No",
+    ],
+    handAfter: ["Silver", "Village"],
+  },
+
+  Mint_Purchase: {
+    play: "CouncilRoom",
+    dMoney: -5,
+
+    played: ["Gold", "Platinum"],
+
+    alsoBuy: ["Mint"],
+
+    interactions: [
+      "ALL: Bot bought Mint",
+      "ALL: Bot trashed Gold",
+      "ALL: Bot trashed Platinum",
+    ],
+
+    discardAfter: ["Mint"],
+    trashAfter: ["Gold", "Platinum"],
+  },
+
   Monument: {
     interactions: [
       "ALL: Bot gained 1 Victory tokens",
