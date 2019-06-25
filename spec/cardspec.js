@@ -1375,6 +1375,18 @@ const tests = {
     handAfter: ["Silver", "Village"],
   },
 
+  Mint_Empty: {
+    storeCounts: {Silver: 0},
+    hand: ["Copper", "Silver"],
+
+    interactions: [
+      "Gain a Treasure card:",
+      ["Copper", "No"],
+      "No",
+    ],
+    handAfter: ["Copper", "Silver"],
+  },
+
   Mint_Purchase: {
     play: "CouncilRoom",
     dMoney: -5,

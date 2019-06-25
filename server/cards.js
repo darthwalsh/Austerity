@@ -683,7 +683,9 @@ const kingdom = {
      * @param {Player} player
      */
     async play(player) {
-      const choices = player.hand.filter(c => c.ofKind("treasure")).map(c => c.name);
+      const choices = player.hand
+        .filter(c => c.ofKind("treasure") && player.game.store.counts[c.name])
+        .map(c => c.name);
       choices.push("No");
       player.sendMessage("Gain a Treasure card:");
       const choice = await player.choose(choices);
