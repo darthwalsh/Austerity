@@ -1833,7 +1833,7 @@ describe("cards", () => {
   });
 
   it("has effect for while-in-play", () => {
-    for (const [name] of Object.entries(cards).filter(entry => entry[1].text.includes("this is in play"))) {
+    for (const [name] of Object.entries(cards).filter(([, c]) => c.text.includes("this is in play"))) {
       expect(cards[name].onBought).toBeDefined();
     }
   });
@@ -1849,14 +1849,14 @@ describe("cards", () => {
 
 function testMessageSubstring(substring) {
   const cardRegex = new RegExp(substring, "i");
-  const cardsWith = Object.entries(cards).filter(entry => cardRegex.test(entry[1].text));
+  const cardsWith = Object.entries(cards).filter(([, c]) => cardRegex.test(c.text));
   const testRegex = new RegExp(`ALL: .*${substring}`);
   const testsWith = new Set(Object.entries(tests)
     .filter(entry => entry[1].interactions && entry[1].interactions.some(i => testRegex.test(i)))
     .flatMap(entry => entry[0].split("_")));
   for (const card of cardsWith) {
     switch (card[0]) {
-    case "Harbinger":
+    case "Harbinger": // Doesn't actually discard any cards
       continue;
     }
     expect(testsWith).toContain(card[0]);
