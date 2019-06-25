@@ -26,24 +26,44 @@ class Store {
    * @param {number} playerCount
    */
   init(included, playerCount) {
-    const victoryCount = playerCount <= 2 ? 8 : 12;
-    const curseCount = 10 * Math.max(playerCount - 1, 1);
-    const treasureCount = 30;
-    const actionCount = 10;
-
-    /** @type {Object<string, number>} */
-    this.counts = this.default.reduce((o, c) => {
-      o[c.name] = c.ofKind("victory") ? victoryCount : (c.ofKind("curse") ? curseCount : treasureCount);
-      return o;
-    }, {});
-
     this.included = included;
+    this.playerCount = playerCount;
     this.allCards = this.default.concat(this.included).sort((a, b) => a.compareTo(b));
 
-    this.counts = this.included.reduce((o, c) => {
-      o[c.name] = c.ofKind("victory") ? victoryCount : actionCount;
+    const extraSize = playerCount > 4;
+
+    const kinds = {
+      victory: c => {
+        let count = playerCount <= 2 ? 8 : 12;
+        if (c.name === "Province" && extraSize) {
+          count += (playerCount - 4) * 3;
+        }
+        return count;
+      },
+      curse: _ => 10 * Math.max(playerCount - 1, 1),
+      treasure: c => {
+        switch (c.name) {
+        case "Copper": return (extraSize ? 120 : 60) - 7 * playerCount;
+        case "Silver": return extraSize ? 80 : 40;
+        case "Gold": return extraSize ? 60 : 30;
+        case "Platinum": return extraSize ? 24 : 12;
+        default: return 10;
+        }
+      },
+      action: _ => 10,
+    };
+
+    /** @type {Object<string, number>} */
+    this.counts = this.default.concat(this.included).reduce((o, c) => {
+      const [[, func], extra] = Object.entries(kinds).filter(([kind, _]) => c.ofKind(kind));
+
+      if (extra) {
+        throw new Error(`${c.name} has a non-unique kind`);
+      }
+
+      o[c.name] = func(c);
       return o;
-    }, this.counts);
+    }, {});
   }
 
   getAllCards() {
@@ -69,11 +89,12 @@ class Store {
   }
 
   gameOver() {
-    if (!this.counts.Province) {
+    if (this.counts.Province === 0 || this.counts.Colony === 0) {
       return true;
     }
+    const requiredPiles = this.playerCount > 4 ? 4 : 3;
     return this.getAllCards()
-      .filter(c => this.counts[c.name] === 0).length >= 3;
+      .filter(c => this.counts[c.name] === 0).length >= requiredPiles;
   }
 }
 
