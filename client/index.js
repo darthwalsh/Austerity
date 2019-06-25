@@ -142,6 +142,14 @@ function addManage(data, ws) {
   manageDiv.appendChild(debugLabel);
 }
 
+function updateChoicesDisabled() {
+  const disabled = !$input("name").value;
+  for (const button of $("choices").children) {
+    const input = /** @type {HTMLInputElement} */ (button);
+    input.disabled = disabled;
+  }
+}
+
 let colors = {};
 let colorBreak = /(?=a)b/; // null regex which won't match anything
 window.onload = () => {
@@ -151,6 +159,8 @@ window.onload = () => {
   name.addEventListener("input", () => {
     localStorage.setItem("name", name.value);
     ws.send(JSON.stringify({name: name.value}));
+
+    updateChoicesDisabled();
   });
 
   const helpOverlay = $("helpOverlay");
@@ -201,6 +211,7 @@ window.onload = () => {
           choicesDiv.appendChild(button);
         }
       }
+      updateChoicesDisabled();
       $("log").scrollTop = $("log").scrollHeight;
       if (document.hasFocus && !document.hasFocus()) {
         if (!turnAlert) {
