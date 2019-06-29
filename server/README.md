@@ -1,3 +1,11 @@
+## UserScripts
+
+At the [List_of_cards](http://wiki.dominionstrategy.com/index.php/List_of_cards):
+
+Run to filter for only Reaction cards
+
+    Array.from(document.getElementsByTagName("tbody")[0].children).forEach(tr => tr.innerText.includes("Reaction") || tr.parentElement.removeChild(tr))
+
 ## Source
 
 AusterityWiki.csv is downloaded from http://wiki.dominionstrategy.com/index.php/List_of_cards
