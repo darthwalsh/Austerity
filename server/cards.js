@@ -921,7 +921,7 @@ function compareTo(other) {
  * @type {Object.<string, Card>}
  */
 const cards = Object.keys(kingdom).reduce((o, name) => {
-  const k = kingdom[name];
+  const k = /** @type {any} */ (kingdom[name]);
   const card = typeof k === "function" ? {play: k} : k;
 
   card.name = name;
@@ -939,7 +939,7 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   card.text = tableRow.text;
   card.set = tableRow.set;
 
-  card.ofKind = k => card.kind.includes(k);
+  card.ofKind = /** @param {string} k */ k => card.kind.includes(k);
   card.color = colorMap[card.kind[0]];
 
   o[name] = card;

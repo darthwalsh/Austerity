@@ -13,9 +13,11 @@ class Connection {
     this.sentChoices = null;
 
     this.messageHandlers = {
-      choice: data => this.onChoice(data),
-      name: data => this.name = data,
-      chat: data => {},
+      choice: /** @param {string} data */ data => this.onChoice(data),
+      name: /** @param {string} data */ data => {
+        this.name = data;
+      },
+      chat: /** @param {string} data */ data => {},
     };
 
     this.initListeners();
@@ -86,7 +88,7 @@ class Connection {
 
       this.sentChoices = JSON.stringify({choices});
 
-      this.onChoice = choice => {
+      this.onChoice = /** @param {string} choice */ choice => {
         if (!choices.includes(choice)) {
           this.send({message: `"${choice}" not a valid choice of "${choices}"!!!`});
           this.resendChoices();

@@ -30,15 +30,15 @@ class Store {
     const extraSize = playerCount > 4;
 
     const kinds = {
-      victory: c => {
+      victory: /** @param {Card} c */ c => {
         let count = playerCount <= 2 ? 8 : 12;
         if (c.name === "Province" && extraSize) {
           count += (playerCount - 4) * 3;
         }
         return count;
       },
-      curse: _ => 10 * Math.max(playerCount - 1, 1),
-      treasure: c => {
+      curse: () => 10 * Math.max(playerCount - 1, 1),
+      treasure: /** @param {Card} c */ c => {
         switch (c.name) {
         case "Copper": return (extraSize ? 120 : 60) - 7 * playerCount;
         case "Silver": return extraSize ? 80 : 40;
@@ -47,7 +47,7 @@ class Store {
         default: return 10;
         }
       },
-      action: _ => 10,
+      action: () => 10,
     };
 
     /** @type {Object<string, number>} */

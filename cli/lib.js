@@ -49,6 +49,9 @@ class lib {
     });
   }
 
+  /**
+   * @param {string} name
+   */
   async connect(name) {
     if (this.open) {
       throw new Error("Already open");

@@ -18,7 +18,7 @@ class Game {
      * @type {Object.<string, Player>}
      */
     this.players = {};
-    this.trash = [];
+    this.trash = /** @type {Card[]} */ ([]);
     this.started = false;
     this.shuffle = shuffle || this.fisherYatesShuffle;
 
@@ -109,15 +109,13 @@ class Game {
    */
   getEndGame(cards) {
     cards = cards.slice().sort((a, b) => a.compareTo(b));
-    const isPoint = c => c.ofKind("victory") || c.ofKind("curse");
+    const isPoint = /** @param {Card} c */ c => c.ofKind("victory") || c.ofKind("curse");
     const byVictory = [...cards.filter(isPoint), ...cards.filter(c => !isPoint(c))];
 
     const map = new Map();
     byVictory.forEach(c => map.set(c.name, 1 + (map.get(c.name) || 0)));
 
-    const text = [];
-    map.forEach((count, name) => text.push(`${name} (${count})`));
-    return text.join(", ");
+    return Array.from(map, ([name, count]) => `${name} (${count})`).join(", ");
   }
 
   /**
@@ -148,10 +146,12 @@ class Game {
       this.allLog(player.name + ": " + data);
     };
 
-    connection.messageHandlers.gameStart = data => {
-      this.store.init(data.included.map(n => cards[n]), this.allPlayers().length);
-      this.start(data.debugMode);
-    };
+    connection.messageHandlers["gameStart"] =
+    /** @param {{included: string[], debugMode: boolean}} data */
+      data => {
+        this.store.init(data.included.map(n => cards[n]), this.allPlayers().length);
+        this.start(data.debugMode);
+      };
 
     connection.ws.addEventListener("close", () => {
       this.allLog(player.name + " disconnected");
@@ -200,6 +200,9 @@ class Game {
     }
   }
 
+  /**
+   * @param {string} text
+   */
   allLog(text) {
     for (const id in this.players) {
       this.players[id].sendMessage(text);

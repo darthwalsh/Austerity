@@ -167,6 +167,9 @@ class Player {
     this.sendHand();
   }
 
+  /**
+   * @param {string} name
+   */
   fromHand(name) {
     const hi = this.hand.map(c => c.name).indexOf(name);
     if (hi === -1) {
@@ -239,6 +242,9 @@ class Player {
     this.discardPile.push(...discard);
   }
 
+  /**
+   * @param {string} name
+   */
   async playCard(name) {
     const card = this.fromHand(name);
     if (card === null) {
@@ -272,6 +278,9 @@ class Player {
     this.redrawHand();
   }
 
+  /**
+   * @param {string} [prefix]
+   */
   draw(n = 1, prefix) {
     for (let i = 0; i < n; ++i) {
       const card = this.fromDraw();
@@ -294,7 +303,7 @@ class Player {
     this.game.shuffle(this.discardPile);
 
     this.drawPile = this.discardPile;
-    this.discardPile = [];
+    this.discardPile = /** @type {Card[]} */ ([]);
   }
 
   /**
@@ -311,6 +320,9 @@ class Player {
     return attack(this);
   }
 
+  /**
+   * @return {number}
+   */
   getPoints() {
     return this.victory + this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0);
   }
@@ -323,10 +335,16 @@ class Player {
     return all;
   }
 
+  /**
+   * @param {object} o
+   */
   send(o) {
     this.connection.send(o);
   }
 
+  /**
+   * @param {string} msg
+   */
   sendMessage(msg) {
     this.connection.send({message: msg});
   }
