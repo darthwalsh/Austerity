@@ -201,7 +201,6 @@ describe("e2e", () => {
 /**
  * @param {function(string[]): Promise<string>} strategy
  * @param {string[]} output
- * @return {function(string[]): Promise<string>}
  */
 function wrapWithLogging(strategy, output) {
   return /** @param {string[]} choices */ async choices => {

@@ -180,7 +180,6 @@ class Player {
   /**
    * @param {object} options
    * @param {boolean} [options.reveal]
-   * @return {Card}
    */
   fromDraw({reveal = false} = {}) {
     if (!this.drawPile.length) {
@@ -200,7 +199,6 @@ class Player {
    * @param {number} count
    * @param {object} [options]
    * @param {boolean} [options.reveal]
-   * @return {Card[]}
    */
   multiFromDraw(count, options = {}) {
     const cards = [];
@@ -344,7 +342,6 @@ class Player {
 
   /**
    * @param {string[]} choices
-   * @return {Promise<string>}
    */
   choose(choices) {
     return this.connection.choose(choices);

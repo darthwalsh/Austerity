@@ -12,11 +12,17 @@ if (!Array.prototype.flatMap) {
   };
 }
 
+/**
+ * @param {number} provides
+ */
 function money(provides) {
   return /** @param {Player} player */ async player =>
     player.money += provides;
 }
 
+/**
+ * @param {number} points
+ */
 function points(points) {
   return {
     getPoints: /** @param {Player} player */ player => points,
@@ -206,6 +212,9 @@ const kingdom = {
   },
 
   Gardens: {
+    /**
+     * @param {Player} player
+     */
     getPoints(player) {
       return Math.floor(player.allCards().length / 10);
     },
@@ -649,7 +658,6 @@ const kingdom = {
 
     /**
      * @param {Player | null} player
-     * @return {number}
      */
     getCost(player) {
       if (!player || player.phase !== "buy") {
@@ -724,7 +732,6 @@ const kingdom = {
 
     /**
      * @param {Player | null} player
-     * @return {number}
      */
     getCost(player) {
       if (!player || player.phase !== "buy") {
@@ -861,7 +868,6 @@ function getCost(tableRow) {
 
 /**
  * @param {{types: string}} tableRow
- * @return {string[]}
  */
 function getKinds(tableRow) {
   const kinds = tableRow.types.split(" - ").map(k => k.toLowerCase()).sort();
@@ -874,7 +880,6 @@ function getKinds(tableRow) {
 /**
  * @this {Card}
  * @param {Card} other
- * @return {number}
  */
 function compareTo(other) {
   return kindOrder[this.kind[0]] - kindOrder[other.kind[0]]

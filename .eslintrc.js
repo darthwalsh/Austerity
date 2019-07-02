@@ -15,6 +15,7 @@ module.exports = {
         "one-var": "off",
         "guard-for-in": "off",
         "no-case-declarations": "off",
+        "valid-jsdoc": "off",
 
         "eqeqeq": "error",
         "operator-assignment": "error",

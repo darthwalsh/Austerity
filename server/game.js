@@ -43,7 +43,6 @@ class Game {
 
   /**
    * @param {any[]} array
-   * @return {any[]}
    */
   fisherYatesShuffle(array) {
     let currentIndex = array.length;
@@ -107,7 +106,6 @@ class Game {
 
   /**
    * @param {Card[]} cards
-   * @return {string}
    */
   getEndGame(cards) {
     cards = cards.slice().sort((a, b) => a.compareTo(b));
@@ -176,7 +174,6 @@ class Game {
 
   /**
    * @param {Player} player
-   * @return {Player[]}
    */
   otherPlayers(player) {
     return this.allPlayers().filter(p => p.name !== player.name);
@@ -185,7 +182,6 @@ class Game {
   /**
    * @param {Player} player
    * @param {function(Player): Promise<void>} attack
-   * @return {Promise<void[]>}
    */
   parallelAttack(player, attack) {
     return Promise.all(this.otherPlayers(player).map(p => p.attacked(attack)));

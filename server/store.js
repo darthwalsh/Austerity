@@ -13,9 +13,6 @@ class Store {
     ];
   }
 
-  /**
-   * @return {Card[]}
-   */
   optional() {
     return Object.values(cards).filter(c => !this.default.includes(c))
       .sort((a, b) => a.compareTo(b));
@@ -75,7 +72,6 @@ class Store {
   /**
    * @param {number} price
    * @param {Player} player
-   * @return {Card[]}
    */
   getAvailable(price, player) {
     return this.getAllCards().filter(c => c.getCost(player) <= price && this.counts[c.name]);
