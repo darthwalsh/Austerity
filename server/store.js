@@ -64,6 +64,8 @@ class Store {
       o[c.name] = func(c);
       return o;
     }, {});
+
+    this.gainedCards = /** @type {Set<string>} */ (new Set());
   }
 
   getAllCards() {
@@ -79,13 +81,17 @@ class Store {
     return this.getAllCards().filter(c => c.getCost(player) <= price && this.counts[c.name]);
   }
 
-  bought(card) {
+  /**
+   * @param {Card} card
+   */
+  gain(card) {
     if (typeof(card.name) !== "string") {
       throw new Error("Invalid argument, not a card");
     }
     if (--this.counts[card.name] < 0) {
       throw new Error("Already out of card!");
     }
+    this.gainedCards.add(card.name);
   }
 
   gameOver() {

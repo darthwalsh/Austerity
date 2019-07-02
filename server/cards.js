@@ -759,6 +759,21 @@ const kingdom = {
     });
   },
 
+  TradeRoute: /** @param {Player} player */ async player => {
+    player.buys += 1;
+
+    if (player.hand.length) {
+      const trashChoices = player.hand.map(c => c.name);
+      player.sendMessage("Trash a card:");
+      const trashChoice = await player.choose(trashChoices);
+      const trash = player.fromHand(trashChoice);
+      player.trashPush(trash);
+    }
+
+    player.money += player.game.store.allCards
+      .filter(c => c.ofKind("victory") && player.game.store.gainedCards.has(c.name)).length;
+  },
+
   Vault: /** @param {Player} player */ async player => {
     player.draw(2);
 

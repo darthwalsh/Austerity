@@ -144,7 +144,7 @@ class Player {
     this.money -= buying.getCost(this);
     --this.buys;
     this.game.allLog(this.name + " bought " + buying.name);
-    this.game.store.bought(buying);
+    this.game.store.gain(buying);
     buying.onThisBought && buying.onThisBought(this);
     for (const onBought of this.played.map(c => c.onBought).filter(f => f)) {
       onBought(this, buying);

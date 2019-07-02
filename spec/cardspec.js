@@ -33,6 +33,7 @@ const defaultTest = {
 
   store: [],
   storeCounts: {},
+  storeGained: [],
 
   initMoney: 3,
   initBuys: 3,
@@ -1538,6 +1539,48 @@ const tests = {
     ],
   },
 
+  TradeRoute: {
+    storeGained: ["Estate", "Duchy", "Province", "Curse"],
+
+    dBuys: 1,
+    dMoney: 3,
+  },
+
+  TradeRoute_OnGain: {
+    play: ["Remodel"],
+
+    hand: ["Copper", "TradeRoute", "Peddler"],
+
+    interactions: [
+      "Trash a card:",
+      ["Copper", "TradeRoute", "Peddler"],
+      "Peddler",
+      "ALL: Bot trashed Peddler",
+      "Gain a card:",
+      ["Copper", "Silver", "Gold", "Estate", "Duchy", "Province", "Curse"],
+      "Province",
+      "ALL: Bot gained Province",
+      "Trash a card:",
+      ["Copper"],
+      "Copper",
+      "ALL: Bot trashed Copper",
+    ],
+
+    alsoPlay: ["TradeRoute"],
+
+    dBuys: 1,
+    dMoney: 1,
+
+    playedAfter: ["Remodel", "TradeRoute"],
+    trashAfter: ["Peddler", "Copper"],
+    discardAfter: ["Province"],
+  },
+
+  TradeRoute_NotStoreCounts: {
+    storeCounts: {Estate: 6, Province: 7},
+    dBuys: 1,
+  },
+
   Vault: {
     draw: ["Copper", "Silver", "Gold"],
     dMoney: 2,
@@ -1667,9 +1710,10 @@ async function dataTest(tName, done) {
   game.players[0] = p;
   game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
   game.store.counts = Object.assign(game.store.counts, test.storeCounts);
+  test.storeGained.forEach(c => game.store.gainedCards.add(c));
   game.allLog = message => {
     const expected = test.interactions[interactionIndex];
-    expect(`[${interactionIndex}] ALL: ${message}`).toEqual(`[${interactionIndex}] ${expected}`, "all log");
+    expect(`[${interactionIndex}] ALL: ${message}`).withContext("all log").toEqual(`[${interactionIndex}] ${expected}`);
     interactionIndex++;
   };
 
@@ -1727,52 +1771,59 @@ async function dataTest(tName, done) {
     for (const also of test.alsoBuy) {
       p.buyCard(also);
     }
-    expect(p.actions - test.initActions).toEqual(test.dActions, "dActions");
-    expect(p.buys - test.initBuys).toEqual(test.dBuys, "dBuys");
-    expect(p.money - test.initMoney).toEqual(test.dMoney, "dMoney");
-    expect(p.victory - test.initVictory).toEqual(test.dVictory, "dVictory");
+    expect(p.actions - test.initActions).withContext("dActions").toEqual(test.dActions);
+    expect(p.buys - test.initBuys).withContext("dBuys").toEqual(test.dBuys);
+    expect(p.money - test.initMoney).withContext("dMoney").toEqual(test.dMoney);
+    expect(p.victory - test.initVictory).withContext("dVictory").toEqual(test.dVictory);
 
-    expect(p.drawPile.map(c => c.name))
-      .toEqual(test.drawAfter, "drawAfter");
-    expect(p.discardPile.map(c => c.name))
-      .toEqual(test.discardAfter, "discardAfter");
-    expect(p.hand.map(c => c.name))
-      .toEqual(test.handAfter, "handAfter");
+    expect(p.drawPile.map(c => c.name)).withContext("drawAfter")
+      .toEqual(test.drawAfter);
+    expect(p.discardPile.map(c => c.name)).withContext("discardAfter")
+      .toEqual(test.discardAfter);
+    expect(p.hand.map(c => c.name)).withContext("handAfter")
+      .toEqual(test.handAfter);
 
-    expect(p.played.map(c => c.name))
-      .toEqual(test.playedAfter, "playedAfter");
+    expect(p.played.map(c => c.name)).withContext("playedAfter")
+      .toEqual(test.playedAfter);
 
-    expect(game.trash.map(c => c.name))
-      .toEqual(test.trashAfter, "trashAfter");
+    expect(game.trash.map(c => c.name)).withContext("trashAfter")
+      .toEqual(test.trashAfter);
 
-    expect(interactionIndex).toEqual(test.interactions.length, "all interactions used");
+    expect(interactionIndex).withContext("all interactions used").toEqual(test.interactions.length);
 
     game.otherPlayers(p).forEach(o => {
       const otherTest = test.others[o["TestIndex"]];
 
-      expect(o.drawPile.map(c => c.name))
-        .toEqual(otherTest.drawAfter, o.name + " drawAfter");
-      expect(o.discardPile.map(c => c.name))
-        .toEqual(otherTest.discardAfter, o.name + " discardAfter");
-      expect(o.hand.map(c => c.name))
-        .toEqual(otherTest.handAfter, o.name + " handAfter");
+      expect(o.drawPile.map(c => c.name)).withContext(o.name + " drawAfter")
+        .toEqual(otherTest.drawAfter);
+      expect(o.discardPile.map(c => c.name)).withContext(o.name + " discardAfter")
+        .toEqual(otherTest.discardAfter);
+      expect(o.hand.map(c => c.name)).withContext(o.name + " handAfter")
+        .toEqual(otherTest.handAfter);
 
-      expect(o["InteractionIndex"]).toEqual(otherTest.interactions.length, o.name + " all interactions used");
+      expect(o["InteractionIndex"]).withContext(o.name + " all interactions used").toEqual(otherTest.interactions.length);
     });
 
     expect(called).toBeFalsy("called twice");
     called = true;
     done();
   } else if (card.ofKind("victory") || card.ofKind("curse")) {
-    expect(card.getPoints(p)).toEqual(test.points, "points");
+    expect(card.getPoints(p)).withContext("points").toEqual(test.points);
     done();
   } else {
     fail(Error("Not implemented kind: " + card.name));
   }
 }
 
-const sets = new Map(new Game().setOrder.map(s => [s, /** @type {string[]} */ ([])]));
-Object.keys(tests).forEach(tName => sets.get(getCard(tName).set).push(tName));
+const sets = new Map(["unimplemented", ...new Game().setOrder].map(s => [s, /** @type {string[]} */ ([])]));
+Object.keys(tests).forEach(tName => {
+  let set = "unimplemented";
+  const card = getCard(tName);
+  if (card) {
+    set = card.set;
+  }
+  sets.get(set).push(tName);
+});
 
 for (const setName of sets.keys()) {
   const testNames = sets.get(setName);

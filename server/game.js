@@ -228,7 +228,7 @@ class Game {
     } else {
       player.discardPile.push(card);
     }
-    this.store.bought(card);
+    this.store.gain(card);
     this.allLog(`${player.name} gained ${cardName}`);
   }
 
