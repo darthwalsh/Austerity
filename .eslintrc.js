@@ -17,6 +17,9 @@ module.exports = {
         "no-case-declarations": "off",
         "valid-jsdoc": "off",
 
+        // Too aggressive because of https://github.com/eslint/eslint/issues/11911
+        "require-atomic-updates": "off",
+
         "eqeqeq": "error",
         "operator-assignment": "error",
         "object-shorthand": "error",
