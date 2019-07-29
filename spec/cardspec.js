@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const cards = require("../server/cards");
+const setOrder = require("../server/setOrder");
 const cardsTable = require("../server/cardsTable");
 const Game = require("../server/game");
 const Player = require("../server/player");
@@ -1815,7 +1816,7 @@ async function dataTest(tName, done) {
   }
 }
 
-const sets = new Map(["unimplemented", ...new Game().setOrder].map(s => [s, /** @type {string[]} */ ([])]));
+const sets = new Map(["unimplemented", ...setOrder].map(s => [s, /** @type {string[]} */ ([])]));
 Object.keys(tests).forEach(tName => {
   let set = "unimplemented";
   const card = getCard(tName);
@@ -1884,9 +1885,15 @@ describe("cards", () => {
   });
 
   it("sorts correctly", () => {
-    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Peddler, cards.Cellar];
+    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Peddler, cards.Chancellor, cards.TradeRoute, cards.Cellar];
     const sorted = arr.sort((a, b) => a.compareTo(b)).map(c => c.name);
-    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Village", "Peddler"]);
+    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Chancellor", "TradeRoute", "Village", "Peddler"]);
+
+    const sortedWithoutKind = arr.sort((a, b) => a.compareTo(b, {compareKind: false})).map(c => c.name);
+    expect(sortedWithoutKind).toEqual(["Cellar", "Chapel", "Estate", "Chancellor", "TradeRoute", "Village", "Peddler"]);
+
+    const sortedWithSet = arr.sort((a, b) => a.compareTo(b, {compareSet: true})).map(c => c.name);
+    expect(sortedWithSet).toEqual(["Estate", "Cellar", "Chapel", "Village", "Chancellor", "TradeRoute", "Peddler"]);
   });
 
   it("has colors for all", () => {

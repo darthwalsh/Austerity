@@ -199,7 +199,7 @@ describe("e2e", () => {
 });
 
 /**
- * @param {function(string[]): Promise<string>} strategy
+ * @param {(choices: string[]) => Promise<string>} strategy
  * @param {string[]} output
  */
 function wrapWithLogging(strategy, output) {

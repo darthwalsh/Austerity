@@ -1,3 +1,5 @@
+const setOrder = require("./setOrder");
+
 /**
  * @typedef { import("./game") } Game
  * @typedef { import("./player") } Player
@@ -847,7 +849,7 @@ const colorMap = {
   curse: "purple",
 };
 
-const kindOrder = {
+const kindIndices = {
   treasure: 0,
   victory: 1,
   curse: 2,
@@ -856,7 +858,7 @@ const kindOrder = {
 
 /**
  * @param {{cost: string, name: string}} tableRow
- * @return {function(Player): number}
+ * @return {(player: Player) => number}
  */
 function getCost(tableRow) {
   const match = /^\$(\d+)$/.exec(tableRow.cost);
@@ -880,9 +882,13 @@ function getKinds(tableRow) {
 /**
  * @this {Card}
  * @param {Card} other
+ * @param {object} [compare]
+ * @param {boolean} [compare.compareKind]
+ * @param {boolean} [compare.compareSet]
  */
-function compareTo(other) {
-  return kindOrder[this.kind[0]] - kindOrder[other.kind[0]]
+function compareTo(other, {compareKind = true, compareSet = false} = {}) {
+  return (compareSet && setOrder.indexOf(this.set) - setOrder.indexOf(other.set))
+    || (compareKind && kindIndices[this.kind[0]] - kindIndices[other.kind[0]])
     || this.getCost(null) - other.getCost(null) // Sorting is best-effort, so not knowing player is fine
     || this.name.localeCompare(other.name);
 }
@@ -907,14 +913,14 @@ function compareTo(other) {
  * @property {string} set
  * @property {string} color
  *
- * @property {function(Player): Promise<void>} play
- * @property {function(Player): number} getCost
- * @property {function(string): boolean} ofKind
- * @property {function(Card): number} compareTo
- * @property {function(Player): number} [getPoints] optionally say how many VP the card is worth at game end
- * @property {function(Player): void} [afterPlay] optionally override the default logic of putting card in played
- * @property {function(Player, Card): void} [onBought] optional event when any card is bought
- * @property {function(Player): void} [onThisBought] optional event when this card is bought
+ * @property {(player: Player) => Promise<void>} play
+ * @property {(player: Player) => number} getCost
+ * @property {(kind: string) => boolean} ofKind
+ * @property {(other: Card, compare?: {compareKind?: boolean, compareSet?: boolean}) => number} compareTo
+ * @property {(player: Player) => number} [getPoints] optionally say how many VP the card is worth at game end
+ * @property {(player: Player) => void} [afterPlay] optionally override the default logic of putting card in played
+ * @property {(player: Player, card: Card) => void} [onBought] optional event when any card is bought
+ * @property {(player: Player) => void} [onThisBought] optional event when this card is bought
  */
 
 /**

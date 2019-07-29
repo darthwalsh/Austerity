@@ -3,8 +3,8 @@ const WebSocket = require("ws");
 class lib {
   /**
    * @param {string} url
-   * @param {function(string[]): Promise<string>} readline
-   * @param {function(string): void} log
+   * @param {(choices: string[]) => Promise<string>} readline
+   * @param {(line: string) => void} log
    */
   constructor(url, readline, log) {
     this.ws = new WebSocket(url);

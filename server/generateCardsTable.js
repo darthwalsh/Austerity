@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const csvParse = /** @type {function(string|Buffer, object): Array} */
+const csvParse = /** @type {(input: string|Buffer, options: object) => Array} */
   (require("csv-parse/lib/sync"));
 const fs = require("fs");
 const path = require("path");

@@ -307,7 +307,7 @@ class Player {
   }
 
   /**
-   * @param {function(Player): Promise<void>} attack
+   * @param {(p: Player) => Promise<void>} attack
    */
   async attacked(attack) {
     if (this.hand.filter(c => c.name === "Moat").length) {

@@ -1,5 +1,6 @@
-const Store = require("./store");
 const cards = require("./cards");
+const setOrder = require("./setOrder");
+const Store = require("./store");
 const Player = require("./player");
 
 /**
@@ -10,7 +11,7 @@ const Player = require("./player");
 class Game {
   /**
    * @param {object} options
-   * @param {function(any[]): any[]} [options.shuffle]
+   * @param {(array: any[]) => any[]} [options.shuffle]
    */
   constructor({shuffle = null} = {}) {
     this.store = new Store();
@@ -21,24 +22,6 @@ class Game {
     this.trash = /** @type {Card[]} */ ([]);
     this.started = false;
     this.shuffle = shuffle || this.fisherYatesShuffle;
-
-    this.setOrder = [
-      "Base",
-      "Base v1",
-      "Intrigue",
-      "Seaside",
-      "Alchemy",
-      "Prosperity",
-      "Cornucopia",
-      "Hinterlands",
-      "Dark Ages",
-      "Guilds",
-      "Adventures",
-      "Empires",
-      "Nocturne",
-      "Renaissance",
-      "Promo",
-    ];
   }
 
   /**
@@ -60,7 +43,9 @@ class Game {
    * @param {Player[]} ps
    */
   initClients(ps) {
-    const included = this.store.included.map(c => c.name);
+    const included = this.store.included
+      .sort((a, b) => a.compareTo(b, {compareKind: false}))
+      .map(c => c.name);
     ps.forEach(p => p.send({included}));
 
     const colors = this.store.getAllCards().reduce((o, c) => {
@@ -130,12 +115,14 @@ class Game {
     const player = new Player(connection, this);
 
     if (!Object.keys(this.players).length) {
-      const setCards = this.setOrder.reduce((o, set) => {
+      const setCards = setOrder.reduce((o, set) => {
         o[set] = this.store.optional().filter(card => card.set === set).map(c => c.name);
         return o;
       }, {});
       player.send({isLeader: setCards});
-      player.send({included: this.store.optional().map(c => c.name)});
+      player.send({included: this.store.optional()
+        .sort((a, b) => a.compareTo(b, {compareSet: true}))
+        .map(c => c.name)});
     } else {
       player.sendMessage("Waiting for the leader to start the game");
       this.allLog(player.name + " joined");
@@ -181,7 +168,7 @@ class Game {
 
   /**
    * @param {Player} player
-   * @param {function(Player): Promise<void>} attack
+   * @param {(other: Player) => Promise<void>} attack
    */
   parallelAttack(player, attack) {
     return Promise.all(this.otherPlayers(player).map(p => p.attacked(attack)));
@@ -189,7 +176,7 @@ class Game {
 
   /**
    * @param {Player} player
-   * @param {function(Player): Promise<void>} attack
+   * @param {(other: Player) => Promise<void>} attack
    */
   async sequentialAttack(player, attack) {
     const ps = this.allPlayers();

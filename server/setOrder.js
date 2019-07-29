@@ -1,0 +1,17 @@
+module.exports = [
+  "Base",
+  "Base v1",
+  "Intrigue",
+  "Seaside",
+  "Alchemy",
+  "Prosperity",
+  "Cornucopia",
+  "Hinterlands",
+  "Dark Ages",
+  "Guilds",
+  "Adventures",
+  "Empires",
+  "Nocturne",
+  "Renaissance",
+  "Promo",
+];
