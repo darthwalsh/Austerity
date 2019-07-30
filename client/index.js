@@ -63,6 +63,13 @@ function addManage(data, ws) {
   const manageDiv = $("manage");
 
   const options = Object.values(data).flatMap(d => d);
+  let optionsFromStorage = [];
+  try {
+    optionsFromStorage = JSON.parse(localStorage.getItem("options"));
+  } catch (e) {
+    // If for some reason this fails, it's not important to warn the user.
+  }
+  const optionSet = new Set(optionsFromStorage);
 
   for (const set in data) {
     const setOptions = data[set];
@@ -80,6 +87,7 @@ function addManage(data, ws) {
       const box = document.createElement("input");
       box.setAttribute("type", "checkbox");
       box.setAttribute("id", "optional" + option);
+      box.checked = optionSet.has(option);
 
       const label = document.createElement("label");
       label.style.whiteSpace = "nowrap";
@@ -134,6 +142,8 @@ function addManage(data, ws) {
     }
     optionsChecked.forEach(c => addCardImage(c, helpSelected));
     helpSelected.style.marginBottom = optionsChecked.length ? "20px" : "";
+
+    localStorage.setItem("options", JSON.stringify(optionsChecked));
   };
   manageDiv.appendChild(countText);
 
