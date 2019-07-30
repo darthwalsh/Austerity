@@ -107,7 +107,7 @@ class Player {
       choices.push(...this.game.store.getAvailable(this.money, this).map(c => "Buy: " + c.name));
 
       if (!choices.length) {
-        this.sendMessage("Nothing to buy");
+        this.game.allLog(`${this.name} wasn't able to buy anything`);
         return;
       }
 
@@ -117,6 +117,9 @@ class Player {
       const choice = await this.choose(choices);
 
       if (choice === "Done With Buys") {
+        if (!bought) {
+          this.game.allLog(`${this.name} chose not to buy anything`);
+        }
         return;
       }
 
