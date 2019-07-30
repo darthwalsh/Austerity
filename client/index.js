@@ -41,6 +41,19 @@ function log(text) {
 }
 
 /**
+ * @param {string} cardName
+ * @param {HTMLElement} e
+ */
+function addCardImage(cardName, e) {
+  const jpg = document.createElement("img");
+  jpg.style.width = "200";
+  jpg.style.maxWidth = "50%";
+  jpg.style.height = "auto";
+  jpg.src = `/cards/${cardName}.jpg`;
+  e.appendChild(jpg);
+}
+
+/**
  * @param {Object<string, string[]>} data
  * @param {WebSocket} ws
  */
@@ -100,10 +113,10 @@ function addManage(data, ws) {
   const countText = document.createElement("span");
   countText.innerText = "0 Selected";
   manageDiv.onclick = () => {
-    const count = options.filter(n => $input("optional" + n).checked).length;
-    countText.innerText = `${count} Selected`;
+    const optionsChecked = options.filter(n => $input("optional" + n).checked);
+    countText.innerText = `${optionsChecked.length} Selected`;
 
-    if (count === CARD_COUNT) {
+    if (optionsChecked.length === CARD_COUNT) {
       startButton.style.color = "black";
       startButton.style.fontWeight = "bold";
     } else {
@@ -111,6 +124,16 @@ function addManage(data, ws) {
       startButton.style.fontWeight = "";
       // Button still works if you want to try on nonstandard game, but looks disabled
     }
+
+    const helpSelected = $("helpSelected");
+    if (!helpSelected) {
+      return;
+    }
+    while (helpSelected.firstElementChild) {
+      helpSelected.removeChild(helpSelected.firstElementChild);
+    }
+    optionsChecked.forEach(c => addCardImage(c, helpSelected));
+    helpSelected.style.marginBottom = optionsChecked.length ? "20px" : "";
   };
   manageDiv.appendChild(countText);
 
@@ -235,14 +258,12 @@ window.onload = () => {
       while (helpOverlay.firstElementChild) {
         helpOverlay.removeChild(helpOverlay.firstElementChild);
       }
-      for (const cardName of data) {
-        const jpg = document.createElement("img");
-        jpg.style.width = "200";
-        jpg.style.maxWidth = "50%";
-        jpg.style.height = "auto";
-        jpg.src = `/cards/${cardName}.jpg`;
-        helpOverlay.appendChild(jpg);
-      }
+
+      const helpSelected = document.createElement("div");
+      helpSelected.id = "helpSelected";
+      helpOverlay.append(helpSelected);
+
+      data.forEach(cardName => addCardImage(cardName, helpOverlay));
       break;
     default:
       throw new Error("Not implemented: " + type);
