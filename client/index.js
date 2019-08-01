@@ -101,12 +101,15 @@ function addManage(data, ws) {
   const randomButton = document.createElement("button");
   randomButton.innerText = "Randomize";
   randomButton.onclick = () => {
-    const randomOptions = options.slice();
-    while (randomOptions.length > CARD_COUNT) {
-      randomOptions.splice(Math.floor(Math.random() * randomOptions.length), 1);
+    const selected = options.filter(n => $input("optional" + n).checked);
+    const randomPicked = new Set(selected.length < CARD_COUNT ? selected : []);
+    const remainingOptions = options.filter(o => !randomPicked.has(o));
+    while (randomPicked.size < CARD_COUNT) {
+      const removed = remainingOptions.splice(Math.floor(Math.random() * remainingOptions.length), 1);
+      randomPicked.add(removed[0]);
     }
     options.forEach(n => {
-      $input("optional" + n).checked = Boolean(randomOptions.includes(n));
+      $input("optional" + n).checked = randomPicked.has(n);
     });
   };
   manageDiv.appendChild(randomButton);
