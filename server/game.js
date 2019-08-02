@@ -80,9 +80,10 @@ class Game {
       ++turn;
 
       if (this.store.gameOver()) {
+        this.allLog("");
         this.allLog("GAME OVER!!!");
         ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
-          .map(p => `${p.name}: ${p.getPoints()}     ${this.getEndGame(p.allCards())}`)
+          .map(p => `${p.name}: ${p.getPoints()}     +VP: ${p.victory} Cards: ${this.getEndGame(p.allCards())}`)
           .forEach(line => this.allLog(line));
         return;
       }
