@@ -7,8 +7,17 @@ function $input(id) {
 }
 
 /**
+ * @param {HTMLElement} e
+ */
+function removeChildren(e) {
+  while (e.firstChild) {
+    e.removeChild(e.firstChild);
+  }
+}
+
+/**
  * Splits text like "Your hand: Copper, Silver, Gold"
- * Into text and colored span elements
+ * into text and colored span elements
  * @param {string} text
  */
 function log(text) {
@@ -53,16 +62,40 @@ function addCardImage(cardName, e) {
   e.appendChild(jpg);
 }
 
+const CARD_COUNT = 10;
+
+function updateSelected() {
+  const optionsChecked = options.filter(n => $input("optional" + n).checked);
+  $("countText").innerText = `${optionsChecked.length} Selected`;
+
+  const startButton = $("startButton");
+  if (optionsChecked.length === CARD_COUNT) {
+    startButton.style.color = "black";
+    startButton.style.fontWeight = "bold";
+  } else {
+    startButton.style.color = "darkgrey";
+    startButton.style.fontWeight = "";
+    // Button still works if you want to try on nonstandard game, but looks disabled
+  }
+
+  const helpSelected = $("helpSelected");
+  removeChildren(helpSelected);
+  optionsChecked.forEach(c => addCardImage(c, helpSelected));
+  helpSelected.style.marginBottom = optionsChecked.length ? "20px" : "";
+
+  localStorage.setItem("options", JSON.stringify(optionsChecked));
+}
+
+let options = /** @type {string[]} */ ([]);
+
 /**
  * @param {Object<string, string[]>} data
  * @param {WebSocket} ws
  */
 function addManage(data, ws) {
-  const CARD_COUNT = 10;
-
   const manageDiv = $("manage");
 
-  const options = Object.values(data).flatMap(d => d);
+  options = Object.values(data).flatMap(d => d);
   let optionsFromStorage = [];
   try {
     optionsFromStorage = JSON.parse(localStorage.getItem("options"));
@@ -85,8 +118,8 @@ function addManage(data, ws) {
 
     for (const option of setOptions) {
       const box = document.createElement("input");
-      box.setAttribute("type", "checkbox");
-      box.setAttribute("id", "optional" + option);
+      box.type = "checkbox";
+      box.id = "optional" + option;
       box.checked = optionSet.has(option);
 
       const label = document.createElement("label");
@@ -122,43 +155,22 @@ function addManage(data, ws) {
   manageDiv.appendChild(clearButton);
 
   const countText = document.createElement("span");
+  countText.id = "countText";
   countText.innerText = "0 Selected";
-  manageDiv.onclick = () => {
-    const optionsChecked = options.filter(n => $input("optional" + n).checked);
-    countText.innerText = `${optionsChecked.length} Selected`;
-
-    if (optionsChecked.length === CARD_COUNT) {
-      startButton.style.color = "black";
-      startButton.style.fontWeight = "bold";
-    } else {
-      startButton.style.color = "darkgrey";
-      startButton.style.fontWeight = "";
-      // Button still works if you want to try on nonstandard game, but looks disabled
-    }
-
-    const helpSelected = $("helpSelected");
-    if (!helpSelected) {
-      return;
-    }
-    while (helpSelected.firstElementChild) {
-      helpSelected.removeChild(helpSelected.firstElementChild);
-    }
-    optionsChecked.forEach(c => addCardImage(c, helpSelected));
-    helpSelected.style.marginBottom = optionsChecked.length ? "20px" : "";
-
-    localStorage.setItem("options", JSON.stringify(optionsChecked));
-  };
+  manageDiv.onclick = updateSelected;
   manageDiv.appendChild(countText);
 
   const startButton = document.createElement("button");
+  startButton.id = "startButton";
   startButton.innerHTML = "Start";
   startButton.onclick = e => {
     const included = options.filter(n => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
-    while (manageDiv.firstChild) {
-      manageDiv.removeChild(manageDiv.firstChild);
-    }
+    removeChildren(manageDiv);
+    const helpSelected = $("helpSelected");
+    removeChildren(helpSelected);
+    helpSelected.style.marginBottom = "0";
 
     ws.send(JSON.stringify({gameStart: {included, debugMode}}));
 
@@ -168,14 +180,16 @@ function addManage(data, ws) {
   manageDiv.appendChild(startButton);
 
   const debugBox = document.createElement("input");
-  debugBox.setAttribute("type", "checkbox");
-  debugBox.setAttribute("id", "debugMode");
+  debugBox.type = "checkbox";
+  debugBox.id = "debugMode";
   manageDiv.appendChild(debugBox);
 
   const debugLabel = document.createElement("label");
   debugLabel.innerText = "Debug";
   debugLabel.htmlFor = "debugMode";
   manageDiv.appendChild(debugLabel);
+
+  updateSelected();
 }
 
 function updateChoicesDisabled() {
@@ -228,9 +242,7 @@ window.onload = () => {
       const choicesDiv = $("choices");
       const choiceOnClick = event => {
         ws.send(JSON.stringify({choice: event.target.innerHTML}));
-        while (choicesDiv.firstChild) {
-          choicesDiv.removeChild(choicesDiv.firstChild);
-        }
+        removeChildren(choicesDiv);
       };
       for (const choice of data) {
         if (choice === "\n") {
@@ -268,15 +280,9 @@ window.onload = () => {
       colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
       break;
     case "included":
-      while (helpOverlay.firstElementChild) {
-        helpOverlay.removeChild(helpOverlay.firstElementChild);
-      }
-
-      const helpSelected = document.createElement("div");
-      helpSelected.id = "helpSelected";
-      helpOverlay.append(helpSelected);
-
-      data.forEach(cardName => addCardImage(cardName, helpOverlay));
+      const helpCards = $("helpCards");
+      removeChildren(helpCards);
+      data.forEach(cardName => addCardImage(cardName, helpCards));
       break;
     default:
       throw new Error("Not implemented: " + type);
