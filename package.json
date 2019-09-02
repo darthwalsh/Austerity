@@ -34,7 +34,7 @@
     "@types/ws": "6.0.3",
     "csv-parse": "4.4.5",
     "eslint": "6.3.0",
-    "eslint-config-google": "0.13.0",
+    "eslint-config-google": "0.14.0",
     "jasmine": "3.4.0",
     "jasmine-reporters": "2.3.2",
     "nyc": "14.1.1",
