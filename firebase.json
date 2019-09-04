@@ -1,0 +1,5 @@
+{
+  "database": {
+    "rules": "server\\database.firebase.json"
+  }
+}

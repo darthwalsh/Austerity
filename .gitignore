@@ -5,3 +5,4 @@ junitresults-*.xml
 coverage/
 spec/Completion.txt
 spec/Multiplayer.txt
+database-debug.log

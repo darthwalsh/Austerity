@@ -4,5 +4,8 @@
     "**/node_modules": true, 
   },
 
-  "jasmineExplorer.debuggerConfig": "Debug Jasmine Tests"
+  "jasmineExplorer.debuggerConfig": "Debug Jasmine Tests",
+  "cSpell.words": [
+    "firestore"
+  ]
 }

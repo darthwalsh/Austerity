@@ -1,4 +1,63 @@
-## UserScripts
+# Server
+
+## Client-Server communication
+
+### Websocket
+The default client-server communication, and by far the fastest.
+
+Downsides:
+
+* Hosting servers don't allow many simultaneous connections, if any
+* Game state is not persisted, so a server reboot will wipe out any games
+
+### Firebase Database
+
+Using [Firebase Realtime Database](https://firebase.google.com/docs/database), it is possible to emulate the websocket messages. This gives the added benefit of messages being persisted in the database, so if the server restarts it can event-source its state from the database, and recover an active game without interaction from the client.
+
+Realtime Database was picked over Firestore because the average round trip latency of 600ms is fast enough to barely be noticed by users, while Firestore is noticeably slower at 1500ms.
+[source](https://medium.com/@d8schreiber/firebase-performance-firestore-and-realtime-database-latency-13effcade26d)
+
+[Info on Data Model, Auth, Queues](https://howtofirebase.com/firebase-data-modeling-939585ade7f4)
+
+#### Database Schema
+
+Each game is composed of messages from server to client, and v/v.
+
+Each firebase client listens for child_added on their message queue.
+
+Here, user* is a userID from Firebase Authentication
+
+    game0:
+        users:
+            alice: userWQ3mVT
+            bob: user7f8pR
+        userMessage:
+            userWQ3mVT:
+                0: Message: Connected to Game
+                1: Choice: New Game, Refresh
+            user7f8pR:
+                0: Message: Connected to Game
+                1: Choice: New Game, Refresh, alice's game
+        serverMessage:
+            userWQ3mVT:
+                0: Choice: New Game
+                1: Start: Militia, Moat, ...
+            user7f8pR:
+                0: Choice: Refresh
+
+### P1
+- [ ] Anonymous login (persists on refresh?)
+- [ ] Database permission rules, with read permission on userMessage and write on serverMessage
+- [ ] Investigate moving hosting to Google node server, fix TODO in main README
+
+### P2 
+- [ ] firebase disconnect messages [using onDisconnect](https://firebase.google.com/docs/database/web/offline-capabilities#how-ondisconnect-works)
+- [ ] OAuth/email sign-in, so users can roam between machines
+- [ ] Move hosting to Google node server if possible
+
+## Generating the table of cards
+
+### Browser UserScripts
 
 At the [List_of_cards](http://wiki.dominionstrategy.com/index.php/List_of_cards):
 
@@ -6,7 +65,7 @@ Run to filter for only Reaction cards
 
     Array.from(document.getElementsByTagName("tbody")[0].children).forEach(tr => tr.innerText.includes("Reaction") || tr.parentElement.removeChild(tr))
 
-## Source
+### Source
 
 AusterityWiki.csv is downloaded from http://wiki.dominionstrategy.com/index.php/List_of_cards
 
@@ -21,7 +80,7 @@ Some other data sources I considered were:
 * https://github.com/mehtank/androminion/blob/master/vdom/src/com/vdom/core/Cards.java
 * https://docs.google.com/spreadsheets/d/1gxwm6m4zImF1BoK_-0YXpr0L3VoMMtCCQH6QzSOWrlY/preview
 
-## Script
+### Script
 
 Using Excel Power Query, this script downloads and fixes up the table:
 

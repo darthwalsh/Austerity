@@ -6,7 +6,7 @@ Austerity
 
 A nodejs web server for a popular deck-building board game.
 
-Try an alpha version at https://austerity.azurewebsites.net/ (Supports only 5 simultaneous connections.)
+Try an alpha version at https://austerity.azurewebsites.net/ (TODO firebase hosting?)
 
 Run it
 ------
@@ -17,3 +17,8 @@ You might need to open a firewall port on your computer to play with external de
 Testing
 -------
 Run `npm test`
+
+More Documentation
+------------------
+
+[Server](server/README.md)
