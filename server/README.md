@@ -27,28 +27,32 @@ Each firebase client listens for child_added on their message queue.
 
 Here, user* is a userID from Firebase Authentication
 
-    game0:
-        users:
-            alice: userWQ3mVT
-            bob: user7f8pR
-        userMessage:
-            userWQ3mVT:
-                0: Message: Connected to Game
-                1: Choice: New Game, Refresh
-            user7f8pR:
-                0: Message: Connected to Game
-                1: Choice: New Game, Refresh, alice's game
-        serverMessage:
-            userWQ3mVT:
-                0: Choice: New Game
-                1: Start: Militia, Moat, ...
-            user7f8pR:
-                0: Choice: Refresh
+    userMessage:
+        userWQ3mVT:
+            0: Message: Connected to Game
+            1: Choice: New Game, Refresh
+            2: Message: Cards
+            3: Choice: Play Copper, Buy Copper
+        user7f8pR:
+            0: Message: Connected to Game
+            1: Choice: New Game, Refresh, alice's game
+    serverMessage:
+        userWQ3mVT:
+            0: Name: alice
+            1: Choice: New Game
+            2: Start: Militia, Moat, ...
+        user7f8pR:
+            0: Name: bob
+            1: Choice: Refresh
 
 ### P1
-- [ ] Anonymous login (persists on refresh?)
+- [ ] Anonymous login (hopefully persists on refresh, or cache token in local storage?)
+- [ ] Message flow
 - [ ] Database permission rules, with read permission on userMessage and write on serverMessage
+- [ ] Unit testing different database restart scenarios
+- [ ] App server has admin write permission, with deployment secret
 - [ ] Investigate moving hosting to Google node server, fix TODO in main README
+- [ ] When to delete data?
 
 ### P2 
 - [ ] firebase disconnect messages [using onDisconnect](https://firebase.google.com/docs/database/web/offline-capabilities#how-ondisconnect-works)
