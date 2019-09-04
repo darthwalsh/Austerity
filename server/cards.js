@@ -311,6 +311,8 @@ const kingdom = {
     player.game.gainCard(player, gainChoice, {toHand: true});
   },
 
+  // Unlike other reactions, it's better for Moat not to have OnAttack override because
+  // it would ask you to reveal Moat, then you'd have to say don't reveal the second time it asked.
   Moat: /** @param {Player} player */ async player => {
     player.draw(2);
   },
@@ -831,6 +833,34 @@ const kingdom = {
     player.money += toDiscard.length;
 
     await others;
+  },
+
+  Watchtower: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      while (player.hand.length < 6) {
+        player.draw();
+      }
+    },
+
+    /**
+     * @param {Player} player
+     * @param {Card} card
+     */
+    async onGain(player, card) {
+      player.sendMessage(`Trash ${card.name} or put on top of deck`);
+      const choice = await player.choose(["Trash", "Put on deck"]);
+      if (choice === "Trash") {
+        player.game.trashPush(card);
+      } else {
+        player
+      }
+
+      const playedActions = player.played.filter(c => c.ofKind("action")).length;
+      return Math.max(0, 8 - 2 * playedActions);
+    },
   },
 
   WorkersVillage: /** @param {Player} player */ async player => {
