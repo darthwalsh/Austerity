@@ -35,7 +35,7 @@
     "csv-parse": "4.4.6",
     "eslint": "6.4.0",
     "eslint-config-google": "0.14.0",
-    "jasmine": "3.4.0",
+    "jasmine": "3.5.0",
     "jasmine-reporters": "2.3.2",
     "nyc": "14.1.1",
     "supervisor": "0.12.0",
