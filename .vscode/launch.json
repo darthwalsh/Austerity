@@ -9,20 +9,14 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}\\server\\app.js",
-      "skipFiles": [
-        "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ],
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch Tests",
-      "program": "${workspaceRoot}\\node_modules\\jasmine\\bin\\jasmine", 
-      "skipFiles": [
-        "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ],
+      "program": "${workspaceRoot}\\node_modules\\jasmine\\bin\\jasmine",
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
     },
     {
       "name": "Debug Jasmine Tests",
@@ -31,35 +25,23 @@
       "port": 9229,
       "protocol": "inspector",
       "timeout": 30000,
-      "stopOnEntry": false, 
-      "skipFiles": [
-        "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ],
+      "stopOnEntry": false,
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch CLI",
       "program": "${workspaceFolder}\\cli\\cli.js",
-      "args": [ 
-          "http://localhost:8080",
-          "DebugPlayer" 
-      ],
-      "skipFiles": [
-        "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ],
+      "args": ["http://localhost:8080", "DebugPlayer"],
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Launch genCards",
       "program": "${workspaceFolder}\\server\\generateCardsTable.js",
-      "skipFiles": [
-        "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
-      ],
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
     }
   ]
 }

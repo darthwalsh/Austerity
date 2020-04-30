@@ -9,7 +9,7 @@ const cardsTable = require("./cardsTable");
 
 if (!Array.prototype.flatMap) {
   // eslint-disable-next-line no-extend-native
-  Array.prototype.flatMap = function(selector) {
+  Array.prototype.flatMap = function (selector) {
     return [].concat(...this.map(selector));
   };
 }
@@ -18,8 +18,7 @@ if (!Array.prototype.flatMap) {
  * @param {number} provides
  */
 function money(provides) {
-  return /** @param {Player} player */ async player =>
-    player.money += provides;
+  return /** @param {Player} player */ async player => (player.money += provides);
 }
 
 /**
@@ -75,9 +74,7 @@ const kingdom = {
   },
 
   Artisan: /** @param {Player} player */ async player => {
-    const gainChoices = player.game.store
-      .getAvailable(5, player)
-      .map(c => c.name);
+    const gainChoices = player.game.store.getAvailable(5, player).map(c => c.name);
     if (!gainChoices.length) {
       return;
     }
@@ -93,36 +90,42 @@ const kingdom = {
   Bandit: /** @param {Player} player */ async player => {
     player.game.tryGainCard(player, "Gold");
 
-    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const drawn = other.multiFromDraw(2, {reveal: true});
-      const goodTreasures = drawn.filter(c => c.ofKind("treasure") && c.name !== "Copper").map(t => t.name);
-      if (goodTreasures.length) {
-        other.sendMessage("Choose a treasure to trash:");
-        const toTrash = await other.choose(goodTreasures);
-        const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
-        other.trashPush(trashed);
+    await player.game.parallelAttack(
+      player,
+      /** @param {Player} other */ async other => {
+        const drawn = other.multiFromDraw(2, {reveal: true});
+        const goodTreasures = drawn
+          .filter(c => c.ofKind("treasure") && c.name !== "Copper")
+          .map(t => t.name);
+        if (goodTreasures.length) {
+          other.sendMessage("Choose a treasure to trash:");
+          const toTrash = await other.choose(goodTreasures);
+          const trashed = drawn.splice(drawn.indexOf(cards[toTrash]), 1)[0];
+          other.trashPush(trashed);
+        }
+        other.discardPush(drawn);
       }
-      other.discardPush(drawn);
-    });
+    );
   },
 
   Bureaucrat: /** @param {Player} player */ async player => {
     player.game.tryGainCard(player, "Silver");
 
-    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const discardChoices = other.hand
-        .filter(c => c.ofKind("victory"))
-        .map(c => c.name);
-      if (discardChoices.length) {
-        other.sendMessage("Put a Victory card onto your deck:");
-        const choice = await other.choose(discardChoices);
-        player.game.allLog(`${other.name} revealed ${choice} and put it onto their deck`);
-        other.drawPile.push(other.fromHand(choice));
-      } else {
-        const hand = other.hand.map(c => c.name).join(", ");
-        player.game.allLog(`${other.name} revealed ${hand}`);
+    await player.game.parallelAttack(
+      player,
+      /** @param {Player} other */ async other => {
+        const discardChoices = other.hand.filter(c => c.ofKind("victory")).map(c => c.name);
+        if (discardChoices.length) {
+          other.sendMessage("Put a Victory card onto your deck:");
+          const choice = await other.choose(discardChoices);
+          player.game.allLog(`${other.name} revealed ${choice} and put it onto their deck`);
+          other.drawPile.push(other.fromHand(choice));
+        } else {
+          const hand = other.hand.map(c => c.name).join(", ");
+          player.game.allLog(`${other.name} revealed ${hand}`);
+        }
       }
-    });
+    );
   },
 
   Cellar: /** @param {Player} player */ async player => {
@@ -188,9 +191,7 @@ const kingdom = {
      * @param {Player} player
      */
     async play(player) {
-      const gainChoices = player.game.store
-        .getAvailable(5, player)
-        .map(c => c.name);
+      const gainChoices = player.game.store.getAvailable(5, player).map(c => c.name);
       if (!gainChoices.length) {
         return;
       }
@@ -273,13 +274,15 @@ const kingdom = {
     player.draw();
     player.actions += 1;
     let used = false;
-    player.onPlayed.push(/** @param {Card} card */ card => {
-      if (used || card !== cards.Silver) {
-        return;
+    player.onPlayed.push(
+      /** @param {Card} card */ card => {
+        if (used || card !== cards.Silver) {
+          return;
+        }
+        used = true;
+        player.money += 1;
       }
-      used = true;
-      player.money += 1;
-    });
+    );
   },
 
   Militia: /** @param {Player} player */ async player => {
@@ -288,9 +291,7 @@ const kingdom = {
   },
 
   Mine: /** @param {Player} player */ async player => {
-    const trashChoices = player.hand
-      .filter(c => c.ofKind("treasure"))
-      .map(c => c.name);
+    const trashChoices = player.hand.filter(c => c.ofKind("treasure")).map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No Treasures to trash");
       return;
@@ -368,7 +369,9 @@ const kingdom = {
     const toDecide = player.multiFromDraw(2).map(c => c.name);
     const toDiscard = [];
     while (toDecide.length) {
-      const choices = toDecide.flatMap(c => ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`));
+      const choices = toDecide.flatMap(c =>
+        ["Trash", "Discard", "To Deck"].map(choice => `${choice}: ${c}`)
+      );
       player.sendMessage("Trash, discard, and/or place on top of deck:");
       const choice = await player.choose(choices);
       const [action, cardName] = choice.split(": ");
@@ -376,15 +379,15 @@ const kingdom = {
 
       toDecide.splice(toDecide.indexOf(cardName), 1);
       switch (action) {
-      case "Trash":
-        player.trashPush(card);
-        break;
-      case "Discard":
-        toDiscard.push(card);
-        break;
-      case "To Deck":
-        player.game.allLog(`${player.name} placed a card back on their deck`);
-        player.drawPile.push(card);
+        case "Trash":
+          player.trashPush(card);
+          break;
+        case "Discard":
+          toDiscard.push(card);
+          break;
+        case "To Deck":
+          player.game.allLog(`${player.name} placed a card back on their deck`);
+          player.drawPile.push(card);
       }
     }
     player.discardPush(toDiscard);
@@ -405,7 +408,7 @@ const kingdom = {
       if (!card) {
         return;
       }
-      const name = other.name === player.name ? "Your" : (other.name + "'s");
+      const name = other.name === player.name ? "Your" : other.name + "'s";
       player.sendMessage("Put back on deck or discard " + name + " " + card.name);
       const choice = await player.choose(["Put back", "Discard"]);
       if (choice === "Put back") {
@@ -420,45 +423,44 @@ const kingdom = {
   },
 
   Thief: /** @param {Player} player */ async player => {
-    await player.game.sequentialAttack(player, /** @param {Player} other */ async other => {
-      const drawn = other.multiFromDraw(2, {reveal: true});
-      const treasures = drawn
-        .filter(c => c.ofKind("treasure"))
-        .map(c => c.name);
-      if (!treasures.length) {
-        other.discardPush(drawn);
-        return;
-      }
-      const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
-      player.sendMessage("Trash or steal a Treasure:");
-      let choice = await player.choose(choices);
+    await player.game.sequentialAttack(
+      player,
+      /** @param {Player} other */ async other => {
+        const drawn = other.multiFromDraw(2, {reveal: true});
+        const treasures = drawn.filter(c => c.ofKind("treasure")).map(c => c.name);
+        if (!treasures.length) {
+          other.discardPush(drawn);
+          return;
+        }
+        const choices = treasures.flatMap(t => ["Trash: " + t, "Steal: " + t]);
+        player.sendMessage("Trash or steal a Treasure:");
+        let choice = await player.choose(choices);
 
-      const isSteal = choice.substring(0, 7) === "Steal: ";
-      choice = choice.substring(7);
-      let chosen;
-      if (choice === treasures[0]) {
-        chosen = treasures.splice(0, 1)[0];
-      } else {
-        chosen = treasures.splice(1, 1)[0];
-      }
-      chosen = cards[chosen];
+        const isSteal = choice.substring(0, 7) === "Steal: ";
+        choice = choice.substring(7);
+        let chosen;
+        if (choice === treasures[0]) {
+          chosen = treasures.splice(0, 1)[0];
+        } else {
+          chosen = treasures.splice(1, 1)[0];
+        }
+        chosen = cards[chosen];
 
-      if (isSteal) {
-        player.game.allLog(`${player.name} stole ${other.name}'s ${chosen.name}`);
-        player.discardPile.push(chosen);
-      } else {
-        player.trashPush(chosen);
+        if (isSteal) {
+          player.game.allLog(`${player.name} stole ${other.name}'s ${chosen.name}`);
+          player.discardPile.push(chosen);
+        } else {
+          player.trashPush(chosen);
+        }
+        const treasureCards = treasures.map(n => cards[n]);
+        const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
+        other.discardPush(treasureCards.concat(notTreasures));
       }
-      const treasureCards = treasures.map(n => cards[n]);
-      const notTreasures = drawn.filter(c => !c.ofKind("treasure"));
-      other.discardPush(treasureCards.concat(notTreasures));
-    });
+    );
   },
 
   ThroneRoom: /** @param {Player} player */ async player => {
-    const actions = player.hand
-      .filter(c => c.ofKind("action"))
-      .map(c => c.name);
+    const actions = player.hand.filter(c => c.ofKind("action")).map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Action cards to play");
       return;
@@ -482,7 +484,7 @@ const kingdom = {
       return;
     }
     player.sendMessage(`What do you want to do with ${drawn.name}?`);
-    if (await player.choose(["Play", "Discard"]) === "Play") {
+    if ((await player.choose(["Play", "Discard"])) === "Play") {
       player.game.allLog(`${player.name} played ${drawn.name}`);
       await drawn.play(player);
       player.afterPlay(drawn);
@@ -499,9 +501,12 @@ const kingdom = {
   Witch: /** @param {Player} player */ async player => {
     player.draw(2);
 
-    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      player.game.tryGainCard(other, "Curse");
-    });
+    await player.game.parallelAttack(
+      player,
+      /** @param {Player} other */ async other => {
+        player.game.tryGainCard(other, "Curse");
+      }
+    );
   },
 
   Woodcutter: /** @param {Player} player */ async player => {
@@ -510,9 +515,7 @@ const kingdom = {
   },
 
   Workshop: /** @param {Player} player */ async player => {
-    const gainChoices = player.game.store
-      .getAvailable(4, player)
-      .map(c => c.name);
+    const gainChoices = player.game.store.getAvailable(4, player).map(c => c.name);
     if (!gainChoices.length) {
       return;
     }
@@ -529,8 +532,7 @@ const kingdom = {
   Bishop: /** @param {Player} player */ async player => {
     player.money += 1;
     let points = 1;
-    const trashChoices = player.hand
-      .map(c => c.name);
+    const trashChoices = player.hand.map(c => c.name);
     if (!trashChoices.length) {
       player.sendMessage("No cards to trash");
     } else {
@@ -541,23 +543,25 @@ const kingdom = {
       player.trashPush(trash);
     }
     player.gainVictory(points);
-    await Promise.all(player.game.otherPlayers(player).map(
-      /** @param {Player} other */ async other => {
-        const otherChoices = other.hand
-          .map(c => c.name);
-        if (!otherChoices.length) {
-          other.game.allLog(`${other.name} could not trash a card`);
-          return;
+    await Promise.all(
+      player.game.otherPlayers(player).map(
+        /** @param {Player} other */ async other => {
+          const otherChoices = other.hand.map(c => c.name);
+          if (!otherChoices.length) {
+            other.game.allLog(`${other.name} could not trash a card`);
+            return;
+          }
+          otherChoices.push("Don't Trash");
+          other.sendMessage("Trash a card?");
+          const otherChoice = await other.choose(otherChoices);
+          if (otherChoice === "Don't Trash") {
+            other.game.allLog(`${other.name} did not trash a card`);
+            return;
+          }
+          other.trashPush(other.fromHand(otherChoice));
         }
-        otherChoices.push("Don't Trash");
-        other.sendMessage("Trash a card?");
-        const otherChoice = await other.choose(otherChoices);
-        if (otherChoice === "Don't Trash") {
-          other.game.allLog(`${other.name} did not trash a card`);
-          return;
-        }
-        other.trashPush(other.fromHand(otherChoice));
-      }));
+      )
+    );
   },
 
   City: /** @param {Player} player */ async player => {
@@ -576,13 +580,16 @@ const kingdom = {
 
   CountingHouse: /** @param {Player} player */ async player => {
     const coppers = player.discardPile.filter(c => c.name === "Copper").length;
-    const choices = Array.from({length: coppers+1}, (v, k) => k.toString());
+    const choices = Array.from({length: coppers + 1}, (v, k) => k.toString());
     player.sendMessage("Put Coppers from discard into hand:");
     const choice = await player.choose(choices);
-    player.discardPile = player.discardPile.filter(c => c.name !== "Copper").concat(
-      Array.from({length: coppers - +choice}, _ => cards.Copper));
+    player.discardPile = player.discardPile
+      .filter(c => c.name !== "Copper")
+      .concat(Array.from({length: coppers - +choice}, _ => cards.Copper));
     player.hand.push(...Array.from({length: +choice}, _ => cards.Copper));
-    player.game.allLog(`${player.name} revealed ${choice} Copper from their discard and put into their hand`);
+    player.game.allLog(
+      `${player.name} revealed ${choice} Copper from their discard and put into their hand`
+    );
   },
 
   Expand: /** @param {Player} player */ async player => {
@@ -671,9 +678,7 @@ const kingdom = {
   },
 
   KingsCourt: /** @param {Player} player */ async player => {
-    const actions = player.hand
-      .filter(c => c.ofKind("action"))
-      .map(c => c.name);
+    const actions = player.hand.filter(c => c.ofKind("action")).map(c => c.name);
     if (!actions.length) {
       player.sendMessage("No Action cards to play");
       return;
@@ -750,22 +755,25 @@ const kingdom = {
   Rabble: /** @param {Player} player */ async player => {
     player.draw(3);
     const shouldDiscard = /** @param {Card} c */ c => c.ofKind("action") || c.ofKind("treasure");
-    await player.game.parallelAttack(player, /** @param {Player} other */ async other => {
-      const fromDraw = other.multiFromDraw(3, {reveal: true});
-      const toDiscard = fromDraw.filter(shouldDiscard);
-      if (toDiscard.length) {
-        other.sendMessage(`Discarded ${toDiscard.map(c => c.name).join(", ")} from draw`);
-        other.discardPush(toDiscard);
-      }
+    await player.game.parallelAttack(
+      player,
+      /** @param {Player} other */ async other => {
+        const fromDraw = other.multiFromDraw(3, {reveal: true});
+        const toDiscard = fromDraw.filter(shouldDiscard);
+        if (toDiscard.length) {
+          other.sendMessage(`Discarded ${toDiscard.map(c => c.name).join(", ")} from draw`);
+          other.discardPush(toDiscard);
+        }
 
-      const backToDraw = fromDraw.filter(c => !shouldDiscard(c)).map(c => c.name);
-      while (backToDraw.length) {
-        other.sendMessage("Put back on draw:");
-        const choice = await other.choose(backToDraw);
-        backToDraw.splice(backToDraw.indexOf(choice), 1);
-        other.drawPile.push(cards[choice]);
+        const backToDraw = fromDraw.filter(c => !shouldDiscard(c)).map(c => c.name);
+        while (backToDraw.length) {
+          other.sendMessage("Put back on draw:");
+          const choice = await other.choose(backToDraw);
+          backToDraw.splice(backToDraw.indexOf(choice), 1);
+          other.drawPile.push(cards[choice]);
+        }
       }
-    });
+    );
   },
 
   TradeRoute: /** @param {Player} player */ async player => {
@@ -779,37 +787,41 @@ const kingdom = {
       player.trashPush(trash);
     }
 
-    player.money += player.game.store.allCards
-      .filter(c => c.ofKind("victory") && player.game.store.gainedCards.has(c.name)).length;
+    player.money += player.game.store.allCards.filter(
+      c => c.ofKind("victory") && player.game.store.gainedCards.has(c.name)
+    ).length;
   },
 
   Vault: /** @param {Player} player */ async player => {
     player.draw(2);
 
-    const others = Promise.all(player.game.otherPlayers(player).map(
-      /** @param {Player} other */ async other => {
-        const discardChoices = other.hand.map(c => c.name);
-        discardChoices.push("Don't Discard");
+    const others = Promise.all(
+      player.game.otherPlayers(player).map(
+        /** @param {Player} other */ async other => {
+          const discardChoices = other.hand.map(c => c.name);
+          discardChoices.push("Don't Discard");
 
-        other.sendMessage("You may discard two cards to draw a card:");
-        const firstChoice = await other.choose(discardChoices);
-        if (firstChoice === "Don't Discard") {
-          other.game.allLog(`${other.name} chose not to discard`);
-          return;
+          other.sendMessage("You may discard two cards to draw a card:");
+          const firstChoice = await other.choose(discardChoices);
+          if (firstChoice === "Don't Discard") {
+            other.game.allLog(`${other.name} chose not to discard`);
+            return;
+          }
+          const toDiscard = [other.fromHand(firstChoice)];
+
+          if (other.hand.length) {
+            other.sendMessage("Discard another card:");
+            const choice = await other.choose(other.hand.map(c => c.name));
+            toDiscard.push(other.fromHand(choice));
+
+            other.draw();
+          } else {
+            other.game.allLog(`${other.name} had only one card to discard`);
+          }
+          other.discardPush(toDiscard);
         }
-        const toDiscard = [other.fromHand(firstChoice)];
-
-        if (other.hand.length) {
-          other.sendMessage("Discard another card:");
-          const choice = await other.choose(other.hand.map(c => c.name));
-          toDiscard.push(other.fromHand(choice));
-
-          other.draw();
-        } else {
-          other.game.allLog(`${other.name} had only one card to discard`);
-        }
-        other.discardPush(toDiscard);
-      }));
+      )
+    );
 
     const toDiscard = [];
     for (;;) {
@@ -872,7 +884,10 @@ function getCost(tableRow) {
  * @param {{types: string}} tableRow
  */
 function getKinds(tableRow) {
-  const kinds = tableRow.types.split(" - ").map(k => k.toLowerCase()).sort();
+  const kinds = tableRow.types
+    .split(" - ")
+    .map(k => k.toLowerCase())
+    .sort();
   if (!kinds.every(k => knownKinds.has(k))) {
     throw new Error(`Unknown kind in ${tableRow.types}`);
   }
@@ -887,10 +902,12 @@ function getKinds(tableRow) {
  * @param {boolean} [compare.compareSet]
  */
 function compareTo(other, {compareKind = true, compareSet = false} = {}) {
-  return (compareSet && setOrder.indexOf(this.set) - setOrder.indexOf(other.set))
-    || (compareKind && kindIndices[this.kind[0]] - kindIndices[other.kind[0]])
-    || this.getCost(null) - other.getCost(null) // Sorting is best-effort, so not knowing player is fine
-    || this.name.localeCompare(other.name);
+  return (
+    (compareSet && setOrder.indexOf(this.set) - setOrder.indexOf(other.set)) ||
+    (compareKind && kindIndices[this.kind[0]] - kindIndices[other.kind[0]]) ||
+    this.getCost(null) - other.getCost(null) || // Sorting is best-effort, so not knowing player is fine
+    this.name.localeCompare(other.name)
+  );
 }
 
 /**

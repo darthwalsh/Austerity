@@ -327,7 +327,9 @@ class Player {
    * @return {number}
    */
   getPoints() {
-    return this.victory + this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0);
+    return (
+      this.victory + this.allCards().reduce((a, c) => a + (c.getPoints ? c.getPoints(this) : 0), 0)
+    );
   }
 
   allCards() {

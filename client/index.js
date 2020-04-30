@@ -138,7 +138,10 @@ function addManage(data, ws) {
     const randomPicked = new Set(selected.length < CARD_COUNT ? selected : []);
     const remainingOptions = options.filter(o => !randomPicked.has(o));
     while (randomPicked.size < CARD_COUNT) {
-      const removed = remainingOptions.splice(Math.floor(Math.random() * remainingOptions.length), 1);
+      const removed = remainingOptions.splice(
+        Math.floor(Math.random() * remainingOptions.length),
+        1
+      );
       randomPicked.add(removed[0]);
     }
     options.forEach(n => {
@@ -150,7 +153,7 @@ function addManage(data, ws) {
   const clearButton = document.createElement("button");
   clearButton.innerText = "Clear";
   clearButton.onclick = () => {
-    options.forEach(n => $input("optional" + n).checked = false);
+    options.forEach(n => ($input("optional" + n).checked = false));
   };
   manageDiv.appendChild(clearButton);
 
@@ -214,8 +217,8 @@ window.onload = () => {
   });
 
   const helpOverlay = $("helpOverlay");
-  helpOverlay.onclick = () => helpOverlay.style.display = "none";
-  $("help").onclick = () => helpOverlay.style.display = "";
+  helpOverlay.onclick = () => (helpOverlay.style.display = "none");
+  $("help").onclick = () => (helpOverlay.style.display = "");
 
   let turnAlert;
   const chat = $input("chat");
@@ -235,57 +238,59 @@ window.onload = () => {
     data = data[type];
 
     switch (type) {
-    case "message":
-      log(data);
-      break;
-    case "choices":
-      const choicesDiv = $("choices");
-      const choiceOnClick = event => {
-        ws.send(JSON.stringify({choice: event.target.innerHTML}));
-        removeChildren(choicesDiv);
-      };
-      for (const choice of data) {
-        if (choice === "\n") {
-          choicesDiv.appendChild(document.createElement("br"));
-        } else {
-          const button = document.createElement("button");
-          button.innerHTML = choice;
-          const color = colors[choice];
-          if (color) {
-            button.style.color = color;
+      case "message":
+        log(data);
+        break;
+      case "choices":
+        const choicesDiv = $("choices");
+        const choiceOnClick = event => {
+          ws.send(JSON.stringify({choice: event.target.innerHTML}));
+          removeChildren(choicesDiv);
+        };
+        for (const choice of data) {
+          if (choice === "\n") {
+            choicesDiv.appendChild(document.createElement("br"));
+          } else {
+            const button = document.createElement("button");
+            button.innerHTML = choice;
+            const color = colors[choice];
+            if (color) {
+              button.style.color = color;
+            }
+            button.style.fontWeight = "bold";
+            button.onclick = choiceOnClick;
+            choicesDiv.appendChild(button);
           }
-          button.style.fontWeight = "bold";
-          button.onclick = choiceOnClick;
-          choicesDiv.appendChild(button);
         }
-      }
-      updateChoicesDisabled();
-      $("log").scrollTop = $("log").scrollHeight;
-      if (document.hasFocus && !document.hasFocus()) {
-        if (!turnAlert) {
-          turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+        updateChoicesDisabled();
+        $("log").scrollTop = $("log").scrollHeight;
+        if (document.hasFocus && !document.hasFocus()) {
+          if (!turnAlert) {
+            turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+          }
+          // Audio need to reload sound before each play
+          // http://stackoverflow.com/a/8959342/771768
+          turnAlert.load();
+          turnAlert.play().catch(_ => {
+            /* whatever*/
+          });
         }
-        // Audio need to reload sound before each play
-        // http://stackoverflow.com/a/8959342/771768
-        turnAlert.load();
-        turnAlert.play().catch(_ => {/* whatever*/});
-      }
-      break;
-    case "isLeader":
-      addManage(data, ws);
-      break;
-    case "colors":
-      colors = data;
-      // Create a regex like \bCopper|Silver|Gold\b
-      colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
-      break;
-    case "included":
-      const helpCards = $("helpCards");
-      removeChildren(helpCards);
-      data.forEach(cardName => addCardImage(cardName, helpCards));
-      break;
-    default:
-      throw new Error("Not implemented: " + type);
+        break;
+      case "isLeader":
+        addManage(data, ws);
+        break;
+      case "colors":
+        colors = data;
+        // Create a regex like \bCopper|Silver|Gold\b
+        colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
+        break;
+      case "included":
+        const helpCards = $("helpCards");
+        removeChildren(helpCards);
+        data.forEach(cardName => addCardImage(cardName, helpCards));
+        break;
+      default:
+        throw new Error("Not implemented: " + type);
     }
   });
   chat.addEventListener("keydown", e => {

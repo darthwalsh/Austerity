@@ -10,16 +10,16 @@ Run to filter for only Reaction cards
 
 AusterityWiki.csv is downloaded from http://wiki.dominionstrategy.com/index.php/List_of_cards
 
-* Run the script below, then Save As with type CSV UTF-8
-* Remove the UTF8 BOM
-* Run `npm run genCards`
-* Run `npm test` to format the generated code
+- Run the script below, then Save As with type CSV UTF-8
+- Remove the UTF8 BOM
+- Run `npm run genCards`
+- Run `npm test` to format the generated code
 
 Some other data sources I considered were:
 
-* https://dominionstrategy.com/all-cards/
-* https://github.com/mehtank/androminion/blob/master/vdom/src/com/vdom/core/Cards.java
-* https://docs.google.com/spreadsheets/d/1gxwm6m4zImF1BoK_-0YXpr0L3VoMMtCCQH6QzSOWrlY/preview
+- https://dominionstrategy.com/all-cards/
+- https://github.com/mehtank/androminion/blob/master/vdom/src/com/vdom/core/Cards.java
+- https://docs.google.com/spreadsheets/d/1gxwm6m4zImF1BoK_-0YXpr0L3VoMMtCCQH6QzSOWrlY/preview
 
 ## Script
 
@@ -44,7 +44,7 @@ let
 in
     #"Replaced Value5"
 
-// ExtractAltString 
+// ExtractAltString
 (Source) => let
     Split = List.Transform(Text.Split(Source, "<img alt="""), (SplitStart) => let
           AltStringLength = Text.PositionOf(SplitStart, """"),

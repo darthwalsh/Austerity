@@ -18,26 +18,29 @@ class Server {
     const app = express();
     const client = path.join(__dirname, "..", "client");
     app.use(express.static(client));
-    const server = app.listen(port, () => console.log(`Example HTTP app on ${client} listening on port ${port}!`));
+    const server = app.listen(port, () =>
+      console.log(`Example HTTP app on ${client} listening on port ${port}!`)
+    );
 
     const lobbyOptions = {};
     if (options.trivialShuffle) {
       console.log("Using trivial shuffle");
-      lobbyOptions.shuffle = array => array.sort((a, b) => {
-        if (typeof a.name === "string") {
-          if (a.name < b.name) {
-            return -1;
+      lobbyOptions.shuffle = array =>
+        array.sort((a, b) => {
+          if (typeof a.name === "string") {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
           }
-          if (a.name > b.name) {
-            return 1;
+          if (typeof a === "number") {
+            return a - b;
           }
-          return 0;
-        }
-        if (typeof a === "number") {
-          return a - b;
-        }
-        throw new Error(a.toString());
-      });
+          throw new Error(a.toString());
+        });
     }
 
     this.lobby = new Lobby(lobbyOptions);

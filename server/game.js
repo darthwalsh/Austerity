@@ -83,7 +83,12 @@ class Game {
         this.allLog("");
         this.allLog("GAME OVER!!!");
         ps.sort((a, b) => b.getPoints() - a.getPoints()) // descending
-          .map(p => `${p.name}: ${p.getPoints()}     +VP: ${p.victory} Cards: ${this.getEndGame(p.allCards())}`)
+          .map(
+            p =>
+              `${p.name}: ${p.getPoints()}     +VP: ${p.victory} Cards: ${this.getEndGame(
+                p.allCards()
+              )}`
+          )
           .forEach(line => this.allLog(line));
         return;
       }
@@ -117,13 +122,19 @@ class Game {
 
     if (!Object.keys(this.players).length) {
       const setCards = setOrder.reduce((o, set) => {
-        o[set] = this.store.optional().filter(card => card.set === set).map(c => c.name);
+        o[set] = this.store
+          .optional()
+          .filter(card => card.set === set)
+          .map(c => c.name);
         return o;
       }, {});
       player.send({isLeader: setCards});
-      player.send({included: this.store.optional()
-        .sort((a, b) => a.compareTo(b, {compareSet: true}))
-        .map(c => c.name)});
+      player.send({
+        included: this.store
+          .optional()
+          .sort((a, b) => a.compareTo(b, {compareSet: true}))
+          .map(c => c.name),
+      });
     } else {
       player.sendMessage("Waiting for the leader to start the game");
       this.allLog(player.name + " joined");
@@ -135,9 +146,12 @@ class Game {
     };
 
     connection.messageHandlers["gameStart"] =
-    /** @param {{included: string[], debugMode: boolean}} data */
+      /** @param {{included: string[], debugMode: boolean}} data */
       data => {
-        this.store.init(data.included.map(n => cards[n]), this.allPlayers().length);
+        this.store.init(
+          data.included.map(n => cards[n]),
+          this.allPlayers().length
+        );
         this.start(data.debugMode);
       };
 

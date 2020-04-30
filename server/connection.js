@@ -90,7 +90,9 @@ class Connection {
 
       this.onChoice = /** @param {string} choice */ choice => {
         if (!choices.includes(choice)) {
-          this.send({message: `"${choice}" not a valid choice of "${choices}"!!!`});
+          this.send({
+            message: `"${choice}" not a valid choice of "${choices}"!!!`,
+          });
           this.resendChoices();
           return;
         }
@@ -99,7 +101,8 @@ class Connection {
         resolve(choice);
       };
 
-      if (this.connected) { // If player is disconnected, they will get choices sent if/when they reconnect
+      if (this.connected) {
+        // If player is disconnected, they will get choices sent if/when they reconnect
         this.ws.send(this.sentChoices);
       }
     });

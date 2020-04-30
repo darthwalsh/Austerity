@@ -8,13 +8,19 @@ const cards = require("./cards");
 class Store {
   constructor() {
     this.default = [
-      cards.Copper, cards.Silver, cards.Gold,
-      cards.Curse, cards.Estate, cards.Duchy, cards.Province,
+      cards.Copper,
+      cards.Silver,
+      cards.Gold,
+      cards.Curse,
+      cards.Estate,
+      cards.Duchy,
+      cards.Province,
     ];
   }
 
   optional() {
-    return Object.values(cards).filter(c => !this.default.includes(c))
+    return Object.values(cards)
+      .filter(c => !this.default.includes(c))
       .sort((a, b) => a.compareTo(b));
   }
 
@@ -40,11 +46,16 @@ class Store {
       curse: () => 10 * Math.max(playerCount - 1, 1),
       treasure: /** @param {Card} c */ c => {
         switch (c.name) {
-        case "Copper": return (extraSize ? 120 : 60) - 7 * playerCount;
-        case "Silver": return extraSize ? 80 : 40;
-        case "Gold": return extraSize ? 60 : 30;
-        case "Platinum": return extraSize ? 24 : 12;
-        default: return 10;
+          case "Copper":
+            return (extraSize ? 120 : 60) - 7 * playerCount;
+          case "Silver":
+            return extraSize ? 80 : 40;
+          case "Gold":
+            return extraSize ? 60 : 30;
+          case "Platinum":
+            return extraSize ? 24 : 12;
+          default:
+            return 10;
         }
       },
       action: () => 10,
@@ -81,7 +92,7 @@ class Store {
    * @param {Card} card
    */
   gain(card) {
-    if (typeof(card.name) !== "string") {
+    if (typeof card.name !== "string") {
       throw new Error("Invalid argument, not a card");
     }
     if (--this.counts[card.name] < 0) {
@@ -95,8 +106,7 @@ class Store {
       return true;
     }
     const requiredPiles = this.playerCount > 4 ? 4 : 3;
-    return this.getAllCards()
-      .filter(c => this.counts[c.name] === 0).length >= requiredPiles;
+    return this.getAllCards().filter(c => this.counts[c.name] === 0).length >= requiredPiles;
   }
 }
 

@@ -79,7 +79,6 @@ const tests = {
     points: -1,
   },
 
-
   Adventurer: {
     draw: ["Copper", "Village", "Silver"],
     hand: [],
@@ -115,9 +114,7 @@ const tests = {
     discard: ["Copper"],
     hand: [],
 
-    interactions: [
-      "ALL: Bot revealed Copper",
-    ],
+    interactions: ["ALL: Bot revealed Copper"],
 
     discardAfter: [],
     handAfter: ["Copper"],
@@ -164,15 +161,13 @@ const tests = {
       "ALL: Other#0 trashed Silver",
       "ALL: Other#0 discarded Gold",
     ],
-    others: [{
-      draw: ["Gold", "Silver"],
-      interactions: [
-        "Choose a treasure to trash:",
-        ["Silver", "Gold"],
-        "Silver",
-      ],
-      discardAfter: ["Gold"],
-    }],
+    others: [
+      {
+        draw: ["Gold", "Silver"],
+        interactions: ["Choose a treasure to trash:", ["Silver", "Gold"], "Silver"],
+        discardAfter: ["Gold"],
+      },
+    ],
     discardAfter: ["Gold"],
     trashAfter: ["Silver"],
   },
@@ -185,15 +180,13 @@ const tests = {
       "ALL: Other#0 trashed Silver",
       "ALL: Other#0 discarded Copper",
     ],
-    others: [{
-      draw: ["Copper", "Silver"],
-      interactions: [
-        "Choose a treasure to trash:",
-        ["Silver"],
-        "Silver",
-      ],
-      discardAfter: ["Copper"],
-    }],
+    others: [
+      {
+        draw: ["Copper", "Silver"],
+        interactions: ["Choose a treasure to trash:", ["Silver"], "Silver"],
+        discardAfter: ["Copper"],
+      },
+    ],
     discardAfter: ["Gold"],
     trashAfter: ["Silver"],
   },
@@ -204,10 +197,12 @@ const tests = {
       "ALL: Other#0 revealed Copper",
       "ALL: Other#0 discarded Copper",
     ],
-    others: [{
-      draw: ["Copper"],
-      discardAfter: ["Copper"],
-    }],
+    others: [
+      {
+        draw: ["Copper"],
+        discardAfter: ["Copper"],
+      },
+    ],
     discardAfter: ["Gold"],
   },
 
@@ -219,30 +214,27 @@ const tests = {
       "ALL: Other#0 revealed Estate and put it onto their deck",
     ],
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold", "Estate", "Duchy"],
-      interactions: [
-        "Put a Victory card onto your deck:",
-        ["Estate", "Duchy"],
-        "Estate",
-      ],
-      handAfter: ["Copper", "Silver", "Gold", "Duchy"],
-      drawAfter: ["Estate"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold", "Estate", "Duchy"],
+        interactions: ["Put a Victory card onto your deck:", ["Estate", "Duchy"], "Estate"],
+        handAfter: ["Copper", "Silver", "Gold", "Duchy"],
+        drawAfter: ["Estate"],
+      },
+    ],
   },
 
   Bureaucrat_NoVictory: {
     discardAfter: ["Silver"],
 
-    interactions: [
-      "ALL: Bot gained Silver",
-      "ALL: Other#0 revealed Copper, Silver, Gold",
-    ],
+    interactions: ["ALL: Bot gained Silver", "ALL: Other#0 revealed Copper, Silver, Gold"],
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold"],
-      handAfter: ["Copper", "Silver", "Gold"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold"],
+        handAfter: ["Copper", "Silver", "Gold"],
+      },
+    ],
   },
 
   Cellar: {
@@ -269,11 +261,7 @@ const tests = {
     draw: ["Silver"],
     discard: [],
     hand: ["Copper"],
-    interactions: [
-      "Discard cards:",
-      ["Copper", "Done Discarding"],
-      "Done Discarding",
-    ],
+    interactions: ["Discard cards:", ["Copper", "Done Discarding"], "Done Discarding"],
     drawAfter: ["Silver"],
     discardAfter: [],
     handAfter: ["Copper"],
@@ -295,11 +283,7 @@ const tests = {
   Chancellor_No: {
     dMoney: 2,
     draw: ["Silver"],
-    interactions: [
-      "Discard your draw pile?",
-      ["No", "Discard"],
-      "No",
-    ],
+    interactions: ["Discard your draw pile?", ["No", "Discard"], "No"],
     drawAfter: ["Silver"],
   },
 
@@ -329,11 +313,7 @@ const tests = {
 
   Chapel_Done: {
     hand: ["Copper"],
-    interactions: [
-      "Trash up to 4 cards:",
-      ["Copper", "Done Trashing"],
-      "Done Trashing",
-    ],
+    interactions: ["Trash up to 4 cards:", ["Copper", "Done Trashing"], "Done Trashing"],
     handAfter: ["Copper"],
     trashAfter: [],
   },
@@ -345,12 +325,14 @@ const tests = {
     drawAfter: ["Village"],
     handAfter: ["Copper", "Silver", "Gold", "Estate"],
 
-    others: [{
-      draw: ["Copper", "Silver"],
-      hand: [],
-      drawAfter: ["Copper"],
-      handAfter: ["Silver"],
-    }],
+    others: [
+      {
+        draw: ["Copper", "Silver"],
+        hand: [],
+        drawAfter: ["Copper"],
+        handAfter: ["Silver"],
+      },
+    ],
   },
 
   CouncilRoom_Self: {
@@ -417,10 +399,7 @@ const tests = {
 
   Gardens_Rounding: {
     points: 0,
-    hand: [
-      "Copper", "Silver", "Gold", "Village", "Smithy",
-      "Copper", "Silver", "Gold", "Village",
-    ],
+    hand: ["Copper", "Silver", "Gold", "Village", "Smithy", "Copper", "Silver", "Gold", "Village"],
   },
 
   Harbinger: {
@@ -482,11 +461,7 @@ const tests = {
     draw: [],
     discard: ["Village"],
     hand: [],
-    interactions: [
-      "Add card to hand or set aside:",
-      ["Village", "Set Aside"],
-      "Village",
-    ],
+    interactions: ["Add card to hand or set aside:", ["Village", "Set Aside"], "Village"],
     handAfter: ["Village"],
     discardAfter: [],
   },
@@ -523,32 +498,34 @@ const tests = {
   Militia: {
     dMoney: 2,
 
-    interactions: [
-      "ALL: Other#0 discarded Village and 1 more",
-    ],
+    interactions: ["ALL: Other#0 discarded Village and 1 more"],
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
-      interactions: [
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Village", "Smithy"],
-        "Village",
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Smithy"],
-        "Silver",
-      ],
-      handAfter: ["Copper", "Gold", "Smithy"],
-      discardAfter: ["Village", "Silver"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
+        interactions: [
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Village", "Smithy"],
+          "Village",
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Smithy"],
+          "Silver",
+        ],
+        handAfter: ["Copper", "Gold", "Smithy"],
+        discardAfter: ["Village", "Silver"],
+      },
+    ],
   },
 
   Militia_FewCards: {
     dMoney: 2,
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold"],
-      handAfter: ["Copper", "Silver", "Gold"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold"],
+        handAfter: ["Copper", "Silver", "Gold"],
+      },
+    ],
   },
 
   Mine: {
@@ -569,9 +546,7 @@ const tests = {
 
   Mine_NoMoney: {
     hand: [],
-    interactions: [
-      "No Treasures to trash",
-    ],
+    interactions: ["No Treasures to trash"],
     handAfter: [],
   },
 
@@ -588,20 +563,17 @@ const tests = {
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
-    interactions: [
-      "ALL: Other#0 revealed Moat",
-    ],
+    interactions: ["ALL: Other#0 revealed Moat"],
 
-    others: [{
-      hand: ["Moat"],
-      discard: [],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Moat",
-      ],
-      handAfter: ["Moat"],
-      discardAfter: [],
-    }],
+    others: [
+      {
+        hand: ["Moat"],
+        discard: [],
+        interactions: [["Moat", "Get Attacked"], "Moat"],
+        handAfter: ["Moat"],
+        discardAfter: [],
+      },
+    ],
   },
 
   MoatAttacked: {
@@ -610,20 +582,17 @@ const tests = {
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
-    interactions: [
-      "ALL: Other#0 gained Curse",
-    ],
+    interactions: ["ALL: Other#0 gained Curse"],
 
-    others: [{
-      hand: ["Moat"],
-      discard: [],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Get Attacked",
-      ],
-      handAfter: ["Moat"],
-      discardAfter: ["Curse"],
-    }],
+    others: [
+      {
+        hand: ["Moat"],
+        discard: [],
+        interactions: [["Moat", "Get Attacked"], "Get Attacked"],
+        handAfter: ["Moat"],
+        discardAfter: ["Curse"],
+      },
+    ],
   },
 
   MoatOtherInteractive: {
@@ -631,44 +600,37 @@ const tests = {
 
     dMoney: 2,
 
-    interactions: [
-      "ALL: Other#0 revealed Moat",
-      "ALL: Other#1 discarded Village and 1 more",
-    ],
+    interactions: ["ALL: Other#0 revealed Moat", "ALL: Other#1 discarded Village and 1 more"],
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Moat",
-      ],
-      handAfter: ["Copper", "Silver", "Gold", "Village", "Moat"],
-      discardAfter: [],
-    }, {
-      hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Get Attacked",
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Village", "Moat"],
-        "Village",
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Moat"],
-        "Silver",
-      ],
-      handAfter: ["Copper", "Gold", "Moat"],
-      discardAfter: ["Village", "Silver"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
+        interactions: [["Moat", "Get Attacked"], "Moat"],
+        handAfter: ["Copper", "Silver", "Gold", "Village", "Moat"],
+        discardAfter: [],
+      },
+      {
+        hand: ["Copper", "Silver", "Gold", "Village", "Moat"],
+        interactions: [
+          ["Moat", "Get Attacked"],
+          "Get Attacked",
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Village", "Moat"],
+          "Village",
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Moat"],
+          "Silver",
+        ],
+        handAfter: ["Copper", "Gold", "Moat"],
+        discardAfter: ["Village", "Silver"],
+      },
+    ],
   },
 
   Moneylender: {
     dMoney: 3,
     hand: ["Copper", "Copper"],
-    interactions: [
-      ["Trash a Copper", "Do Nothing"],
-      "Trash a Copper",
-      "ALL: Bot trashed Copper",
-    ],
+    interactions: [["Trash a Copper", "Do Nothing"], "Trash a Copper", "ALL: Bot trashed Copper"],
     handAfter: ["Copper"],
     trashAfter: ["Copper"],
   },
@@ -676,10 +638,7 @@ const tests = {
   Moneylender_DoNothing: {
     dMoney: 0,
     hand: ["Copper", "Copper"],
-    interactions: [
-      ["Trash a Copper", "Do Nothing"],
-      "Do Nothing",
-    ],
+    interactions: [["Trash a Copper", "Do Nothing"], "Do Nothing"],
     handAfter: ["Copper", "Copper"],
     trashAfter: [],
   },
@@ -733,7 +692,14 @@ const tests = {
     draw: ["Copper", "Silver", "Gold"],
     interactions: [
       "Trash, discard, and/or place on top of deck:",
-      ["Trash: Silver", "Discard: Silver", "To Deck: Silver", "Trash: Copper", "Discard: Copper", "To Deck: Copper"],
+      [
+        "Trash: Silver",
+        "Discard: Silver",
+        "To Deck: Silver",
+        "Trash: Copper",
+        "Discard: Copper",
+        "To Deck: Copper",
+      ],
       "Discard: Silver",
       "Trash, discard, and/or place on top of deck:",
       ["Trash: Copper", "Discard: Copper", "To Deck: Copper"],
@@ -752,7 +718,14 @@ const tests = {
     draw: ["Copper", "Silver", "Gold"],
     interactions: [
       "Trash, discard, and/or place on top of deck:",
-      ["Trash: Silver", "Discard: Silver", "To Deck: Silver", "Trash: Copper", "Discard: Copper", "To Deck: Copper"],
+      [
+        "Trash: Silver",
+        "Discard: Silver",
+        "To Deck: Silver",
+        "Trash: Copper",
+        "Discard: Copper",
+        "To Deck: Copper",
+      ],
       "To Deck: Copper",
       "ALL: Bot placed a card back on their deck",
       "Trash, discard, and/or place on top of deck:",
@@ -806,16 +779,20 @@ const tests = {
     drawAfter: ["Moneylender"],
     discardAfter: ["Copper"],
 
-    others: [{
-      draw: [],
-    }, {
-      draw: ["Smithy", "Thief"],
-      drawAfter: ["Smithy"],
-      discardAfter: ["Thief"],
-    }, {
-      draw: ["Copper"],
-      drawAfter: ["Copper"],
-    }],
+    others: [
+      {
+        draw: [],
+      },
+      {
+        draw: ["Smithy", "Thief"],
+        drawAfter: ["Smithy"],
+        discardAfter: ["Thief"],
+      },
+      {
+        draw: ["Copper"],
+        drawAfter: ["Copper"],
+      },
+    ],
   },
 
   Spy_Solo: {
@@ -840,22 +817,23 @@ const tests = {
 
     discardAfter: ["Silver"],
 
-    others: [{
-      draw: ["Silver", "Copper"],
-      discardAfter: ["Copper"],
-    }],
+    others: [
+      {
+        draw: ["Silver", "Copper"],
+        discardAfter: ["Copper"],
+      },
+    ],
   },
 
   Thief_NonTreasure: {
-    interactions: [
-      "ALL: Other#0 revealed Village",
-      "ALL: Other#0 discarded Village",
-    ],
+    interactions: ["ALL: Other#0 revealed Village", "ALL: Other#0 discarded Village"],
 
-    others: [{
-      draw: ["Village"],
-      discardAfter: ["Village"],
-    }],
+    others: [
+      {
+        draw: ["Village"],
+        discardAfter: ["Village"],
+      },
+    ],
   },
 
   Thief_SequentialMultiple: {
@@ -877,13 +855,16 @@ const tests = {
     discardAfter: ["Gold"],
     trashAfter: ["Silver"],
 
-    others: [{
-      draw: ["Silver", "Copper"],
-      discardAfter: ["Copper"],
-    }, {
-      draw: ["Gold"],
-      discardAfter: [],
-    }],
+    others: [
+      {
+        draw: ["Silver", "Copper"],
+        discardAfter: ["Copper"],
+      },
+      {
+        draw: ["Gold"],
+        discardAfter: [],
+      },
+    ],
   },
 
   Thief_SequentialSolo: {
@@ -922,10 +903,12 @@ const tests = {
     discardAfter: ["Silver", "Gold"],
     playedAfter: ["Thief", "ThroneRoom"],
 
-    others: [{
-      draw: ["Village", "Gold", "Silver", "Copper"],
-      discardAfter: ["Copper", "Village"],
-    }],
+    others: [
+      {
+        draw: ["Village", "Gold", "Silver", "Copper"],
+        discardAfter: ["Copper", "Village"],
+      },
+    ],
   },
 
   Thief_Moat: {
@@ -940,25 +923,22 @@ const tests = {
 
     discardAfter: ["Silver"],
 
-    others: [{
-      hand: ["Moat"],
-      draw: ["Copper"],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Moat",
-      ],
-      handAfter: ["Moat"],
-      drawAfter: ["Copper"],
-    }, {
-      hand: ["Moat"],
-      draw: ["Silver"],
-      interactions: [
-        ["Moat", "Get Attacked"],
-        "Get Attacked",
-      ],
-      handAfter: ["Moat"],
-      drawAfter: [],
-    }],
+    others: [
+      {
+        hand: ["Moat"],
+        draw: ["Copper"],
+        interactions: [["Moat", "Get Attacked"], "Moat"],
+        handAfter: ["Moat"],
+        drawAfter: ["Copper"],
+      },
+      {
+        hand: ["Moat"],
+        draw: ["Silver"],
+        interactions: [["Moat", "Get Attacked"], "Get Attacked"],
+        handAfter: ["Moat"],
+        drawAfter: [],
+      },
+    ],
   },
 
   ThroneRoom: {
@@ -992,9 +972,7 @@ const tests = {
 
   ThroneRoom_None: {
     hand: ["Copper", "Silver"],
-    interactions: [
-      "No Action cards to play",
-    ],
+    interactions: ["No Action cards to play"],
     handAfter: ["Copper", "Silver"],
   },
 
@@ -1009,17 +987,17 @@ const tests = {
     draw: ["Village", "Estate", "Copper"],
     hand: [],
 
-    interactions: [
-      "ALL: Other#0 gained Curse",
-    ],
+    interactions: ["ALL: Other#0 gained Curse"],
 
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
-    others: [{
-      discard: [],
-      discardAfter: ["Curse"],
-    }],
+    others: [
+      {
+        discard: [],
+        discardAfter: ["Curse"],
+      },
+    ],
   },
 
   Witch_NoCurse: {
@@ -1027,10 +1005,12 @@ const tests = {
     draw: ["Estate", "Copper"],
     handAfter: ["Copper", "Estate"],
 
-    others: [{
-      discard: [],
-      discardAfter: [],
-    }],
+    others: [
+      {
+        discard: [],
+        discardAfter: [],
+      },
+    ],
   },
 
   Witch_Self: {
@@ -1047,21 +1027,21 @@ const tests = {
     draw: ["Village", "Estate", "Copper"],
     hand: [],
 
-    interactions: [
-      "ALL: Other#0 gained Curse",
-      "ALL: Other#1 gained Curse",
-    ],
+    interactions: ["ALL: Other#0 gained Curse", "ALL: Other#1 gained Curse"],
 
     drawAfter: ["Village"],
     handAfter: ["Copper", "Estate"],
 
-    others: [{
-      discard: [],
-      discardAfter: ["Curse"],
-    }, {
-      discard: [],
-      discardAfter: ["Curse"],
-    }],
+    others: [
+      {
+        discard: [],
+        discardAfter: ["Curse"],
+      },
+      {
+        discard: [],
+        discardAfter: ["Curse"],
+      },
+    ],
   },
 
   Woodcutter: {
@@ -1111,9 +1091,7 @@ const tests = {
 
   Vassal_NoAction: {
     draw: ["Copper"],
-    interactions: [
-      "ALL: Bot discarded Copper",
-    ],
+    interactions: ["ALL: Bot discarded Copper"],
     discardAfter: ["Copper"],
   },
 
@@ -1139,25 +1117,21 @@ const tests = {
       "ALL: Other#0 trashed Moat",
       "ALL: Other#1 did not trash a card",
     ],
-    others: [{
-      hand: ["Moat"],
-      interactions: [
-        "Trash a card?",
-        ["Moat", "Don't Trash"],
-        "Moat",
-      ],
-      handAfter: [],
-    }, {
-      hand: ["Curse"],
-      interactions: [
-        "Trash a card?",
-        ["Curse", "Don't Trash"],
-        "Don't Trash",
-      ],
-      handAfter: ["Curse"],
-    }, {
-      hand: [],
-    }],
+    others: [
+      {
+        hand: ["Moat"],
+        interactions: ["Trash a card?", ["Moat", "Don't Trash"], "Moat"],
+        handAfter: [],
+      },
+      {
+        hand: ["Curse"],
+        interactions: ["Trash a card?", ["Curse", "Don't Trash"], "Don't Trash"],
+        handAfter: ["Curse"],
+      },
+      {
+        hand: [],
+      },
+    ],
     handAfter: ["Copper"],
     trashAfter: ["KingsCourt", "Moat"],
   },
@@ -1256,19 +1230,21 @@ const tests = {
       "ALL: Bot gained 1 Victory tokens",
     ],
 
-    others: [{
-      hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
-      interactions: [
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Village", "Smithy"],
-        "Village",
-        "Discard down to three cards:",
-        ["Copper", "Silver", "Gold", "Smithy"],
-        "Silver",
-      ],
-      handAfter: ["Copper", "Gold", "Smithy"],
-      discardAfter: ["Village", "Silver"],
-    }],
+    others: [
+      {
+        hand: ["Copper", "Silver", "Gold", "Village", "Smithy"],
+        interactions: [
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Village", "Smithy"],
+          "Village",
+          "Discard down to three cards:",
+          ["Copper", "Silver", "Gold", "Smithy"],
+          "Silver",
+        ],
+        handAfter: ["Copper", "Gold", "Smithy"],
+        discardAfter: ["Village", "Silver"],
+      },
+    ],
 
     alsoBuy: ["Copper", "Copper"],
     discardAfter: ["Copper", "Copper"],
@@ -1313,9 +1289,7 @@ const tests = {
     played: ["Gold", "Gold"],
     dMoney: -6,
 
-    interactions: [
-      "ALL: Bot bought GrandMarket",
-    ],
+    interactions: ["ALL: Bot bought GrandMarket"],
 
     alsoBuy: ["GrandMarket"],
     discardAfter: ["GrandMarket"],
@@ -1329,9 +1303,7 @@ const tests = {
     played: ["Copper", "Copper", "Copper", "Gold"],
     dMoney: -Infinity,
 
-    interactions: [
-      "ALL: Bot bought GrandMarket",
-    ],
+    interactions: ["ALL: Bot bought GrandMarket"],
 
     alsoBuy: ["GrandMarket"],
     discardAfter: ["GrandMarket"],
@@ -1369,11 +1341,7 @@ const tests = {
   Mint_No: {
     hand: ["Village", "Silver"],
 
-    interactions: [
-      "Gain a Treasure card:",
-      ["Silver", "No"],
-      "No",
-    ],
+    interactions: ["Gain a Treasure card:", ["Silver", "No"], "No"],
     handAfter: ["Silver", "Village"],
   },
 
@@ -1381,11 +1349,7 @@ const tests = {
     storeCounts: {Silver: 0},
     hand: ["Copper", "Silver"],
 
-    interactions: [
-      "Gain a Treasure card:",
-      ["Copper", "No"],
-      "No",
-    ],
+    interactions: ["Gain a Treasure card:", ["Copper", "No"], "No"],
     handAfter: ["Copper", "Silver"],
   },
 
@@ -1397,20 +1361,14 @@ const tests = {
 
     alsoBuy: ["Mint"],
 
-    interactions: [
-      "ALL: Bot bought Mint",
-      "ALL: Bot trashed Gold",
-      "ALL: Bot trashed Platinum",
-    ],
+    interactions: ["ALL: Bot bought Mint", "ALL: Bot trashed Gold", "ALL: Bot trashed Platinum"],
 
     discardAfter: ["Mint"],
     trashAfter: ["Gold", "Platinum"],
   },
 
   Monument: {
-    interactions: [
-      "ALL: Bot gained 1 Victory tokens",
-    ],
+    interactions: ["ALL: Bot gained 1 Victory tokens"],
 
     dMoney: 2,
     dVictory: 1,
@@ -1432,9 +1390,7 @@ const tests = {
     played: ["Village"],
     dMoney: -4,
 
-    interactions: [
-      "ALL: Bot bought Peddler",
-    ],
+    interactions: ["ALL: Bot bought Peddler"],
 
     alsoBuy: ["Peddler"],
     discardAfter: ["Peddler"],
@@ -1448,9 +1404,7 @@ const tests = {
     played: ["Village", "Village", "Village", "Village", "Village"],
     dMoney: 0,
 
-    interactions: [
-      "ALL: Bot bought Peddler",
-    ],
+    interactions: ["ALL: Bot bought Peddler"],
 
     alsoBuy: ["Peddler"],
     discardAfter: ["Peddler"],
@@ -1503,9 +1457,7 @@ const tests = {
     others: [
       {
         draw: ["Copper", "Smithy", "Copper"],
-        interactions: [
-          "Discarded Copper, Smithy, Copper from draw",
-        ],
+        interactions: ["Discarded Copper, Smithy, Copper from draw"],
         discardAfter: ["Copper", "Smithy", "Copper"],
       },
       {
@@ -1603,39 +1555,43 @@ const tests = {
     drawAfter: ["Copper"],
     discardAfter: ["Gold", "Silver"],
 
-    others: [{
-      draw: ["Gold"],
-      hand: ["Copper", "Silver"],
-      interactions: [
-        "You may discard two cards to draw a card:",
-        ["Copper", "Silver", "Don't Discard"],
-        "Copper",
-        "Discard another card:",
-        ["Silver"],
-        "Silver",
-      ],
-      handAfter: ["Gold"],
-      discardAfter: ["Copper", "Silver"],
-    }, {
-      draw: ["Gold"],
-      hand: ["Copper"],
-      interactions: [
-        "You may discard two cards to draw a card:",
-        ["Copper", "Don't Discard"],
-        "Copper",
-      ],
-      drawAfter: ["Gold"],
-      discardAfter: ["Copper"],
-    }, {
-      draw: ["Gold"],
-      hand: [],
-      interactions: [
-        "You may discard two cards to draw a card:",
-        ["Don't Discard"],
-        "Don't Discard",
-      ],
-      drawAfter: ["Gold"],
-    }],
+    others: [
+      {
+        draw: ["Gold"],
+        hand: ["Copper", "Silver"],
+        interactions: [
+          "You may discard two cards to draw a card:",
+          ["Copper", "Silver", "Don't Discard"],
+          "Copper",
+          "Discard another card:",
+          ["Silver"],
+          "Silver",
+        ],
+        handAfter: ["Gold"],
+        discardAfter: ["Copper", "Silver"],
+      },
+      {
+        draw: ["Gold"],
+        hand: ["Copper"],
+        interactions: [
+          "You may discard two cards to draw a card:",
+          ["Copper", "Don't Discard"],
+          "Copper",
+        ],
+        drawAfter: ["Gold"],
+        discardAfter: ["Copper"],
+      },
+      {
+        draw: ["Gold"],
+        hand: [],
+        interactions: [
+          "You may discard two cards to draw a card:",
+          ["Don't Discard"],
+          "Don't Discard",
+        ],
+        drawAfter: ["Gold"],
+      },
+    ],
   },
 
   WorkersVillage: {
@@ -1676,7 +1632,9 @@ async function dataTest(tName, done) {
   }
   for (let i = 0; i < test.others.length; ++i) {
     for (const testOtherKey in test.others[i]) {
-      expect(defaultTest[testOtherKey]).toBeDefined("typo other key wasn't a subset of defaultTest: " + testOtherKey);
+      expect(defaultTest[testOtherKey]).toBeDefined(
+        "typo other key wasn't a subset of defaultTest: " + testOtherKey
+      );
     }
     for (const oKey in defaultOthers) {
       test.others[i][oKey] = test.others[i][oKey] || defaultOthers[oKey];
@@ -1687,48 +1645,16 @@ async function dataTest(tName, done) {
 
   const game = new Game();
 
-  // @ts-ignore create a mock connection
-  const p = new Player({
-    name: "Bot",
-    send: o => {
-      if (isHandMessage(o.message)) {
-        return;
-      }
-
-      const expected = test.interactions[interactionIndex++];
-      if (o.message) {
-        expect(o.message).toEqual(expected);
-      } else {
-        fail(Error("Not implemented: " + o));
-      }
-    },
-    choose: choices => {
-      const expected = test.interactions[interactionIndex++];
-      expect(choices).toEqual(expected);
-      return Promise.resolve(test.interactions[interactionIndex++]);
-    }}, game);
-
-  game.players[0] = p;
-  game.store.init(test.store.map(n => cards[n]), test.others.length + 1);
-  game.store.counts = Object.assign(game.store.counts, test.storeCounts);
-  test.storeGained.forEach(c => game.store.gainedCards.add(c));
-  game.allLog = message => {
-    const expected = test.interactions[interactionIndex];
-    expect(`[${interactionIndex}] ALL: ${message}`).withContext("all log").toEqual(`[${interactionIndex}] ${expected}`);
-    interactionIndex++;
-  };
-
-  let otherCount = 0;
-  test.others.forEach(testOther => {
+  const p = new Player(
     // @ts-ignore create a mock connection
-    const oP = new Player({
-      name: "Other#" + otherCount++,
+    {
+      name: "Bot",
       send: o => {
         if (isHandMessage(o.message)) {
           return;
         }
 
-        const expected = testOther.interactions[oP["InteractionIndex"]++];
+        const expected = test.interactions[interactionIndex++];
         if (o.message) {
           expect(o.message).toEqual(expected);
         } else {
@@ -1736,10 +1662,55 @@ async function dataTest(tName, done) {
         }
       },
       choose: choices => {
-        const expected = testOther.interactions[oP["InteractionIndex"]++];
+        const expected = test.interactions[interactionIndex++];
         expect(choices).toEqual(expected);
-        return Promise.resolve(testOther.interactions[oP["InteractionIndex"]++]);
-      }}, game);
+        return Promise.resolve(test.interactions[interactionIndex++]);
+      },
+    },
+    game
+  );
+
+  game.players[0] = p;
+  game.store.init(
+    test.store.map(n => cards[n]),
+    test.others.length + 1
+  );
+  game.store.counts = Object.assign(game.store.counts, test.storeCounts);
+  test.storeGained.forEach(c => game.store.gainedCards.add(c));
+  game.allLog = message => {
+    const expected = test.interactions[interactionIndex];
+    expect(`[${interactionIndex}] ALL: ${message}`)
+      .withContext("all log")
+      .toEqual(`[${interactionIndex}] ${expected}`);
+    interactionIndex++;
+  };
+
+  let otherCount = 0;
+  test.others.forEach(testOther => {
+    const oP = new Player(
+      // @ts-ignore create a mock connection
+      {
+        name: "Other#" + otherCount++,
+        send: o => {
+          if (isHandMessage(o.message)) {
+            return;
+          }
+
+          const expected = testOther.interactions[oP["InteractionIndex"]++];
+          if (o.message) {
+            expect(o.message).toEqual(expected);
+          } else {
+            fail(Error("Not implemented: " + o));
+          }
+        },
+        choose: choices => {
+          const expected = testOther.interactions[oP["InteractionIndex"]++];
+          expect(choices).toEqual(expected);
+          return Promise.resolve(testOther.interactions[oP["InteractionIndex"]++]);
+        },
+      },
+      game
+    );
     oP["TestIndex"] = otherCount - 1;
     oP["InteractionIndex"] = 0;
     oP.drawPile = testOther.draw.map(n => cards[n]);
@@ -1772,22 +1743,35 @@ async function dataTest(tName, done) {
     for (const also of test.alsoBuy) {
       p.buyCard(also);
     }
-    expect(p.actions - test.initActions).withContext("dActions").toEqual(test.dActions);
-    expect(p.buys - test.initBuys).withContext("dBuys").toEqual(test.dBuys);
-    expect(p.money - test.initMoney).withContext("dMoney").toEqual(test.dMoney);
-    expect(p.victory - test.initVictory).withContext("dVictory").toEqual(test.dVictory);
+    expect(p.actions - test.initActions)
+      .withContext("dActions")
+      .toEqual(test.dActions);
+    expect(p.buys - test.initBuys)
+      .withContext("dBuys")
+      .toEqual(test.dBuys);
+    expect(p.money - test.initMoney)
+      .withContext("dMoney")
+      .toEqual(test.dMoney);
+    expect(p.victory - test.initVictory)
+      .withContext("dVictory")
+      .toEqual(test.dVictory);
 
-    expect(p.drawPile.map(c => c.name)).withContext("drawAfter")
+    expect(p.drawPile.map(c => c.name))
+      .withContext("drawAfter")
       .toEqual(test.drawAfter);
-    expect(p.discardPile.map(c => c.name)).withContext("discardAfter")
+    expect(p.discardPile.map(c => c.name))
+      .withContext("discardAfter")
       .toEqual(test.discardAfter);
-    expect(p.hand.map(c => c.name)).withContext("handAfter")
+    expect(p.hand.map(c => c.name))
+      .withContext("handAfter")
       .toEqual(test.handAfter);
 
-    expect(p.played.map(c => c.name)).withContext("playedAfter")
+    expect(p.played.map(c => c.name))
+      .withContext("playedAfter")
       .toEqual(test.playedAfter);
 
-    expect(game.trash.map(c => c.name)).withContext("trashAfter")
+    expect(game.trash.map(c => c.name))
+      .withContext("trashAfter")
       .toEqual(test.trashAfter);
 
     expect(interactionIndex).withContext("all interactions used").toEqual(test.interactions.length);
@@ -1795,14 +1779,19 @@ async function dataTest(tName, done) {
     game.otherPlayers(p).forEach(o => {
       const otherTest = test.others[o["TestIndex"]];
 
-      expect(o.drawPile.map(c => c.name)).withContext(o.name + " drawAfter")
+      expect(o.drawPile.map(c => c.name))
+        .withContext(o.name + " drawAfter")
         .toEqual(otherTest.drawAfter);
-      expect(o.discardPile.map(c => c.name)).withContext(o.name + " discardAfter")
+      expect(o.discardPile.map(c => c.name))
+        .withContext(o.name + " discardAfter")
         .toEqual(otherTest.discardAfter);
-      expect(o.hand.map(c => c.name)).withContext(o.name + " handAfter")
+      expect(o.hand.map(c => c.name))
+        .withContext(o.name + " handAfter")
         .toEqual(otherTest.handAfter);
 
-      expect(o["InteractionIndex"]).withContext(o.name + " all interactions used").toEqual(otherTest.interactions.length);
+      expect(o["InteractionIndex"])
+        .withContext(o.name + " all interactions used")
+        .toEqual(otherTest.interactions.length);
     });
 
     expect(called).toBeFalsy("called twice");
@@ -1846,10 +1835,7 @@ describe("cards", () => {
   });
 
   it("implements all", () => {
-    const doneSets = new Set([
-      "Base",
-      "Base v1",
-    ]);
+    const doneSets = new Set(["Base", "Base v1"]);
     const implemented = /** @type {Map<string, {impl: number, total: number}>} */ (new Map());
     for (const [name, value] of Object.entries(cardsTable)) {
       if (doneSets.has(value.set)) {
@@ -1869,11 +1855,19 @@ describe("cards", () => {
     }
     const output = [];
     for (const [set, o] of implemented) {
-      output.push(`${(set + ":").padEnd(12)} ${Math.floor(100 * o.impl / o.total).toString().padStart(3)}% (${o.impl}/${o.total})`);
+      output.push(
+        `${(set + ":").padEnd(12)} ${Math.floor((100 * o.impl) / o.total)
+          .toString()
+          .padStart(3)}% (${o.impl}/${o.total})`
+      );
     }
     output.push("");
     const [cardL, total] = [Object.keys(cards).length, Object.keys(cardsTable).length];
-    output.push(`${("Total:").padEnd(12)} ${Math.floor(100 * cardL / total).toString().padStart(3)}% (${cardL}/${total})`);
+    output.push(
+      `${"Total:".padEnd(12)} ${Math.floor((100 * cardL) / total)
+        .toString()
+        .padStart(3)}% (${cardL}/${total})`
+    );
     fs.writeFileSync(path.join(__dirname, "Completion.txt"), output.join("\r\n"));
   });
 
@@ -1885,15 +1879,49 @@ describe("cards", () => {
   });
 
   it("sorts correctly", () => {
-    const arr = [cards.Estate, cards.Village, cards.Chapel, cards.Peddler, cards.Chancellor, cards.TradeRoute, cards.Cellar];
+    const arr = [
+      cards.Estate,
+      cards.Village,
+      cards.Chapel,
+      cards.Peddler,
+      cards.Chancellor,
+      cards.TradeRoute,
+      cards.Cellar,
+    ];
     const sorted = arr.sort((a, b) => a.compareTo(b)).map(c => c.name);
-    expect(sorted).toEqual(["Estate", "Cellar", "Chapel", "Chancellor", "TradeRoute", "Village", "Peddler"]);
+    expect(sorted).toEqual([
+      "Estate",
+      "Cellar",
+      "Chapel",
+      "Chancellor",
+      "TradeRoute",
+      "Village",
+      "Peddler",
+    ]);
 
-    const sortedWithoutKind = arr.sort((a, b) => a.compareTo(b, {compareKind: false})).map(c => c.name);
-    expect(sortedWithoutKind).toEqual(["Cellar", "Chapel", "Estate", "Chancellor", "TradeRoute", "Village", "Peddler"]);
+    const sortedWithoutKind = arr
+      .sort((a, b) => a.compareTo(b, {compareKind: false}))
+      .map(c => c.name);
+    expect(sortedWithoutKind).toEqual([
+      "Cellar",
+      "Chapel",
+      "Estate",
+      "Chancellor",
+      "TradeRoute",
+      "Village",
+      "Peddler",
+    ]);
 
     const sortedWithSet = arr.sort((a, b) => a.compareTo(b, {compareSet: true})).map(c => c.name);
-    expect(sortedWithSet).toEqual(["Estate", "Cellar", "Chapel", "Village", "Chancellor", "TradeRoute", "Peddler"]);
+    expect(sortedWithSet).toEqual([
+      "Estate",
+      "Cellar",
+      "Chapel",
+      "Village",
+      "Chancellor",
+      "TradeRoute",
+      "Peddler",
+    ]);
   });
 
   it("has colors for all", () => {
@@ -1903,7 +1931,9 @@ describe("cards", () => {
   });
 
   it("has effect for while-in-play", () => {
-    for (const [name] of Object.entries(cards).filter(([, c]) => c.text.includes("this is in play"))) {
+    for (const [name] of Object.entries(cards).filter(([, c]) =>
+      c.text.includes("this is in play")
+    )) {
       expect(cards[name].onBought).toBeDefined();
     }
   });
@@ -1921,13 +1951,15 @@ function testMessageSubstring(substring) {
   const cardRegex = new RegExp(substring, "i");
   const cardsWith = Object.entries(cards).filter(([, c]) => cardRegex.test(c.text));
   const testRegex = new RegExp(`ALL: .*${substring}`);
-  const testsWith = new Set(Object.entries(tests)
-    .filter(entry => entry[1].interactions && entry[1].interactions.some(i => testRegex.test(i)))
-    .flatMap(entry => entry[0].split("_")));
+  const testsWith = new Set(
+    Object.entries(tests)
+      .filter(entry => entry[1].interactions && entry[1].interactions.some(i => testRegex.test(i)))
+      .flatMap(entry => entry[0].split("_"))
+  );
   for (const card of cardsWith) {
     switch (card[0]) {
-    case "Harbinger": // Doesn't actually discard any cards
-      continue;
+      case "Harbinger": // Doesn't actually discard any cards
+        continue;
     }
     expect(testsWith).toContain(card[0]);
   }

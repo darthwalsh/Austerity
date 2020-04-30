@@ -42,12 +42,7 @@ class CuriousBot {
     this.seen = /** @type {Map<string, number>} */ (new Map());
 
     // Limit buying cheap cards
-    this.limitChoice = [
-      "Buy: Copper",
-      "Buy: Estate",
-      "Buy: Chapel",
-      "Buy: Moat",
-    ];
+    this.limitChoice = ["Buy: Copper", "Buy: Estate", "Buy: Chapel", "Buy: Moat"];
   }
 
   count(choice) {
@@ -81,21 +76,26 @@ class ManualPlayer {
   play(actions) {
     return new Promise((res, rej) => {
       let i = 0;
-      this.lib = new Lib(url, choices => {
-        if (i === actions.length) {
-          res(this.lib);
-          return new Promise((res, rej) => {/* black-hole lib instance */});
-        }
-        const action = actions[i++];
+      this.lib = new Lib(
+        url,
+        choices => {
+          if (i === actions.length) {
+            res(this.lib);
+            return new Promise((res, rej) => {
+              /* black-hole lib instance */
+            });
+          }
+          const action = actions[i++];
 
-        const ret = action(choices);
-        return typeof ret === "string" ? Promise.resolve(ret) : ret;
-      }, _ => { });
+          const ret = action(choices);
+          return typeof ret === "string" ? Promise.resolve(ret) : ret;
+        },
+        _ => {}
+      );
       this.lib.connect(this.name);
     });
   }
 }
-
 
 describe("e2e", () => {
   const server = new Server();
@@ -105,9 +105,7 @@ describe("e2e", () => {
   it("plays a game", async done => {
     const output = [];
     await new Promise((res, rej) => {
-      const p1 = new Lib(url,
-        wrapWithLogging(bigMoney, output),
-        logUntilGameOver(output, res));
+      const p1 = new Lib(url, wrapWithLogging(bigMoney, output), logUntilGameOver(output, res));
       p1.connect("p1");
     });
 
@@ -120,24 +118,29 @@ describe("e2e", () => {
 
     await new Promise((res, rej) => {
       let joined = false;
-      let p1 = null, p2 = null;
+      let p1 = null,
+        p2 = null;
       const dedupedStrategy = new CuriousBot(); // Use same backing storage for p1 and p2
       const strategy = wrapWithLogging(choices => dedupedStrategy.choose(choices), output);
       const joiningStrategy = async choices => {
         if (!joined && choices.length > 20) {
           await new Promise((rr, _) => {
-            p2 = new Lib(url, wrapWithLogging(choices => {
-              const joinGame = choices.filter(c => c.endsWith("'s game"))[0];
-              if (joinGame) {
-                // Ugly hack, but as long as it works...
-                setTimeout(() => {
-                  bypassSockets(server, [p1, p2]);
-                  rr();
-                }, 10);
-                return Promise.resolve(joinGame);
-              }
-              return dedupedStrategy.choose(choices);
-            }, output), logUntilGameOver(output, res));
+            p2 = new Lib(
+              url,
+              wrapWithLogging(choices => {
+                const joinGame = choices.filter(c => c.endsWith("'s game"))[0];
+                if (joinGame) {
+                  // Ugly hack, but as long as it works...
+                  setTimeout(() => {
+                    bypassSockets(server, [p1, p2]);
+                    rr();
+                  }, 10);
+                  return Promise.resolve(joinGame);
+                }
+                return dedupedStrategy.choose(choices);
+              }, output),
+              logUntilGameOver(output, res)
+            );
             p2.connect("Ape");
             joined = true;
           });
@@ -157,14 +160,20 @@ describe("e2e", () => {
 
   async function closeReopenAt(choice, done) {
     await new Promise((res, rej) => {
-      const p1 = new Lib(url, choices => {
-        if (!choices.includes(choice)) {
-          return bigMoney(choices);
-        }
-        p1.close();
-        res();
-        return new Promise((res, rej) => {/* black-hole lib instance */}); // TODO manual player?
-      }, _ => { });
+      const p1 = new Lib(
+        url,
+        choices => {
+          if (!choices.includes(choice)) {
+            return bigMoney(choices);
+          }
+          p1.close();
+          res();
+          return new Promise((res, rej) => {
+            /* black-hole lib instance */
+          }); // TODO manual player?
+        },
+        _ => {}
+      );
       p1.connect("p1");
     });
 
@@ -208,7 +217,7 @@ function wrapWithLogging(strategy, output) {
     if (choices.length > 30) {
       choices = ["SNIP_FOR_STABILITY!"];
     }
-    output.push(`Choices: ${choices.map(c => c === "\n" ? "\\n" : c).join(", ")}`);
+    output.push(`Choices: ${choices.map(c => (c === "\n" ? "\\n" : c)).join(", ")}`);
     output.push(`Chose: ${result}`);
     return result;
   };
@@ -230,9 +239,9 @@ function logUntilGameOver(output, res) {
 function checkOutput(name, output) {
   const transcript = path.join(__dirname, name);
   output.push(""); // trailing new line
-  const expected = fs.existsSync(transcript) ?
-    fs.readFileSync(transcript, {encoding: "utf8"}).split(/\r?\n/) :
-    ["<File didn't exist>"];
+  const expected = fs.existsSync(transcript)
+    ? fs.readFileSync(transcript, {encoding: "utf8"}).split(/\r?\n/)
+    : ["<File didn't exist>"];
   if (output !== expected) {
     fs.writeFileSync(transcript, output.join("\r\n")); // re-baseline the test data for next run
   }
@@ -274,8 +283,11 @@ class MockWebSocket {
 
   addEventListener(name, handler) {
     switch (name) {
-    case "message": this.handlers.push(handler); return;
-    case "open": setTimeout(handler, 0);
+      case "message":
+        this.handlers.push(handler);
+        return;
+      case "open":
+        setTimeout(handler, 0);
     }
   }
 
@@ -294,7 +306,8 @@ class MockWebSocket {
   }
 
   static newPair() {
-    const a = new MockWebSocket(), b = new MockWebSocket;
+    const a = new MockWebSocket(),
+      b = new MockWebSocket();
     [a.otherHandlers, b.otherHandlers] = [b.handlers, a.handlers];
     return [a, b];
   }
@@ -327,10 +340,10 @@ function bypassSockets(server, clients) {
  */
 function expectArrayEqual(output, expected) {
   for (let i = 0; i < Math.min(output.length, expected.length); ++i) {
-    if (output[i] !== expected[i]) { // Quick check for perf
-      expect(`[${i+1}] ${output[i]}`).toEqual(`[${i+1}] ${expected[i]}`);
+    // reference equality check for perf
+    if (output[i] !== expected[i]) {
+      expect(`[${i + 1}] ${output[i]}`).toEqual(`[${i + 1}] ${expected[i]}`);
     }
   }
   expect(output.length).toEqual(expected.length);
 }
-
