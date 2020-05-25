@@ -29,20 +29,19 @@ Using Excel Power Query, this script downloads and fixes up the table:
 let
     Html = Text.FromBinary(Web.Contents("http://wiki.dominionstrategy.com/index.php/List_of_cards")),
     ExtractAlt = ExtractAltString(Html),
-    ReplaceHR = Text.Replace(ExtractAlt, "<hr />", "<br />"),
+    ReplaceHR = Text.Replace(ExtractAlt, "<hr style=""width:60%;margin-left:20%;text-align:center;"" />", "<br />"),
     Source = Web.Page(Text.ToBinary(ReplaceHR)),
     Data0 = Source{0}[Data],
-    #"Changed Type" = Table.TransformColumnTypes(Data0,{{"Name", type text}, {"Set", type text}, {"Types", type text}, {"Cost", type text}, {"Text", type text}, {"Actions / Villagers", type text}, {"Cards", type text}, {"Buys", type text}, {"Coins / Coffers", type text}, {"Trash", type text}, {"Junk", type text}, {"Gain", type text}, {"Column13", type text}}),
+    #"Changed Type" = Table.TransformColumnTypes(Data0,{{"Name", type text}, {"Set", type text}, {"Types", type text}, {"Cost", type text}, {"Text", type text}, {"Actions / Villagers", type text}, {"Cards", type text}, {"Buys", type text}, {"Coins / Coffers", type text}, {"Trash", type text}, {"Exile", type text}, {"Junk", type text}, {"Gain", type text}, {"Victory Points", type text}}),
     #"Replaced Value" = Table.ReplaceValue(#"Changed Type","Base, 1E","Base v1",Replacer.ReplaceText,{"Set"}),
     #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","Base, 2E","Base",Replacer.ReplaceText,{"Set"}),
     #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Intrigue, 1E","Intrigue v1",Replacer.ReplaceText,{"Set"}),
     #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Intrigue, 2E","Intrigue",Replacer.ReplaceText,{"Set"}),
     #"Removed Other Columns" = Table.SelectColumns(#"Replaced Value3",{"Name", "Set", "Types", "Cost", "Text"}),
     #"Sorted Rows" = Table.Sort(#"Removed Other Columns",{{"Set", Order.Ascending}, {"Name", Order.Ascending}}),
-    #"Replaced Value4" = Table.ReplaceValue(#"Sorted Rows","'","’",Replacer.ReplaceText,{"Text"}),
-    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","VP","VP ",Replacer.ReplaceText,{"Text"})
+    #"Replaced Value4" = Table.ReplaceValue(#"Sorted Rows","'","’",Replacer.ReplaceText,{"Text"})
 in
-    #"Replaced Value5"
+    #"Replaced Value4"
 
 // ExtractAltString
 (Source) => let

@@ -1075,7 +1075,7 @@ const tests = {
 
     playedAfter: ["Woodcutter", "ThroneRoom", "Vassal"],
     dBuys: 2,
-    dMoney: 4,
+    dMoney: 6,
   },
 
   Vassal_Discard: {
@@ -1087,12 +1087,14 @@ const tests = {
       "ALL: Bot discarded ThroneRoom",
     ],
     discardAfter: ["ThroneRoom"],
+    dMoney: 2,
   },
 
   Vassal_NoAction: {
     draw: ["Copper"],
     interactions: ["ALL: Bot discarded Copper"],
     discardAfter: ["Copper"],
+    dMoney: 2,
   },
 
   Platinum: {

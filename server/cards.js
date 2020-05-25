@@ -475,6 +475,8 @@ const kingdom = {
   },
 
   Vassal: /** @param {Player} player */ async player => {
+    player.money += 2;
+
     const drawn = player.fromDraw();
     if (!drawn) {
       return;
