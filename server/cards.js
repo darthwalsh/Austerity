@@ -778,6 +778,25 @@ const kingdom = {
     );
   },
 
+  Talisman: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.money += 1;
+    },
+
+    /**
+     * @param {Player} player
+     * @param {Card} card
+     */
+    onBought(player, card) {
+      if (!card.ofKind("victory") && card.getCost(player) <= 4) {
+        player.game.tryGainCard(player, card.name);
+      }
+    },
+  },
+
   TradeRoute: /** @param {Player} player */ async player => {
     player.buys += 1;
 

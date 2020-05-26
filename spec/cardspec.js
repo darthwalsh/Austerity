@@ -1494,6 +1494,34 @@ const tests = {
     ],
   },
 
+  Talisman: {
+    alsoBuy: ["Copper", "Silver", "Gold", "Estate"],
+
+    interactions: [
+      "ALL: Bot bought Copper",
+      "ALL: Bot gained Copper",
+      "ALL: Bot bought Silver",
+      "ALL: Bot gained Silver",
+      "ALL: Bot bought Gold",
+      "ALL: Bot bought Estate",
+    ],
+
+    dBuys: -4,
+    dMoney: -10, // +1 - (0 + 3 + 6 + 2)
+    discardAfter: ["Copper", "Copper", "Silver", "Silver", "Gold", "Estate"],
+  },
+
+  Talisman_NoBuy: {
+    alsoBuy: ["Copper"],
+    storeCounts: {Copper: 1},
+
+    interactions: ["ALL: Bot bought Copper"],
+
+    dBuys: -1,
+    dMoney: 1,
+    discardAfter: ["Copper"],
+  },
+
   TradeRoute: {
     storeGained: ["Estate", "Duchy", "Province", "Curse"],
 
