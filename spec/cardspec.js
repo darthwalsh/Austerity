@@ -1312,6 +1312,40 @@ const tests = {
     playedAfter: ["Copper", "Copper", "Copper", "Gold", "CouncilRoom"],
   },
 
+  Hoard: {
+    alsoBuy: ["Estate"],
+
+    interactions: ["ALL: Bot bought Estate", "ALL: Bot gained Gold"],
+
+    dBuys: -1,
+    dMoney: 0, // +2 - 2
+    discardAfter: ["Estate", "Gold"],
+  },
+
+  Hoard_NoGold: {
+    storeCounts: {Gold: 0},
+    alsoBuy: ["Estate"],
+
+    interactions: ["ALL: Bot bought Estate"],
+
+    dBuys: -1,
+    dMoney: 0, // +2 - 2
+    discardAfter: ["Estate"],
+  },
+
+  Hoard_Multi: {
+    hand: ["Hoard"],
+    alsoPlay: ["Hoard"],
+    alsoBuy: ["Estate"],
+
+    interactions: ["ALL: Bot bought Estate", "ALL: Bot gained Gold", "ALL: Bot gained Gold"],
+
+    dBuys: -1,
+    dMoney: 2, // +2 +2 - 2
+    playedAfter: ["Hoard", "Hoard"],
+    discardAfter: ["Estate", "Gold", "Gold"],
+  },
+
   KingsCourt: {
     hand: ["Woodcutter", "Woodcutter"],
     dBuys: 3,

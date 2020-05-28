@@ -679,6 +679,25 @@ const kingdom = {
     },
   },
 
+  Hoard: {
+    /**
+     * @param {Player} player
+     */
+    async play(player) {
+      player.money += 2;
+    },
+
+    /**
+     * @param {Player} player
+     * @param {Card} card
+     */
+    onBought(player, card) {
+      if (card.ofKind("victory")) {
+        player.game.tryGainCard(player, "Gold");
+      }
+    },
+  },
+
   KingsCourt: /** @param {Player} player */ async player => {
     const actions = player.hand.filter(c => c.ofKind("action")).map(c => c.name);
     if (!actions.length) {
