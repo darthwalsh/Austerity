@@ -33,7 +33,7 @@
     "@types/node": "14.17.2",
     "@types/ws": "7.4.4",
     "csv-parse": "4.15.4",
-    "eslint": "7.27.0",
+    "eslint": "7.28.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.3.0",
     "jasmine": "3.7.0",
