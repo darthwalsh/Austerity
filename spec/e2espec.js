@@ -6,7 +6,7 @@ const path = require("path");
 const Lib = require("../cli/lib");
 const Server = require("../server/server");
 
-const url = "http://localhost:8080";
+const url = "ws://localhost:8080";
 
 /**
  * @param {string[]} choices
