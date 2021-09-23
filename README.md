@@ -5,7 +5,7 @@
 
 A nodejs web server for a popular deck-building board game.
 
-Try an alpha version at https://austerity.azurewebsites.net/ (Supports only 5 simultaneous connections.)
+~~Try an alpha version at https://austerity.azurewebsites.net/ (Supports only 5 simultaneous connections.)~~ Azure took down my account :\\
 
 ## Run it
 
