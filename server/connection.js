@@ -25,7 +25,7 @@ class Connection {
 
   initListeners() {
     this.ws.addEventListener("message", data => {
-      const o = JSON.parse(data.data);
+      const o = JSON.parse(data.data.toString());
       const type = Object.keys(o)[0];
       const content = o[type];
       const handler = this.messageHandlers[type];

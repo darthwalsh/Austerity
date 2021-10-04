@@ -233,7 +233,7 @@ window.onload = () => {
     chat.disabled = true;
   });
   ws.addEventListener("message", e => {
-    let data = JSON.parse(e.data);
+    let data = JSON.parse(e.data.toString());
     const type = Object.keys(data)[0];
     data = data[type];
 
