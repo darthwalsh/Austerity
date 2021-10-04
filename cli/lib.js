@@ -28,7 +28,7 @@ class lib {
     });
 
     this.ws.addEventListener("message", async e => {
-      let data = JSON.parse(e.data);
+      let data = JSON.parse(e.data.toString());
       const type = Object.keys(data)[0];
       data = data[type];
 
