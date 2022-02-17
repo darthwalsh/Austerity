@@ -43,7 +43,7 @@
     "typescript": "4.5.5"
   },
   "dependencies": {
-    "express": "4.17.2",
+    "express": "4.17.3",
     "ws": "8.5.0"
   }
 }
