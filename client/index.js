@@ -33,7 +33,7 @@ function log(text) {
   }
   parts.push(text.substring(prevIndex, text.length));
 
-  const elems = parts.map(t => {
+  const elems = parts.map((t) => {
     const color = colors[t];
     if (!color) {
       return t;
@@ -65,7 +65,7 @@ function addCardImage(cardName, e) {
 const CARD_COUNT = 10;
 
 function updateSelected() {
-  const optionsChecked = options.filter(n => $input("optional" + n).checked);
+  const optionsChecked = options.filter((n) => $input("optional" + n).checked);
   $("countText").innerText = `${optionsChecked.length} Selected`;
 
   const startButton = $("startButton");
@@ -80,7 +80,7 @@ function updateSelected() {
 
   const helpSelected = $("helpSelected");
   removeChildren(helpSelected);
-  optionsChecked.forEach(c => addCardImage(c, helpSelected));
+  optionsChecked.forEach((c) => addCardImage(c, helpSelected));
   helpSelected.style.marginBottom = optionsChecked.length ? "20px" : "";
 
   localStorage.setItem("options", JSON.stringify(optionsChecked));
@@ -95,7 +95,7 @@ let options = /** @type {string[]} */ ([]);
 function addManage(data, ws) {
   const manageDiv = $("manage");
 
-  options = Object.values(data).flatMap(d => d);
+  options = Object.values(data).flatMap((d) => d);
   let optionsFromStorage = [];
   try {
     optionsFromStorage = JSON.parse(localStorage.getItem("options"));
@@ -134,9 +134,9 @@ function addManage(data, ws) {
   const randomButton = document.createElement("button");
   randomButton.innerText = "Randomize";
   randomButton.onclick = () => {
-    const selected = options.filter(n => $input("optional" + n).checked);
+    const selected = options.filter((n) => $input("optional" + n).checked);
     const randomPicked = new Set(selected.length < CARD_COUNT ? selected : []);
-    const remainingOptions = options.filter(o => !randomPicked.has(o));
+    const remainingOptions = options.filter((o) => !randomPicked.has(o));
     while (randomPicked.size < CARD_COUNT) {
       const removed = remainingOptions.splice(
         Math.floor(Math.random() * remainingOptions.length),
@@ -144,7 +144,7 @@ function addManage(data, ws) {
       );
       randomPicked.add(removed[0]);
     }
-    options.forEach(n => {
+    options.forEach((n) => {
       $input("optional" + n).checked = randomPicked.has(n);
     });
   };
@@ -153,7 +153,7 @@ function addManage(data, ws) {
   const clearButton = document.createElement("button");
   clearButton.innerText = "Clear";
   clearButton.onclick = () => {
-    options.forEach(n => ($input("optional" + n).checked = false));
+    options.forEach((n) => ($input("optional" + n).checked = false));
   };
   manageDiv.appendChild(clearButton);
 
@@ -166,8 +166,8 @@ function addManage(data, ws) {
   const startButton = document.createElement("button");
   startButton.id = "startButton";
   startButton.innerHTML = "Start";
-  startButton.onclick = e => {
-    const included = options.filter(n => $input("optional" + n).checked);
+  startButton.onclick = (e) => {
+    const included = options.filter((n) => $input("optional" + n).checked);
     const debugMode = $input("debugMode").checked;
 
     removeChildren(manageDiv);
@@ -175,7 +175,7 @@ function addManage(data, ws) {
     removeChildren(helpSelected);
     helpSelected.style.marginBottom = "0";
 
-    ws.send(JSON.stringify({gameStart: {included, debugMode}}));
+    ws.send(JSON.stringify({ gameStart: { included, debugMode } }));
 
     e.stopPropagation();
   };
@@ -211,7 +211,7 @@ window.onload = () => {
   name.value = localStorage.getItem("name") || "";
   name.addEventListener("input", () => {
     localStorage.setItem("name", name.value);
-    ws.send(JSON.stringify({name: name.value}));
+    ws.send(JSON.stringify({ name: name.value }));
 
     updateChoicesDisabled();
   });
@@ -243,8 +243,8 @@ window.onload = () => {
         break;
       case "choices":
         const choicesDiv = $("choices");
-        const choiceOnClick = event => {
-          ws.send(JSON.stringify({choice: event.target.innerHTML}));
+        const choiceOnClick = (event) => {
+          ws.send(JSON.stringify({ choice: event.target.innerHTML }));
           removeChildren(choicesDiv);
         };
         for (const choice of data) {
@@ -266,12 +266,14 @@ window.onload = () => {
         $("log").scrollTop = $("log").scrollHeight;
         if (document.hasFocus && !document.hasFocus()) {
           if (!turnAlert) {
-            turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+            turnAlert = new Audio(
+              "Computer Error Alert from SoundBible.com.mp3"
+            );
           }
           // Audio need to reload sound before each play
           // http://stackoverflow.com/a/8959342/771768
           turnAlert.load();
-          turnAlert.play().catch(_ => {
+          turnAlert.play().catch((_) => {
             /* whatever*/
           });
         }
@@ -287,7 +289,7 @@ window.onload = () => {
       case "included":
         const helpCards = $("helpCards");
         removeChildren(helpCards);
-        data.forEach(cardName => addCardImage(cardName, helpCards));
+        data.forEach((cardName) => addCardImage(cardName, helpCards));
         break;
       default:
         throw new Error("Not implemented: " + type);
@@ -302,4 +304,4 @@ window.onload = () => {
 };
 
 // Maybe remove this after winning each game, then restore?
-window.onbeforeunload = e => "Don't leave the game hanging!";
+window.onbeforeunload = (e) => "Don't leave the game hanging!";
