@@ -1,3 +1,54 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getDatabase, ref, onValue, set, child, push, remove, get, update, onChildAdded, onChildRemoved, onChildChanged, onChildMoved, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+const firebaseConfig = {
+  databaseURL: "https://carlwa-default-rtdb.firebaseio.com",
+};
+const app = initializeApp(firebaseConfig);
+const db = ref(getDatabase(app), "austerity");
+
+let stopListeningToLobby;
+function listenToLobby() {
+  // TODO call addManage if your own game shows up here, which allows for reconnecting to your own game?
+  // TODO then creating a game should call listenToGameEvents() on your own game!
+  const unsubscribe = onValue(child(db, "lobby"), async (snapshot) => {
+    const lobbyData = snapshot.val();
+    if (lobbyData) {
+      stopListeningToLobby();
+      const gameId = await handleChoices(Object.keys(lobbyData));
+      if (!gameId) {
+        // Choices not handled yet, wait for another call.
+        return;
+      }
+      listenToGameEvents(gameId);
+    }
+  });
+
+  return () => {
+    // TODO(cleanup) not sure if this is too ugly
+    unsubscribe();
+    removeChildren($("choices"));
+  };
+}
+
+function listenToGameEvents(gameId) {
+  const gameRef = child(child(db, "games"), gameId);
+  // const gameRef = child(child(db, "games", gameId));
+  onValue(gameRef, (snapshot) => {
+    const gameData = snapshot.val();
+    if (gameData) {
+      // TODO pass back into game engine
+      // TODO create game engine that has callback
+      console.log(gameData);
+    }
+  });
+}
+
+function initializeGame(gameId, initData) {
+  set(child(child(child(db, "games"), gameId), "init"), initData);
+}
+// let gameId = TODO needed?
+
 function $(id) {
   return document.getElementById(id);
 }
@@ -90,9 +141,8 @@ let options = /** @type {string[]} */ ([]);
 
 /**
  * @param {Object<string, string[]>} data
- * @param {WebSocket} ws
  */
-function addManage(data, ws) {
+function addManage(gameId, data) {
   const manageDiv = $("manage");
 
   options = Object.values(data).flatMap((d) => d);
@@ -175,7 +225,9 @@ function addManage(data, ws) {
     removeChildren(helpSelected);
     helpSelected.style.marginBottom = "0";
 
-    ws.send(JSON.stringify({ gameStart: { included, debugMode } }));
+    initializeGame(gameId, { included, debugMode });
+
+    // ws.send(JSON.stringify({ gameStart: { included, debugMode } }));
 
     e.stopPropagation();
   };
@@ -211,7 +263,7 @@ window.onload = () => {
   name.value = localStorage.getItem("name") || "";
   name.addEventListener("input", () => {
     localStorage.setItem("name", name.value);
-    ws.send(JSON.stringify({ name: name.value }));
+    // ws.send(JSON.stringify({ name: name.value }));
 
     updateChoicesDisabled();
   });
@@ -220,19 +272,26 @@ window.onload = () => {
   helpOverlay.onclick = () => (helpOverlay.style.display = "none");
   $("help").onclick = () => (helpOverlay.style.display = "");
 
-  let turnAlert;
+  $("createGame").onclick = () => {
+    const createButton = /** @type {HTMLButtonElement} */ ($("createGame")); 
+    createButton.disabled = true;
+
+    const gameId = `${name.value}'s game`; // TODO(security) could be crypto-random???
+    set(child(child(db, "lobby"), gameId), {
+      gameId,
+      created: Date.now(), // TODO(cleanup) trim old entries from the lobby?
+    });
+    const mockCards = { // TODO(engine)
+      "Base": ["Copper", "Silver", "Gold"],
+      "Prosperity": ["Bank", "Bishop"],
+    };
+    addManage(gameId, mockCards);
+  };
+  stopListeningToLobby = listenToLobby();
+
   const chat = $input("chat");
-  const ws = new WebSocket(address);
-  ws.addEventListener("open", () => {
-    log("Connected to Server");
-    chat.disabled = false;
-    ws.send(JSON.stringify({name: name.value}));
-  });
-  ws.addEventListener("close", () => {
-    log("Connection to Server lost");
-    chat.disabled = true;
-  });
-  ws.addEventListener("message", e => {
+  log("Connected to sync backend");
+  false && ws.addEventListener("message", (e) => {
     let data = JSON.parse(e.data.toString());
     const type = Object.keys(data)[0];
     data = data[type];
@@ -242,44 +301,11 @@ window.onload = () => {
         log(data);
         break;
       case "choices":
-        const choicesDiv = $("choices");
-        const choiceOnClick = (event) => {
-          ws.send(JSON.stringify({ choice: event.target.innerHTML }));
-          removeChildren(choicesDiv);
-        };
-        for (const choice of data) {
-          if (choice === "\n") {
-            choicesDiv.appendChild(document.createElement("br"));
-          } else {
-            const button = document.createElement("button");
-            button.innerHTML = choice;
-            const color = colors[choice];
-            if (color) {
-              button.style.color = color;
-            }
-            button.style.fontWeight = "bold";
-            button.onclick = choiceOnClick;
-            choicesDiv.appendChild(button);
-          }
-        }
-        updateChoicesDisabled();
-        $("log").scrollTop = $("log").scrollHeight;
-        if (document.hasFocus && !document.hasFocus()) {
-          if (!turnAlert) {
-            turnAlert = new Audio(
-              "Computer Error Alert from SoundBible.com.mp3"
-            );
-          }
-          // Audio need to reload sound before each play
-          // http://stackoverflow.com/a/8959342/771768
-          turnAlert.load();
-          turnAlert.play().catch((_) => {
-            /* whatever*/
-          });
-        }
+        const choose = handleChoices(data);
+        console.error("TODO" + choose);
         break;
       case "isLeader":
-        addManage(data, ws);
+        // addManage(data, ws);
         break;
       case "colors":
         colors = data;
@@ -295,13 +321,59 @@ window.onload = () => {
         throw new Error("Not implemented: " + type);
     }
   });
-  chat.addEventListener("keydown", e => {
-    if (ws && ws.readyState === 1 && e.keyCode === 13) {
-      ws.send(JSON.stringify({chat: chat.value}));
-      chat.value = "";
-    }
-  });
+  // TODO(chat)
+  // chat.addEventListener("keydown", (e) => {
+  //   if (ws && ws.readyState === 1 && e.keyCode === 13) {
+  //     ws.send(JSON.stringify({ chat: chat.value }));
+  //     chat.value = "";
+  //   }
+  // });
 };
 
+let turnAlert;
+async function handleChoices(data) {
+  const choicesDiv = $("choices");
+  if (choicesDiv.firstChild) {
+    throw "TODO re-entrant call to handleChoices";
+    // Maybe keep a global AbortController to cancel the previous call?
+  }
+  
+  return new Promise((resolve) => {
+    const choiceOnClick = (event) => {
+      removeChildren(choicesDiv);
+      resolve(event.target.innerHTML);
+    };
+    
+    for (const choice of data) {
+      if (choice === "\n") {
+        choicesDiv.appendChild(document.createElement("br"));
+      } else {
+        const button = document.createElement("button");
+        button.innerHTML = choice;
+        const color = colors[choice];
+        if (color) {
+          button.style.color = color;
+        }
+        button.style.fontWeight = "bold";
+        button.onclick = choiceOnClick;
+        choicesDiv.appendChild(button);
+      }
+    }
+    
+    updateChoicesDisabled();
+    $("log").scrollTop = $("log").scrollHeight;
+    if (document.hasFocus && !document.hasFocus()) {
+      if (!turnAlert) {
+        turnAlert = new Audio("Computer Error Alert from SoundBible.com.mp3");
+      }
+      // Audio need to reload sound before each play
+      // http://stackoverflow.com/a/8959342/771768
+      turnAlert.load();
+      turnAlert.play().catch((_) => {});
+    }
+  });
+}
+
 // Maybe remove this after winning each game, then restore?
-window.onbeforeunload = (e) => "Don't leave the game hanging!";
+// TODO(cleanup) restore this
+// window.onbeforeunload = (e) => "Don't leave the game hanging!";
