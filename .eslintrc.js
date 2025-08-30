@@ -1,12 +1,13 @@
-module.exports = {
+export default {
   "env": {
     "browser": true,
-    "es6": true,
+    "es2022": true,
     "node": true,
   },
   "extends": ["eslint:recommended", "google", "prettier"],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2022,
+    "sourceType": "module",
   },
   "rules": {
     "linebreak-style": "off",

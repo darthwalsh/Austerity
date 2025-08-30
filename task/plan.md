@@ -265,6 +265,10 @@ describe('Firebase Event Sourcing', () => {
 - [x] Firebase project created and configured
 - [x] Client can create games and write events
 - [x] Multiple clients can join same game
+- [x] Package.json cleaned up - removed server dependencies
+- [x] ESLint modernized to ES modules and ES2022
+- [x] Dependencies updated to modern versions
+- [x] README updated to reflect client-side architecture
 - [ ] Game state stays synchronized across clients via local memory
 - [ ] Game can be completed end-to-end
 - [ ] All existing functionality preserved
@@ -320,10 +324,10 @@ export default Player;
 - [ ] All game functionality works as expected
 - [ ] No CommonJS syntax remaining in server code
 
-## v2: Chat
-TODO(chat)
+## P2: Chat
+search for `TODO(chat)`
 
-## v2: Firebase Testing Options
+## P2: Firebase Testing Options
 
 ### Option 1: Firebase Emulator Suite
 - **Pros**: Full API compatibility, official Google support, runs actual security rules
@@ -340,7 +344,7 @@ TODO(chat)
 - **Cons**: Must maintain mock API, may miss edge cases
 - **Best for**: Simple testing scenarios, learning Firebase API
 
-## v2: Consider different sync backends
+## P2: Consider different sync backends
 
 | Feature | Firebase | Supabase | RxJS + WebRTC + Lambda |
 |---------|----------|----------|------------------------|
@@ -355,4 +359,14 @@ TODO(chat)
 
 **Recommendation**: For real-time gaming with sub-100ms latency requirements, **RxJS + WebRTC + Lambda** offers the best performance and lowest costs. WebRTC provides ultra-low latency peer-to-peer syncing, RxJS handles reactive state management, and Lambda handles discovery coordination. Firebase offers the most features out-of-the-box but has higher latency. Supabase provides a good middle ground with PostgreSQL and lower latency than Firebase.
 
-## v3: consider fixing the cli app
+## P3: consider fixing the cli app
+Nodejs desktop firebase cli app
+
+## P3: Consider dropping jasmine and using built-in node testing
+Didn't change anything yet: 
+**Decision**: Keep Jasmine testing framework instead of migrating to Node.js built-in testing
+**Rationale**: 
+- Jasmine is already set up and working
+- Built-in testing is less mature and has fewer features
+- ES module conversion is higher priority for Firebase integration
+- Can migrate testing framework later after Firebase is working## v4: Development Environment Updates

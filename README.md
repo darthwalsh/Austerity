@@ -1,18 +1,27 @@
 # Austerity
 
-[![Build status](https://dev.azure.com/darthwalsh/austerity/_apis/build/status/austerity-npm)](https://dev.azure.com/darthwalsh/austerity/_build/latest?definitionId=4)
-[![Deployment status](https://vsrm.dev.azure.com/darthwalsh/_apis/public/Release/badge/3f7b9cb9-a9ce-4a58-ba31-e808d7667cc4/1/1)](https://dev.azure.com/darthwalsh/austerity/_release?definitionId=1)
+A client-side web application for a popular deck-building board game, built with vanilla JavaScript and JSDoc annotations.
 
-A nodejs web server for a popular deck-building board game.
+## Architecture
 
-~~Try an alpha version at https://austerity.azurewebsites.net/ (Supports only 5 simultaneous connections.)~~ Azure took down my account :\\
+This project uses:
+- **Vanilla JavaScript** with JSDoc type annotations, so no build step
+- **TypeScript compiler** for type checking (no .ts files)
+- **Firebase Realtime Database** for real-time game synchronization
+- **Local game engine** running in each browser
+- **Event sourcing** for game state reconstruction
 
-## Run it
+## Development
 
-`git clone` then `npm start` and you're running a server!
+Install node.js 18+ (for development tooling and testing)
 
-You might need to open a firewall port on your computer to play with external devices.
+1. `git clone` this repository
+2. `npm install` to install development dependencies
+3. `npm test` to lint then execute the Jasmine test suite.
+4. `npm pretest` to just lint
+5. `npm run profile` - Runs tests with Node.js profiling
+6. `npm run cover` - Runs tests with code coverage
 
-## Testing
+## History
 
-Run `npm test`
+This project was originally a Node.js web server with WebSockets (see [v0.1](https://github.com/darthwalsh/Austerity/tree/v0.1)), but had no error-recovery and so it wasn't fun to run on free webapp hosting and get kicked out...
