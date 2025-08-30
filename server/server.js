@@ -1,10 +1,14 @@
 /* eslint-disable no-console */
-const express = require("express");
-const path = require("path");
-const ws = require("ws");
+import express from "express";
+import path from "path";
+import ws from "ws";
+import { fileURLToPath } from "url";
 
-const Connection = require("./connection");
-const Lobby = require("./lobby");
+import Connection from "./connection.js";
+import Lobby from "./lobby.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class Server {
   /**
@@ -52,4 +56,4 @@ class Server {
   }
 }
 
-module.exports = Server;
+export default Server;

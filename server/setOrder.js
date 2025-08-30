@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   "Base",
   "Base v1",
   "Intrigue",

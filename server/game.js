@@ -1,10 +1,10 @@
-const cards = require("./cards");
-const setOrder = require("./setOrder");
-const Store = require("./store");
-const Player = require("./player");
+import cards from "./cards.js";
+import setOrder from "./setOrder.js";
+import Store from "./store.js";
+import Player from "./player.js";
+import Connection from "./connection.js";
 
 /**
- * @typedef { import("./connection") } Connection
  * @typedef { import("./cards").Card } Card
  */
 
@@ -253,4 +253,4 @@ class Game {
   }
 }
 
-module.exports = Game;
+export default Game;

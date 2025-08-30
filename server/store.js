@@ -1,8 +1,8 @@
-const cards = require("./cards");
+import cards from "./cards.js";
+import Player from "./player.js";
 
 /**
- * @typedef { import("./cards").Card } Card
- * @typedef { import("./player") } Player
+ * @typedef { import("./cards.js").Card } Card
  */
 
 class Store {
@@ -110,4 +110,4 @@ class Store {
   }
 }
 
-module.exports = Store;
+export default Store;

@@ -1,11 +1,7 @@
-const setOrder = require("./setOrder");
+import setOrder from "./setOrder.js";
 
-/**
- * @typedef { import("./game") } Game
- * @typedef { import("./player") } Player
- */
-
-const cardsTable = require("./cardsTable");
+import cardsTable from "./cardsTable.js";
+import Player from "./player.js";
 
 if (!Array.prototype.flatMap) {
   // eslint-disable-next-line no-extend-native
@@ -649,9 +645,9 @@ const kingdom = {
 
     /**
      * @param {Player} player
-     * @param {Card} card
+     * @param {Card} _card
      */
-    onBought(player, card) {
+    onBought(player, _card) {
       player.gainVictory(1);
     },
   },
@@ -937,9 +933,9 @@ function getKinds(tableRow) {
 /**
  * @this {Card}
  * @param {Card} other
- * @param {object} [compare]
- * @param {boolean} [compare.compareKind]
- * @param {boolean} [compare.compareSet]
+ * @param {Object} [compare={}]
+ * @param {boolean} [compare.compareKind=true]
+ * @param {boolean} [compare.compareSet=false]
  */
 function compareTo(other, {compareKind = true, compareSet = false} = {}) {
   return (
@@ -1009,4 +1005,4 @@ const cards = Object.keys(kingdom).reduce((o, name) => {
   return o;
 }, {});
 
-module.exports = cards;
+export default cards;

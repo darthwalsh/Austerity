@@ -2,6 +2,7 @@
   "name": "austerity",
   "version": "0.0.0",
   "description": "Gameboard web server",
+  "type": "module",
   "main": "server/app.js",
   "directories": {
     "test": "test"
@@ -11,7 +12,7 @@
     "test": "jasmine",
     "cover": "nyc --reporter=lcov --reporter=text-summary jasmine",
     "profile": "node --inspect-brk node_modules/jasmine/bin/jasmine.js spec/e2espec.js",
-    "genCards": "node server/generateCardsTable.js > server\\cardsTable.js"
+    "genCards": "node server/generateCardsTable.js > server/cardsTable.js"
   },
   "repository": {
     "type": "git",

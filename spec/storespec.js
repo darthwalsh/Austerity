@@ -1,8 +1,8 @@
 /* global describe it expect */
 /* eslint-disable key-spacing */
 
-const cards = require("../server/cards");
-const Store = require("../server/store");
+import cards from "../server/cards.js";
+import Store from "../server/store.js";
 
 describe("store", () => {
   it("initial counts", () => {

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
-const readline = require("readline");
-const Library = require("./lib");
-const Server = require("../server/server");
+import readline from "readline";
+import Library from "./lib.js";
+import Server from "../server/server.js";
 
 let [, , url, name] = process.argv;
 if (!url || !name) {

@@ -1,8 +1,5 @@
-const Game = require("./game");
-
-/**
- * @typedef { import("./connection") } Connection
- */
+import Connection from "./connection.js";
+import Game from "./game.js";
 
 class Lobby {
   /**
@@ -63,4 +60,4 @@ class Lobby {
   }
 }
 
-module.exports = Lobby;
+export default Lobby;

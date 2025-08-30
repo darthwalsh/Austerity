@@ -1,12 +1,16 @@
 /* global describe it expect fail */
 
-const fs = require("fs");
-const path = require("path");
-const cards = require("../server/cards");
-const setOrder = require("../server/setOrder");
-const cardsTable = require("../server/cardsTable");
-const Game = require("../server/game");
-const Player = require("../server/player");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import cards from "../server/cards.js";
+import setOrder from "../server/setOrder.js";
+import cardsTable from "../server/cardsTable.js";
+import Game from "../server/game.js";
+import Player from "../server/player.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const defaultTest = {
   dMoney: 0,

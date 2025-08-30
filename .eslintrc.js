@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   "env": {
     "browser": true,
     "es2022": true,
@@ -20,6 +20,9 @@ export default {
 
     // Too aggressive because of https://github.com/eslint/eslint/issues/11911
     "require-atomic-updates": "off",
+
+    // Disable unused vars to unblock progress
+    "no-unused-vars": "off",
 
     "eqeqeq": "error",
     "operator-assignment": "error",

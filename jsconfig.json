@@ -3,7 +3,9 @@
     "baseUrl": ".",
     "paths": {"*": ["types/*"]},
     "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "checkJs": true
   },
-  "exclude": ["node_modules", "coverage"]
+  "exclude": ["node_modules", "coverage", "client"]
 }

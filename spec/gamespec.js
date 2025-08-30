@@ -1,7 +1,7 @@
 /* global describe it expect */
 
-const cards = require("../server/cards");
-const Game = require("../server/game");
+import cards from "../server/cards.js";
+import Game from "../server/game.js";
 
 describe("game", () => {
   it("displays endgame", () => {

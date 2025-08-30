@@ -1,4 +1,4 @@
-const WebSocket = require("ws");
+import WebSocket from "ws";
 
 class lib {
   /**
@@ -73,4 +73,4 @@ class lib {
   }
 }
 
-module.exports = lib;
+export default lib;

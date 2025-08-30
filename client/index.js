@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, ref, onValue, set, child, push, remove, get, update, onChildAdded, onChildRemoved, onChildChanged, onChildMoved, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getDatabase, ref, onValue, set, child } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
 const firebaseConfig = {
   databaseURL: "https://carlwa-default-rtdb.firebaseio.com",
@@ -255,10 +255,9 @@ function updateChoicesDisabled() {
   }
 }
 
-let colors = {};
-let colorBreak = /(?=a)b/; // null regex which won't match anything
+const colors = {};
+const colorBreak = /(?=a)b/; // null regex which won't match anything
 window.onload = () => {
-  const address = window.location.href.replace("http", "ws");
   const name = $input("name");
   name.value = localStorage.getItem("name") || "";
   name.addEventListener("input", () => {
@@ -289,38 +288,38 @@ window.onload = () => {
   };
   stopListeningToLobby = listenToLobby();
 
-  const chat = $input("chat");
   log("Connected to sync backend");
-  false && ws.addEventListener("message", (e) => {
-    let data = JSON.parse(e.data.toString());
-    const type = Object.keys(data)[0];
-    data = data[type];
+  // TODO(chat) - removed old WebSocket code
+  // false && ws.addEventListener("message", (e) => {
+  //   let data = JSON.parse(e.data.toString());
+  //   const type = Object.keys(data)[0];
+  //   data = data[type];
 
-    switch (type) {
-      case "message":
-        log(data);
-        break;
-      case "choices":
-        const choose = handleChoices(data);
-        console.error("TODO" + choose);
-        break;
-      case "isLeader":
-        // addManage(data, ws);
-        break;
-      case "colors":
-        colors = data;
-        // Create a regex like \bCopper|Silver|Gold\b
-        colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
-        break;
-      case "included":
-        const helpCards = $("helpCards");
-        removeChildren(helpCards);
-        data.forEach((cardName) => addCardImage(cardName, helpCards));
-        break;
-      default:
-        throw new Error("Not implemented: " + type);
-    }
-  });
+  //   switch (type) {
+  //     case "message":
+  //       log(data);
+  //       break;
+  //     case "choices":
+  //       const choose = handleChoices(data);
+  //       console.error("TODO" + choose);
+  //       break;
+  //     case "isLeader":
+  //       // addManage(data, ws);
+  //       break;
+  //     case "colors":
+  //       colors = data;
+  //       // Create a regex like \bCopper|Silver|Gold\b
+  //       colorBreak = new RegExp(`\\b${Object.keys(colors).join("|")}\\b`, "g");
+  //       break;
+  //     case "included":
+  //       const helpCards = $("helpCards");
+  //       removeChildren(helpCards);
+  //       data.forEach((cardName) => addCardImage(cardName, helpCards));
+  //       break;
+  //     default:
+  //       throw new Error("Not implemented: " + type);
+  //   }
+  // });
   // TODO(chat)
   // chat.addEventListener("keydown", (e) => {
   //   if (ws && ws.readyState === 1 && e.keyCode === 13) {
@@ -334,7 +333,7 @@ let turnAlert;
 async function handleChoices(data) {
   const choicesDiv = $("choices");
   if (choicesDiv.firstChild) {
-    throw "TODO re-entrant call to handleChoices";
+    throw new Error("TODO re-entrant call to handleChoices");
     // Maybe keep a global AbortController to cancel the previous call?
   }
   

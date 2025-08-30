@@ -309,6 +309,13 @@ module.exports = Player;
 export default Player;
 ```
 
+#### 4. Fix Eslint issue
+Was causing
+```
+/Users/walshca/code/Austerity/server/player.js
+  2:8  error  'Connection' is defined but never used  no-unused-vars
+  3:8  error  'Game' is defined but never used        no-unused-vars
+```
 ### Migration Strategy
 1. Create a new branch for ES module conversion
 2. Convert one file at a time, testing after each conversion
@@ -323,6 +330,7 @@ export default Player;
 - [ ] Server starts and runs correctly
 - [ ] All game functionality works as expected
 - [ ] No CommonJS syntax remaining in server code
+- [ ] tsc jsconfig.json .exclude: remove client, maybe by moving only firebase code to a new file
 
 ## P2: Chat
 search for `TODO(chat)`

@@ -1,10 +1,10 @@
 /* global describe beforeAll afterEach it expect */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
-const Lib = require("../cli/lib");
-const Server = require("../server/server");
+import Lib from "../cli/lib.js";
+import Server from "../server/server.js";
 
 const url = "ws://localhost:8080";
 

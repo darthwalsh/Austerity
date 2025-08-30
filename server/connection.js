@@ -114,4 +114,4 @@ class Connection {
   }
 }
 
-module.exports = Connection;
+export default Connection;
