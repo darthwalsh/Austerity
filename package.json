@@ -12,7 +12,10 @@
     "test": "jasmine",
     "cover": "nyc --reporter=lcov --reporter=text-summary jasmine",
     "profile": "node --inspect-brk node_modules/jasmine/bin/jasmine.js spec/e2espec.js",
-    "genCards": "node server/generateCardsTable.js > server/cardsTable.js"
+    "genCards": "node server/generateCardsTable.js > server/cardsTable.js",
+    "db-rm-rf": "npm run db-backup && firebase database:remove /austerity --force",
+    "db-backup": "firebase database:get / --pretty > database_backup.json",
+    "db-restore": "firebase database:remove / database_backup.json"
   },
   "repository": {
     "type": "git",
@@ -25,18 +28,16 @@
   },
   "homepage": "https://github.com/darthwalsh/Austerity",
   "devDependencies": {
-    "@types/csv-parse": "^5.0.0",
     "@types/jasmine": "^5.1.0",
     "@types/node": "^20.0.0",
     "csv-parse": "^5.5.0",
     "eslint": "^9.0.0",
-    "eslint-config-google": "^0.15.0",
+    "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "^9.1.0",
+    "firebase": "^12.2.1",
     "jasmine": "^5.1.0",
     "jasmine-reporters": "^2.5.0",
     "nyc": "^15.1.0",
     "typescript": "^5.3.0"
-  },
-  "dependencies": {
   }
 }

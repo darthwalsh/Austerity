@@ -4,20 +4,13 @@ import readline from "readline";
 import Library from "./lib.js";
 import Server from "../server/server.js";
 
-let [, , url, name] = process.argv;
-if (!url || !name) {
+let [, , name] = process.argv;
+if (!name) {
   console.error(`Expected usage: cli URL NAME
 
 Use URL=host to also run the server on port 8080`);
   process.exit(1);
 }
-
-if (url === "host") {
-  new Server().listen({port: 8080});
-  url = "http://localhost:8080";
-}
-
-const wsUrl = url.replace(/^http/, "ws");
 
 const cl = readline.createInterface(process.stdin, process.stdout);
 
@@ -33,6 +26,12 @@ function question(query) {
   });
 }
 
-const lib = new Library(wsUrl, question, console.log);
+const lib = new Library(question, console.log);
+
+
+if (name === "host") {
+  throw "TODO do the server start stuff"
+}
+
 
 lib.connect(name);

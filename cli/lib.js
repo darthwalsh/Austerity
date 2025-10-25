@@ -1,17 +1,62 @@
-import WebSocket from "ws";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, set, child, push, update } from "firebase/database";
+
+// TODO import ../server/game.js
+
+const firebaseConfig = {
+  databaseURL: "https://carlwa-default-rtdb.firebaseio.com",
+};
 
 class lib {
   /**
-   * @param {string} url
    * @param {(choices: string[]) => Promise<string>} readline
    * @param {(line: string) => void} log
    */
-  constructor(url, readline, log) {
-    this.ws = new WebSocket(url);
+  constructor(readline, log) {
+    this.connected = "TODO"
+
     this.log = log;
-    this.open = false;
     this.readline = readline;
-    this.initWS();
+    this.playerId = null;
+    this.gameRef = null;
+    this.playerRef = null;
+    
+    this.app = initializeApp(firebaseConfig);
+    this.database = getDatabase(this.app);
+    // Match the database structure from index.js
+    this.db = ref(this.database, "austerity");
+    
+    // Initialize Firebase listeners
+    this.initFirebase();
+  }
+
+  initFirebase() {
+    // Listen for game updates
+    this.gameRef = ref(this.database, "games/default");
+    onValue(this.gameRef, async (snapshot) => {
+      const gameData = snapshot.val();
+      if (!gameData) return;
+
+      // Handle different game events
+      if (gameData.choices && gameData.choices[this.playerId]) {
+        const choice = await this.readline(gameData.choices[this.playerId]);
+        this.sendChoice(choice);
+      }
+
+      if (gameData.isLeader && gameData.isLeader[this.playerId]) {
+        const leaderData = Object.values(gameData.isLeader).flatMap(d => d);
+        const included = (await this.readline(leaderData)).split(" ");
+        const debugMode = false;
+        this.sendGameStart(included, debugMode);
+      }
+
+      // Log other game updates
+      Object.keys(gameData).forEach(key => {
+        if (!['choices', 'isLeader'].includes(key)) {
+          this.log(`${key}: ${JSON.stringify(gameData[key])}`);
+        }
+      });
+    });
   }
 
   initWS() {
@@ -50,15 +95,16 @@ class lib {
   }
 
   /**
-   * @param {string} name
+   * @param {string} player
+   * @param {string} game
    */
-  async connect(name) {
+  async connect(player, game) {
     if (this.open) {
       throw new Error("Already open");
     }
-    this.name = name;
+    this.name = player;
     await this.opened;
-    this.send({name});
+    this.send({name: player});
   }
 
   close() {

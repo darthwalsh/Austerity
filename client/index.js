@@ -225,6 +225,7 @@ function addManage(gameId, data) {
     removeChildren(helpSelected);
     helpSelected.style.marginBottom = "0";
 
+    // TODO(RNG) include a start player
     initializeGame(gameId, { included, debugMode });
 
     // ws.send(JSON.stringify({ gameStart: { included, debugMode } }));

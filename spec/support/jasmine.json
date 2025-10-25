@@ -1,6 +1,6 @@
 {
   "spec_dir": "spec",
-  "spec_files": ["gamespec.js", "storespec.js", "cardspec.js"],
+  "spec_files": ["gamespec.js", "storespec.js", "cardspec.js", "clispec.js"],
   "helpers": ["helpers/**/*.js"],
   "stopSpecOnExpectationFailure": false,
   "random": true
